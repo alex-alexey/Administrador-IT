@@ -1,0 +1,4 @@
+- [ ] Clarificar requerimientos del proyecto
+- [ ] Estructurar carpetas y archivos base
+- [ ] Personalizar la estructura según necesidades
+- [ ] Verificar documentación y archivos base

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTEK-IT | Inventario IT Premium</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+  --color-bg: #f5f7fb;
+  --color-primary: #1e3a8a;
+  --color-secondary: #3b82f6;
+  --color-accent: #f59e0b;
+  --color-danger: #ef4444;
+  --color-white: #ffffff;
+  --color-gray: #6b7280;
+  --color-border: #e5e7eb;
+  --radius: 12px;
+  --shadow: 0 4px 15px rgba(0,0,0,0.05);
+  --transition: all 0.3s ease;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+
+body {
+  background: var(--color-bg);
+  color:#111827;
+  min-height:100vh;
+  display:flex;
+  font-size:14px;
+}
+
+/* Sidebar */
+aside {
+  width:220px;
+  background: var(--color-primary);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  padding:1.5rem 1rem;
+  height:100vh;
+  position:fixed;
+}
+
+aside .logo {
+  font-size:1.5rem;
+  font-weight:700;
+  margin-bottom:2rem;
+  text-align:center;
+}
+
+aside nav a {
+  color:white;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+  padding:0.6rem 0.8rem;
+  border-radius:8px;
+  margin-bottom:0.5rem;
+  transition:var(--transition);
+}
+
+aside nav a:hover,
+aside nav a.active { background: rgba(255,255,255,0.2); }
+
+/* Main content */
+.main-content {
+  margin-left:220px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+header {
+  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+  color:white;
+  padding:1rem 2rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:1.2rem;
+  font-weight:600;
+  box-shadow: var(--shadow);
+}
+
+header a {
+  color:white;
+  text-decoration:none;
+  font-size:0.9rem;
+  background: rgba(255,255,255,0.15);
+  padding:0.5rem 1rem;
+  border-radius:8px;
+  transition:var(--transition);
+}
+
+header a:hover { background: rgba(255,255,255,0.25); }
+
+.container {
+  flex:1;
+  padding:2rem;
+}
+
+/* Estadísticas */
+.stats {
+  display:flex;
+  gap:1rem;
+  margin-bottom:1.5rem;
+  flex-wrap:wrap;
+}
+
+.card {
+  flex:1;
+  background:white;
+  padding:1rem 1.2rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:150px;
+  transition: var(--transition);
+}
+
+.card:hover { transform: translateY(-3px); }
+
+.card h3 { font-size:1.1rem; color:var(--color-gray); margin-bottom:0.5rem; }
+.card span { font-size:1.5rem; font-weight:600; color:var(--color-primary); }
+
+/* Buscador y filtro */
+.search-filter {
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+
+.search-filter input,
+.search-filter select {
+  padding:0.5rem 0.8rem;
+  border-radius:6px;
+  border:1px solid var(--color-border);
+  outline:none;
+  transition:var(--transition);
+}
+
+.search-filter input:focus,
+.search-filter select:focus {
+  border-color:var(--color-secondary);
+  box-shadow:0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* Tabla estilizada */
+.table-wrapper {
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  background:white;
+  margin-top:0.5rem;
+}
+
+th, td {
+  padding:0.9rem 1rem;
+  text-align:left;
+  font-size:0.95rem;
+}
+
+th {
+  background:#f3f4f6;
+  color:var(--color-primary);
+  font-weight:600;
+}
+
+tbody tr { border-bottom:1px solid var(--color-border); transition:var(--transition); }
+tbody tr:hover { background:#f9fafb; }
+
+.acciones button {
+  margin-right:0.4rem;
+  padding:0.4rem 0.7rem;
+  border-radius:6px;
+  font-size:0.85rem;
+  font-weight:500;
+  border:none;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.acciones button.edit { background:var(--color-accent); color:white; }
+.acciones button.delete { background:var(--color-danger); color:white; }
+.acciones button:hover { transform: translateY(-1px); opacity:0.85; }
+
+/* Botón añadir */
+button#btnAddDevice {
+  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+  color:white;
+  border:none;
+  border-radius:var(--radius);
+  padding:0.6rem 1.2rem;
+  font-weight:500;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  transition:var(--transition);
+}
+
+button#btnAddDevice:hover { opacity:0.9; transform:translateY(-1px); }
+
+/* Modal */
+#deviceModal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.4);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+
+#deviceForm {
+  background:white;
+  padding:2rem;
+  border-radius:var(--radius);
+  width:100%;
+  max-width:450px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  animation: slideUp 0.3s ease;
+}
+
+#deviceForm h3 { color:var(--color-primary); margin-bottom:1rem; font-size:1.3rem; }
+#deviceForm label { display:flex; flex-direction:column; gap:0.3rem; font-weight:500; color:var(--color-gray); font-size:0.9rem; }
+#deviceForm input,
+#deviceForm select {
+  padding:0.6rem;
+  border-radius:6px;
+  border:1px solid var(--color-border);
+  font-size:0.95rem;
+  outline:none;
+  transition:var(--transition);
+}
+#deviceForm input:focus,
+#deviceForm select:focus { border-color:var(--color-secondary); box-shadow:0 0 0 2px rgba(59,130,246,0.2); }
+
+.form-actions { display:flex; justify-content:flex-end; gap:1rem; margin-top:0.5rem; }
+#btnCancel { background:#9ca3af; color:white; }
+
+@keyframes slideUp { from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+
+footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gray); margin-top:2rem; }
+
+/* Responsivo */
+@media(max-width:768px){
+  aside{ width:60px; padding:1rem 0.5rem; }
+  aside nav a span{ display:none; }
+  .main-content{ margin-left:60px; }
+  header{ flex-direction:column; align-items:flex-start; gap:0.5rem; }
+  .container{ padding:1rem; }
+  .stats{flex-direction:column;}
+}
+</style>
+</head>
+<body>
+<aside>
+  <div class="logo">INTEK-IT</div>
+  <nav>
+  <a href="/dashboard.html" class="fa-solid fa-gauge"></i> <span>Dashboard</span></a>
+  <a href="/inventario.html" class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+  <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html" class="active"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+  <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+  <a href="/"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+  </nav>
+</aside>
+<div class="main-content">
+  <header>
+    <span><i class="fa-solid fa-boxes-stacked"></i> Empleados</span>
+    <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver al Dashboard</a>
+  </header>
+
+  <div class="container">
+    <div class="stats">
+      <div class="card"><h3>Total Empleados</h3><span id="totalDevices">0</span></div>
+      <div class="card"><h3>Con licencias Activas</h3><span id="operativos">0</span></div>
+      <div class="card"><h3>Con incidencias</h3><span id="reparacion">0</span></div>
+      <div class="card"><h3>Bajas</h3><span id="baja">0</span></div>
+    </div>
+
+    <div class="search-filter">
+      <input type="text" id="searchInput" placeholder="Buscar por tipo, modelo o empleado">
+      <select id="filterTipo">
+        <option value="">Filtrar por tipo</option>
+        <option value="Ordenador">Ordenadores</option>
+        <option value="Workstation">Workstations</option>
+        <option value="Teclado y ratón">Teclado y ratón</option>
+        <option value="Otro">Otros</option>
+      </select>
+      <select id="filterEstado">
+        <option value="">Filtrar por estado</option>
+        <option value="Operativo">Operativo</option>
+        <option value="En reparación">En reparación</option>
+        <option value="Baja">Baja</option>
+      </select>
+      <button id="btnAddDevice"><i class="fa-solid fa-plus"></i> Añadir</button>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Departamento</th>
+            <th>Correo</th>
+            <th>Fecha de incorporación</th>
+            <th>Dispositivos asignados</th>
+            <th>Licencias Asignadas</th>
+          </tr>
+        </thead>
+        <tbody id="inventoryTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="deviceModal">
+    <form id="deviceForm">
+      <h3 id="modalTitle">Añadir Empleado</h3>
+      <label>Nombre
+        <input type="text" name="nombre" required />
+      </label>
+      <label>Departamento
+        <input type="text" name="departamento" />
+      </label>
+      <label>Correo
+        <input type="email" name="correo" />
+      </label>
+      <label>Fecha de incorporación
+        <input type="date" name="fechaIncorporacion" />
+      </label>
+      <label>Dispositivos asignados
+        <input type="text" name="dispositivosAsignados" placeholder="Ej: PC-01, Laptop-02" />
+      </label>
+      <label>Licencias Asignadas
+        <input type="text" name="licenciasAsignadas" placeholder="Ej: Office, Adobe" />
+      </label>
+      <div class="form-actions">
+        <button type="button" id="btnCancel">Cancelar</button>
+        <button type="submit">Guardar</button>
+      </div>
+      <input type="hidden" name="editIndex" />
+    </form>
+  </div>
+
+  <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
+</div>
+
+<script>
+
+const tableBody = document.getElementById('inventoryTableBody');
+const totalDevices = document.getElementById('totalDevices');
+const operativos = document.getElementById('operativos');
+const reparacion = document.getElementById('reparacion');
+const baja = document.getElementById('baja');
+
+let inventory = [];
+
+async function fetchInventory() {
+  try {
+  const res = await fetch('http://localhost:4000/api/empleados');
+    if (!res.ok) {
+      let errorMsg = 'No se pudo cargar el inventario';
+      try {
+        const errorData = await res.json();
+        errorMsg = errorData.error || errorMsg;
+      } catch {}
+      throw new Error(errorMsg);
+    }
+    inventory = await res.json();
+    renderTable();
+  } catch (err) {
+    tableBody.innerHTML = `<tr><td colspan="10" style="color:red;">${err.message}</td></tr>`;
+    totalDevices.textContent = operativos.textContent = reparacion.textContent = baja.textContent = '0';
+    if (err instanceof TypeError) {
+      mostrarPopupError('El servidor no responde. Por favor, inténtalo más tarde.');
+    } else {
+      mostrarPopupError(err.message || 'El servidor no responde. Por favor, inténtalo más tarde.');
+    }
+  }
+}
+ // Popup de error global
+    function mostrarPopupError(mensaje) {
+      let popup = document.createElement('div');
+      popup.style.position = 'fixed';
+      popup.style.top = '0';
+      popup.style.left = '0';
+      popup.style.width = '100vw';
+      popup.style.height = '100vh';
+      popup.style.background = 'rgba(30,58,138,0.85)';
+      popup.style.display = 'flex';
+      popup.style.alignItems = 'center';
+      popup.style.justifyContent = 'center';
+      popup.style.zIndex = '9999';
+      popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+        <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+        ${mensaje}<br><br>
+        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
+      </div>`;
+      document.body.appendChild(popup);
+    }
+    
+function renderTable() {
+  tableBody.innerHTML = '';
+  inventory.forEach((item,index)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><a href="/empleado.html?id=${item._id}" style="color:var(--color-secondary);text-decoration:underline;cursor:pointer;">${item._id || ''}</a></td>
+      <td>${item.nombre || ''}</td>
+      <td>${item.departamento || ''}</td>
+      <td>${item.correo || ''}</td>
+      <td>${item.fechaIncorporacion ? item.fechaIncorporacion.slice(0,10) : ''}</td>
+      <td>${item.dispositivosAsignados ? item.dispositivosAsignados.join(', ') : ''}</td>
+      <td>${item.licenciasAsignadas ? item.licenciasAsignadas.join(', ') : ''}</td>
+      <td class="acciones">
+        <a href="/empleado.html?id=${item._id}" class="edit" style="background:var(--color-accent);color:white;padding:0.4rem 0.7rem;border-radius:6px;font-size:0.85rem;font-weight:500;text-decoration:none;display:inline-block;margin-right:0.4rem;"><i class="fa-solid fa-pen"></i></a>
+        <button class="delete" onclick="deleteDevice('${item._id}')"><i class="fa-solid fa-trash"></i></button>
+      </td>`;
+    tableBody.appendChild(tr);
+  });
+  updateStats();
+}
+
+function updateStats() {
+  totalDevices.textContent = inventory.length;
+  operativos.textContent = inventory.filter(d=>d.estado==='Operativo').length;
+  reparacion.textContent = inventory.filter(d=>d.estado==='En reparación').length;
+  baja.textContent = inventory.filter(d=>d.estado==='Baja').length;
+}
+
+
+// Modal
+const modal = document.getElementById('deviceModal');
+const form = document.getElementById('deviceForm');
+const btnAdd = document.getElementById('btnAddDevice');
+const btnCancel = document.getElementById('btnCancel');
+const modalTitle = document.getElementById('modalTitle');
+
+btnAdd.addEventListener('click',()=>{
+  form.reset();
+  modalTitle.textContent='Añadir Dispositivo';
+  form.editIndex.value='';
+  modal.style.display='flex';
+});
+
+btnCancel.addEventListener('click',()=> modal.style.display='none');
+
+window.addEventListener('click',(e)=>{
+  if(e.target===modal) modal.style.display='none';
+});
+
+// Guardar dispositivo (crear o editar)
+form.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const formData = new FormData(form);
+  const empleado = {
+    nombre: formData.get('nombre'),
+    departamento: formData.get('departamento'),
+    correo: formData.get('correo'),
+    fechaIncorporacion: formData.get('fechaIncorporacion'),
+    dispositivosAsignados: formData.get('dispositivosAsignados') ? formData.get('dispositivosAsignados').split(',') : [],
+    licenciasAsignadas: formData.get('licenciasAsignadas') ? formData.get('licenciasAsignadas').split(',') : []
+  };
+  const editId = formData.get('editIndex');
+  try {
+    if(editId) {
+      // Editar
+      await fetch(`http://localhost:4000/api/empleados/${editId}`, {
+        method: 'PUT',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(empleado)
+      });
+    } else {
+      // Crear
+      await fetch('http://localhost:4000/api/empleados', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(empleado)
+      });
+    }
+    modal.style.display='none';
+    fetchInventory();
+  } catch {
+    mostrarPopupError('El servidor no responde. No se pudo guardar el empleado.');
+  }
+});
+
+// Editar dispositivo
+function editDevice(id){
+  const device = inventory.find(d=>d._id===id);
+  if(!device) return;
+  form.tipo.value = device.tipo || '';
+  form.nombre.value = device.nombre || '';
+  form.categoria.value = device.categoria || '';
+  form.marca.value = device.marca || '';
+  form.modelo.value = device.modelo || '';
+  form.serie.value = device.serie || '';
+  form.estado.value = device.estado || '';
+  form.ubicacion.value = device.ubicacion || '';
+  form.fechaCompra.value = device.fechaCompra ? device.fechaCompra.slice(0,10) : '';
+  form.observaciones.value = device.observaciones || '';
+  form.empleado.value = device.responsable || device.empleado || '';
+  form.editIndex.value = device._id || '';
+  modalTitle.textContent='Editar Dispositivo';
+  modal.style.display='flex';
+}
+
+// Eliminar dispositivo
+async function deleteDevice(id){
+  if(confirm('¿Estás seguro de eliminar este dispositivo?')){
+    try {
+  await fetch(`http://localhost:4000/api/empleados/${id}`, {method:'DELETE'});
+      fetchInventory();
+    } catch {
+      mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');
+    }
+// Popup de error global
+function mostrarPopupError(mensaje) {
+  let popup = document.createElement('div');
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.width = '100vw';
+  popup.style.height = '100vh';
+  popup.style.background = 'rgba(30,58,138,0.85)';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'center';
+  popup.style.justifyContent = 'center';
+  popup.style.zIndex = '9999';
+  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+    ${mensaje}<br><br>
+    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
+  </div>`;
+  document.body.appendChild(popup);
+}
+  }
+}
+
+
+// Buscador y filtro
+const searchInput = document.getElementById('searchInput');
+const filterTipo = document.getElementById('filterTipo');
+const filterEstado = document.getElementById('filterEstado');
+
+function filtrarTabla() {
+  const term = searchInput.value.toLowerCase();
+  const tipo = filterTipo.value;
+  const estado = filterEstado.value;
+  const rows = tableBody.querySelectorAll('tr');
+  rows.forEach((tr,i)=>{
+    const device = inventory[i];
+    const coincideBusqueda = device.tipo.toLowerCase().includes(term) || device.modelo.toLowerCase().includes(term) || (device.empleado||'').toLowerCase().includes(term);
+    const coincideTipo = !tipo || device.tipo === tipo || (tipo==='Teclado y ratón' && (device.tipo==='Teclado' || device.tipo==='Ratón')) || (tipo==='Otros' && device.tipo==='Otro');
+    const coincideEstado = !estado || device.estado === estado;
+    tr.style.display = (coincideBusqueda && coincideTipo && coincideEstado) ? '' : 'none';
+  });
+}
+searchInput.addEventListener('input', filtrarTabla);
+filterTipo.addEventListener('change', filtrarTabla);
+filterEstado.addEventListener('change', filtrarTabla);
+
+fetchInventory();
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "intek-it",
+  "version": "1.0.0",
+  "description": "Proyecto base Node.js",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"No hay pruebas definidas\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
