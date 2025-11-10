@@ -1,4 +1,5 @@
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 // Backend básico Express + MongoDB (estructura inicial)
 
 
@@ -20,7 +21,11 @@ app.use(session({
   secret: 'intek-it-secret',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: false },
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI || 'mongodb://localhost:27017/intek-it',
+    ttl: 60 * 60 * 24, // 1 día
+  })
 }));
 app.use(cors());
 app.use(express.json());
