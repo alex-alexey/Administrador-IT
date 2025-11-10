@@ -607,7 +607,7 @@ if (typeof XLSX === 'undefined') {
   document.head.appendChild(script);
 }
 
-// --- LICENCIAS ---
+// --- REFACTORIZADO Y LIMPIO ---
 let licencias = [];
 const licenseTableBody = document.getElementById('licenseTableBody');
 const totalLicencias = document.getElementById('totalLicencias');
@@ -616,9 +616,9 @@ const caducadas = document.getElementById('caducadas');
 
 async function fetchLicencias() {
   try {
-  const res = await fetch(`${API_BASE_URL}/api/licencias`);
+    const res = await fetch(`${API_BASE_URL}/api/licencias`);
     if (!res.ok) {
-      let errorMsg = 'Error al obtener licencias';
+      let errorMsg = 'No se pudo cargar las licencias';
       try {
         const errorData = await res.json();
         errorMsg = errorData.error || errorMsg;

@@ -211,8 +211,8 @@ if (loginForm) {
       });
       const data = await res.json();
       if (res.ok) {
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('usuario', JSON.stringify(data.user));
+  localStorage.setItem('loggedIn', 'true');
+  localStorage.setItem('usuario', JSON.stringify(data.data));
         window.location.href = '/dashboard.html';
       } else {
         if (data.error === 'No existe el usuario') {
