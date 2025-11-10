@@ -412,19 +412,18 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </div>
 
 <script>
+// Unificación de API_BASE_URL
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000/api'
+  : 'https://it-xqhv.onrender.com/api';
+
 document.addEventListener('DOMContentLoaded', function() {
   const btnLogout = document.getElementById('btnLogout');
   if (btnLogout) {
     btnLogout.addEventListener('click', async function(e) {
       e.preventDefault();
       try {
-        let API_BASE_URL = '';
-        if (window.location.hostname === 'localhost') {
-          API_BASE_URL = 'http://localhost:4000';
-        } else {
-          API_BASE_URL = 'https://it-xqhv.onrender.com';
-        }
-        await fetch(`${API_BASE_URL}/api/usuarios/logout`, {
+        await fetch(`${API_BASE_URL}/usuarios/logout`, {
           method: 'POST',
           credentials: 'include'
         });
@@ -545,7 +544,7 @@ let inventory = [];
 
 async function fetchInventory() {
   try {
-    const res = await fetch('http://localhost:4000/api/inventario');
+    const res = await fetch(`${API_BASE_URL}/inventario`);
     if (!res.ok) {
       let errorMsg = 'No se pudo cargar el inventario';
       try {
@@ -681,14 +680,14 @@ form.addEventListener('submit',async e=>{
   try {
     if(editId) {
       // Editar
-  await fetch(`http://localhost:4000/api/inventario/${editId}`, {
+      await fetch(`${API_BASE_URL}/inventario/${editId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(device)
       });
     } else {
       // Crear
-  await fetch('http://localhost:4000/api/inventario', {
+      await fetch(`${API_BASE_URL}/inventario`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(device)
@@ -696,9 +695,9 @@ form.addEventListener('submit',async e=>{
     }
     modal.style.display='none';
     fetchInventory();
-    } catch {
-      mostrarPopupError('El servidor no responde. No se pudo guardar el dispositivo.');
-    }
+  } catch {
+    mostrarPopupError('El servidor no responde. No se pudo guardar el dispositivo.');
+  }
 });
 
 // Editar dispositivo
@@ -725,7 +724,7 @@ function editDevice(id){
 async function deleteDevice(id){
   if(confirm('¿Estás seguro de eliminar este dispositivo?')){
     try {
-  await fetch(`http://localhost:4000/api/inventario/${id}`, {method:'DELETE'});
+      await fetch(`${API_BASE_URL}/inventario/${id}`, {method:'DELETE'});
       fetchInventory();
     } catch {
       mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');

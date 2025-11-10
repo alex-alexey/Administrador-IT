@@ -215,6 +215,10 @@ if (!localStorage.getItem('loggedIn')) {
 <script>
 
 // --- Migración a backend ---
+// Lógica de entorno para API_BASE_URL
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000/api'
+  : 'https://it-xqhv.onrender.com/api';
 let currentRepairRow = null;
 let modalType = '';
 let empleadoId = null;
@@ -230,7 +234,7 @@ async function fetchEmpleado() {
   empleadoId = getEmpleadoIdFromUrl();
   if (!empleadoId) return;
   try {
-    const res = await fetch(`http://localhost:4000/api/empleados/${empleadoId}`);
+  const res = await fetch(`${API_BASE_URL}/empleados/${empleadoId}`);
     if (!res.ok) {
       // Si no está logueado, redirigir a login
       if (!localStorage.getItem('loggedIn')) {
@@ -323,7 +327,7 @@ function openEditModal(type, row=null){
       </label>
     `;
     // Cargar dispositivos disponibles y marcar los asignados
-    fetch('http://localhost:4000/api/inventario')
+  fetch(`${API_BASE_URL}/inventario`)
       .then(res => res.json())
       .then(dispositivos => {
         const select = document.getElementById('modal_dispositivosAsignados');
@@ -389,7 +393,7 @@ async function saveModal(){
   dispositivosAsignados: Array.from(document.getElementById('modal_dispositivosAsignados').selectedOptions).map(opt => opt.value)
     };
     try {
-  const res = await fetch(`http://localhost:4000/api/empleados/${empleadoId}`, {
+  const res = await fetch(`${API_BASE_URL}/empleados/${empleadoId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(update)
@@ -429,7 +433,7 @@ async function saveModal(){
       os: document.getElementById('modal_os').value
     };
     try {
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(update)
@@ -448,7 +452,7 @@ async function saveModal(){
     try {
       const asignaciones = deviceData.asignaciones || [];
       asignaciones.push(nueva);
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({asignaciones})
@@ -474,7 +478,7 @@ async function saveModal(){
         // Añadir
         reparaciones.push(nueva);
       }
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({reparaciones})

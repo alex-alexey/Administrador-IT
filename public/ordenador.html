@@ -203,19 +203,18 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </head>
 <body>
 <script>
+// Unificación de API_BASE_URL
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000/api'
+  : 'https://it-xqhv.onrender.com/api';
+
 document.addEventListener('DOMContentLoaded', function() {
   const btnLogout = document.getElementById('btnLogout');
   if (btnLogout) {
     btnLogout.addEventListener('click', async function(e) {
       e.preventDefault();
       try {
-        let API_BASE_URL = '';
-        if (window.location.hostname === 'localhost') {
-          API_BASE_URL = 'http://localhost:4000';
-        } else {
-          API_BASE_URL = 'https://it-xqhv.onrender.com';
-        }
-        await fetch(`${API_BASE_URL}/api/usuarios/logout`, {
+        await fetch(`${API_BASE_URL}/usuarios/logout`, {
           method: 'POST',
           credentials: 'include'
         });
@@ -358,7 +357,7 @@ async function fetchDevice() {
     try {
       deviceId = getDeviceIdFromUrl();
       if (!deviceId) return;
-      const res = await fetch(`http://localhost:4000/api/inventario/${deviceId}`);
+      const res = await fetch(`${API_BASE_URL}/inventario/${deviceId}`);
       if (!res.ok) throw new Error('No se pudo cargar el dispositivo');
       deviceData = await res.json();
       renderDeviceData();
@@ -403,7 +402,7 @@ function renderDeviceData() {
   window.guardarNuevoEstado = async function() {
     const nuevoEstado = document.getElementById('selectNuevoEstado').value;
     try {
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+      await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ estado: nuevoEstado })
@@ -464,7 +463,7 @@ async function deleteAssignment(idx) {
   await mostrarPopupConfirmacion('¿Seguro que quieres eliminar este historial?', async () => {
     let asignaciones = deviceData.asignaciones || [];
     asignaciones.splice(idx, 1);
-  await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
       method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({asignaciones})
@@ -703,7 +702,7 @@ async function saveModal(){
     await mostrarPopupConfirmacion('¿Seguro que quieres guardar estos datos?', async () => {
       const update = getBasicFormData();
       try {
-        const res = await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+        const res = await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
           method: 'PUT',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify(update)
@@ -733,7 +732,7 @@ async function saveModal(){
     await mostrarPopupConfirmacion('¿Seguro que quieres guardar estos datos?', async () => {
       const update = getFeaturesFormData();
       try {
-        await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+        await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
           method: 'PUT',
           headers: {'Content-Type':'application/json'},
           body: JSON.stringify(update)
@@ -759,7 +758,7 @@ async function saveModal(){
       } else {
         asignaciones.push(nueva);
       }
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+      await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({asignaciones})
@@ -784,7 +783,7 @@ async function saveModal(){
       } else {
         reparaciones.push(nueva);
       }
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+      await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({reparaciones})
@@ -835,7 +834,7 @@ async function deleteRepair(idx) {
   await mostrarPopupConfirmacion('¿Seguro que quieres eliminar este historial?', async () => {
     let reparaciones = deviceData.reparaciones || [];
     reparaciones.splice(idx, 1);
-  await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reparaciones })
