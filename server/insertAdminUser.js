@@ -4,7 +4,6 @@ dotenv.config();
 
 import Usuario from './models/Usuario.js';
 
-import bcrypt from 'bcryptjs';
 
 async function main() {
   await mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/intek-it', {
@@ -15,11 +14,10 @@ async function main() {
   // Verificar si el usuario admin ya existe
   const existe = await Usuario.findOne({ username: 'admin' });
   if (!existe) {
-    // Usar bcrypt para la contraseña admin
-    const hash = await bcrypt.hash('admin', 10);
+    // Guardar contraseña en texto plano (sin bcrypt)
     await Usuario.create({
       username: 'admin',
-      password: hash,
+      password: 'admin',
       nombre: 'Administrador',
       departamento: 'IT',
       email: 'admin@intek.com',

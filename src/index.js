@@ -30,12 +30,12 @@ const users = [
 
 // Ruta principal para servir la página de login
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'views', 'login.html'));
+  res.sendFile(path.resolve(__dirname, '../public/login.html'));
 });
 
 // Ruta para /login que sirve login.html
 app.get('/login', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'views', 'login.html'));
+  res.sendFile(path.resolve(__dirname, '../public/login.html'));
 });
 
 // Ruta para manejar el inicio de sesión

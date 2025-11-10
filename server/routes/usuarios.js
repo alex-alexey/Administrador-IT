@@ -1,7 +1,6 @@
 import express from 'express';
 import Usuario from '../models/Usuario.js';
 
-import bcrypt from 'bcryptjs';
 const router = express.Router();
 
 // Login
@@ -26,9 +25,8 @@ router.post('/login', async (req, res) => {
       data: null
     });
   }
-  // Comparar contraseña con bcrypt
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) {
+  // Comparar contraseña directamente (sin bcrypt)
+  if (user.password !== password) {
     console.warn(`[LOGIN] Fallo: contraseña incorrecta (${username})`);
     return res.status(401).json({
       success: false,
@@ -55,14 +53,7 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   console.log(`[REGISTER] Intento de registro: usuario=${username}, fecha=${new Date().toISOString()}`);
   const { username, password, nombre, departamento, email, rol } = req.body;
-  // Validación de contraseña fuerte
-  const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
-  if (!strongRegex.test(password)) {
-    return res.status(400).json({
-      success: false,
-      error: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial.'
-    });
-  }
+  // Validación de contraseña desactivada temporalmente
   try {
     const usuario = new Usuario({ username, password, nombre, departamento, email, rol });
     await usuario.save();
