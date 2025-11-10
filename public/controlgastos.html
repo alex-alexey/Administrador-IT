@@ -402,6 +402,33 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </div>
 
 <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async function(e) {
+      e.preventDefault();
+      try {
+        let API_BASE_URL = '';
+        if (window.location.hostname === 'localhost') {
+          API_BASE_URL = 'http://localhost:4000';
+        } else {
+          API_BASE_URL = 'https://it-xqhv.onrender.com';
+        }
+        await fetch(`${API_BASE_URL}/api/usuarios/logout`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+      } catch (err) {}
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/login.html';
+    });
+  }
+});
+// Verificación universal de login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = '/login.html';
+}
 
 const tableBody = document.getElementById('inventoryTableBody');
 const totalDevices = document.getElementById('totalDevices');

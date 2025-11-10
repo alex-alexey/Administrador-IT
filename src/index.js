@@ -33,6 +33,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'views', 'login.html'));
 });
 
+// Ruta para /login que sirve login.html
+app.get('/login', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'views', 'login.html'));
+});
+
 // Ruta para manejar el inicio de sesión
 app.post('/login', (req, res) => {
   const { username, password } = req.body;

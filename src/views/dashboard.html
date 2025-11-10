@@ -7,17 +7,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
+<link rel="stylesheet" href="/css/dashboard.css">
 <style>
 :root {
   --color-bg: #f5f7fb;
   --color-primary: #1e3a8a;
-  <link rel="stylesheet" href="/css/dashboard.css">
-  padding:0.6rem;
-  border-radius:6px;
-  border:1px solid var(--color-border);
-  font-size:0.95rem;
-  outline:none;
-  transition:var(--transition);
 }
 #deviceForm input:focus,
 #deviceForm select:focus { border-color:var(--color-secondary); box-shadow:0 0 0 2px rgba(59,130,246,0.2); }
@@ -42,22 +36,34 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </head>
 
 <body>
+<body>
+<script>
+// Verificación de login universal
+function isLoggedIn() {
+  return !!localStorage.getItem('token') || !!sessionStorage.getItem('token');
+}
+if (!isLoggedIn()) {
+  window.location.href = '/login.html';
+}
+// Definir API_BASE_URL según entorno
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000/api'
+  : 'https://it-xqhv.onrender.com/api';
+</script>
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-  <a href="/dashboard.html" class="active"><i class="fa-solid fa-gauge"></i> <span>Dashboard</span></a>
-  <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-  <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
-  <a href="#empleados"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
-  <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="/"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+    <a href="/dashboard.html" class="active"><i class="fa-solid fa-gauge"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+    <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="#" onclick="cerrarSesion()"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
   </nav>
 </aside>
-  </aside>
-  <div class="main-content">
-    <header>
-      <span><i class="fa-solid fa-gauge"></i> Dashboard de IT</span>
-      <a href="/login.html"><i class="fa-solid fa-arrow-left"></i> Cerrar sesión</a>
+<div class="main-content">
+  <span><i class="fa-solid fa-gauge"></i> Dashboard de IT</span>
+  <a href="#" onclick="cerrarSesion()"><i class="fa-solid fa-arrow-left"></i> Cerrar sesión</a>
     </header>
     <div class="container">
       <div class="stats">
@@ -99,16 +105,23 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
   <!-- Listado de dispositivos IT -->
   <div id="listado-dispositivos-dashboard" style="margin-bottom:2rem;"></div>
     </div>
-    <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
+  <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
   <script>
+    // Función para mostrar mensajes de error claros
+    function mostrarError(mensaje) {
+      alert(mensaje); // Puedes mejorar esto con un modal personalizado
+    }
     // Mostrar listado de dispositivos IT con acceso a detalle (desde backend)
     async function renderListadoDispositivosDashboard() {
       let inventory = [];
       try {
-        const res = await fetch('/api/inventario');
+        const res = await fetch(`${API_BASE_URL}/inventario`);
         if (!res.ok) throw new Error('Error al obtener inventario');
         inventory = await res.json();
-      } catch { inventory = []; }
+      } catch (err) {
+        inventory = [];
+        mostrarError('Error al obtener inventario');
+      }
       document.getElementById('totalDispositivos').textContent = inventory.length;
       let html = '<h2 style="font-size:1.1rem; color:var(--color-secondary); margin-bottom:0.7rem; font-weight:600;">Dispositivos IT</h2>';
       if (inventory.length === 0) {
@@ -133,10 +146,13 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     async function renderListadoLicenciasCaducar() {
       let licencias = [];
       try {
-        const res = await fetch('/api/licencias');
+        const res = await fetch(`${API_BASE_URL}/licencias`);
         if (!res.ok) throw new Error('Error al obtener licencias');
         licencias = await res.json();
-      } catch { licencias = []; }
+      } catch (err) {
+        licencias = [];
+        mostrarError('Error al obtener licencias');
+      }
       // Ordenar por fecha de expiración ascendente
       licencias.sort((a, b) => new Date(a.expiracion) - new Date(b.expiracion));
       let html = '<h2 style="font-size:1.1rem; color:var(--color-secondary); margin-bottom:0.7rem; font-weight:600;">Todas las licencias (ordenadas por caducidad)</h2>';
@@ -162,10 +178,13 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     async function renderLicenciasProximas() {
       let licencias = [];
       try {
-        const res = await fetch('/api/licencias');
+        const res = await fetch(`${API_BASE_URL}/licencias`);
         if (!res.ok) throw new Error('Error al obtener licencias');
         licencias = await res.json();
-      } catch { licencias = []; }
+      } catch (err) {
+        licencias = [];
+        mostrarError('Error al obtener licencias');
+      }
       const proximas = licencias.filter(l => l.estado === 'Próxima a caducar');
       if (proximas.length === 0) {
         document.getElementById('licencias-proximas-dashboard').innerHTML = '';
@@ -197,23 +216,23 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     }
     // Ejecutar al cargar
     renderLicenciasProximas();
-    // Si quieres refrescar dinámicamente, puedes usar window.addEventListener('storage', renderLicenciasProximas);
     // Mostrar número de usuarios registrados desde backend
     async function renderUsuariosRegistrados() {
       try {
-        const res = await fetch('/api/empleados');
+        const res = await fetch(`${API_BASE_URL}/empleados`);
         if (!res.ok) throw new Error('Error al obtener empleados');
         const empleados = await res.json();
         document.getElementById('totalUsuarios').textContent = empleados.length;
-      } catch {
+      } catch (err) {
         document.getElementById('totalUsuarios').textContent = '0';
+        mostrarError('Error al obtener empleados');
       }
     }
     renderUsuariosRegistrados();
     // Cargar datos del dashboard desde la nueva API
     async function renderDashboardStats() {
       try {
-        const res = await fetch('/api/dashboard');
+        const res = await fetch(`${API_BASE_URL}/dashboard`);
         if (!res.ok) throw new Error('Error al obtener datos del dashboard');
         const data = await res.json();
         document.getElementById('totalUsuarios').textContent = data.usuariosRegistrados;
@@ -238,15 +257,29 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
           html += '<div style="color:var(--color-gray); font-size:1rem;">No hay dispositivos registrados.</div>';
         }
         document.getElementById('listado-dispositivos-dashboard').innerHTML = html;
-      } catch {
+      } catch (err) {
         document.getElementById('totalUsuarios').textContent = '0';
         document.getElementById('totalDispositivos').textContent = '0';
         document.getElementById('ticketsAbiertos').textContent = '0';
         document.getElementById('licenciasPorCaducar').textContent = '0';
         document.getElementById('listado-dispositivos-dashboard').innerHTML = '<div style="color:red;">Error al cargar datos del dashboard</div>';
+        mostrarError('Error al cargar datos del dashboard');
       }
     }
     renderDashboardStats();
+    // Función para cerrar sesión
+    function cerrarSesion() {
+      // Llamada al backend para cerrar sesión
+      fetch(`${API_BASE_URL}/usuarios/logout`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      }).finally(() => {
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+        window.location.href = '/login.html';
+      });
+    }
   </script>
   </div>
   <!-- Chart.js CDN -->

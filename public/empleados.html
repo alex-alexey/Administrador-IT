@@ -370,6 +370,35 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </div>
 
 <script>
+// Unificación de API_BASE_URL
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000/api'
+  : 'https://it-xqhv.onrender.com/api';
+
+document.addEventListener('DOMContentLoaded', function() {
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async function(e) {
+      e.preventDefault();
+      try {
+        await fetch(`${API_BASE_URL}/usuarios/logout`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+      } catch (err) {}
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/login.html';
+    });
+  }
+});
+// Verificación universal de login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = '/login.html';
+}
+</script>
+
+<script>
 
 const tableBody = document.getElementById('inventoryTableBody');
 const totalDevices = document.getElementById('totalDevices');
@@ -381,7 +410,7 @@ let inventory = [];
 
 async function fetchInventory() {
   try {
-  const res = await fetch('http://localhost:4000/api/empleados');
+    const res = await fetch(`${API_BASE_URL}/empleados`);
     if (!res.ok) {
       let errorMsg = 'No se pudo cargar el inventario';
       try {
@@ -488,14 +517,14 @@ form.addEventListener('submit',async e=>{
   try {
     if(editId) {
       // Editar
-      await fetch(`http://localhost:4000/api/empleados/${editId}`, {
+      await fetch(`${API_BASE_URL}/empleados/${editId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(empleado)
       });
     } else {
       // Crear
-      await fetch('http://localhost:4000/api/empleados', {
+      await fetch(`${API_BASE_URL}/empleados`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(empleado)
@@ -532,7 +561,7 @@ function editDevice(id){
 async function deleteDevice(id){
   if(confirm('¿Estás seguro de eliminar este dispositivo?')){
     try {
-  await fetch(`http://localhost:4000/api/empleados/${id}`, {method:'DELETE'});
+      await fetch(`${API_BASE_URL}/empleados/${id}`, {method:'DELETE'});
       fetchInventory();
     } catch {
       mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');

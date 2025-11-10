@@ -41,6 +41,11 @@ router.post('/login', async (req, res) => {
 });
 
 // Puedes agregar aquí más endpoints de usuarios (registro, edición, etc)
+// Logout
+router.post('/logout', (req, res) => {
+  // Aquí podrías limpiar la sesión si usas sesiones en el backend
+  res.json({ success: true, mensaje: 'Sesión cerrada correctamente' });
+});
 
 // Listar todos los usuarios
 router.get('/', async (req, res) => {

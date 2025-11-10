@@ -284,7 +284,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
     <a href="/empleados.html" class="fa-solid fa-users"></i> <span>Empleados</span></a>
   <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="/"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+  <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
   </nav>
 </aside>
   <div class="main-content">
@@ -316,7 +316,40 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     </div>
     <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
   <script>
-    // Cargar datos del dashboard desde la API centralizada
+// Lógica para cerrar sesión desde el botón del sidebar
+document.addEventListener('DOMContentLoaded', function() {
+  const btnLogout = document.getElementById('btnLogout');
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async function(e) {
+      e.preventDefault();
+      try {
+        // Detectar entorno y construir URL base
+        let API_BASE_URL = '';
+        if (window.location.hostname === 'localhost') {
+          API_BASE_URL = 'http://localhost:4000';
+        } else {
+          API_BASE_URL = 'https://it-xqhv.onrender.com';
+        }
+        // Llamada al endpoint de logout
+        await fetch(`${API_BASE_URL}/api/usuarios/logout`, {
+          method: 'POST',
+          credentials: 'include'
+        });
+      } catch (err) {
+        // Ignorar errores de red
+      }
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = '/login.html';
+    });
+  }
+});
+    // Verificación universal de login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = '/login.html';
+}
+
+// Cargar datos del dashboard desde la API centralizada
     async function renderDashboardStats() {
       try {
   const res = await fetch('http://localhost:4000/api/dashboard');
