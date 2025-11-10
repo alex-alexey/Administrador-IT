@@ -1,32 +1,42 @@
 import express from 'express';
 import Usuario from '../models/Usuario.js';
+
+import bcrypt from 'bcryptjs';
 const router = express.Router();
 
 // Login
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+  // Log de intento de login (sin guardar contraseña)
+  console.log(`[LOGIN] Intento de acceso: usuario=${username}, fecha=${new Date().toISOString()}`);
   if (!username || !password) {
+    console.warn(`[LOGIN] Fallo: usuario o contraseña vacíos (${username})`);
     return res.status(400).json({
       success: false,
       error: 'Usuario y contraseña son obligatorios',
       data: null
     });
   }
-  const user = await Usuario.findOne({ username });
+  const user = await Usuario.findOne({ username }).select('+password');
   if (!user) {
+    console.warn(`[LOGIN] Fallo: usuario no existe (${username})`);
     return res.status(401).json({
       success: false,
       error: 'No existe el usuario',
       data: null
     });
   }
-  if (user.password !== password) {
+  // Comparar contraseña con bcrypt
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) {
+    console.warn(`[LOGIN] Fallo: contraseña incorrecta (${username})`);
     return res.status(401).json({
       success: false,
       error: 'La contraseña es incorrecta',
       data: null
     });
   }
+  console.log(`[LOGIN] Acceso exitoso: usuario=${username}, fecha=${new Date().toISOString()}`);
   res.json({
     success: true,
     mensaje: 'Login correcto',
@@ -41,6 +51,28 @@ router.post('/login', async (req, res) => {
 });
 
 // Puedes agregar aquí más endpoints de usuarios (registro, edición, etc)
+// Registro de usuario con política de contraseña fuerte
+router.post('/register', async (req, res) => {
+  console.log(`[REGISTER] Intento de registro: usuario=${username}, fecha=${new Date().toISOString()}`);
+  const { username, password, nombre, departamento, email, rol } = req.body;
+  // Validación de contraseña fuerte
+  const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+  if (!strongRegex.test(password)) {
+    return res.status(400).json({
+      success: false,
+      error: 'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial.'
+    });
+  }
+  try {
+    const usuario = new Usuario({ username, password, nombre, departamento, email, rol });
+    await usuario.save();
+    console.log(`[REGISTER] Registro exitoso: usuario=${username}, fecha=${new Date().toISOString()}`);
+    res.json({ success: true, mensaje: 'Usuario registrado correctamente' });
+  } catch (err) {
+    console.error(`[REGISTER] Error al registrar usuario (${username}): ${err.message}`);
+    res.status(500).json({ success: false, error: 'Error al registrar usuario' });
+  }
+});
 // Logout
 router.post('/logout', (req, res) => {
   // Aquí podrías limpiar la sesión si usas sesiones en el backend

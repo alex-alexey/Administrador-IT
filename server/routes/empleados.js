@@ -7,18 +7,25 @@ const router = express.Router();
 // Obtener un empleado por ID
 router.get('/:id', async (req, res) => {
   try {
+    console.log(`[EMPLEADOS] Consulta de empleado por ID: ${req.params.id}, fecha=${new Date().toISOString()}`);
     const empleado = await Empleado.findById(req.params.id);
-    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' });
+    if (!empleado) {
+      console.warn(`[EMPLEADOS] Empleado no encontrado: ${req.params.id}`);
+      return res.status(404).json({ error: 'Empleado no encontrado' });
+    }
     res.json(empleado);
   } catch (err) {
+    console.error(`[EMPLEADOS] Error al consultar empleado (${req.params.id}): ${err.message}`);
     res.status(500).json({ error: err.message });
   }
 });
 router.get('/', async (req, res) => {
   try {
+    console.log(`[EMPLEADOS] Consulta de todos los empleados, fecha=${new Date().toISOString()}`);
     const empleados = await Empleado.find();
     res.json(empleados);
   } catch (err) {
+    console.error(`[EMPLEADOS] Error al consultar empleados: ${err.message}`);
     res.status(500).json({ error: err.message });
   }
 });
@@ -26,39 +33,12 @@ router.get('/', async (req, res) => {
 // Crear un empleado
 router.post('/', async (req, res) => {
   try {
-    const {
-      nombre,
-      departamento,
-      correo,
-      fechaIncorporacion,
-      cargo,
-      estadoLaboral,
-      licenciasAsignadas,
-      azureDevOps,
-      almacenamiento,
-      sistemaOperativo,
-      dispositivosAsignados,
-      asignaciones,
-      reparaciones
-    } = req.body;
-    const empleado = new Empleado({
-      nombre,
-      departamento,
-      correo,
-      fechaIncorporacion,
-      cargo,
-      estadoLaboral,
-      licenciasAsignadas,
-      azureDevOps,
-      almacenamiento,
-      sistemaOperativo,
-      dispositivosAsignados,
-      asignaciones,
-      reparaciones
-    });
+    console.log(`[EMPLEADOS] Creación de empleado: nombre=${req.body.nombre}, fecha=${new Date().toISOString()}`);
+    const empleado = new Empleado(req.body);
     await empleado.save();
     res.status(201).json(empleado);
   } catch (err) {
+    console.error(`[EMPLEADOS] Error al crear empleado: ${err.message}`);
     res.status(400).json({ error: err.message });
   }
 });
@@ -67,43 +47,15 @@ router.post('/', async (req, res) => {
 // Editar un empleado
 router.put('/:id', async (req, res) => {
   try {
-    const {
-      nombre,
-      departamento,
-      correo,
-      fechaIncorporacion,
-      cargo,
-      estadoLaboral,
-      licenciasAsignadas,
-      azureDevOps,
-      almacenamiento,
-      sistemaOperativo,
-      dispositivosAsignados,
-      asignaciones,
-      reparaciones
-    } = req.body;
-    const empleado = await Empleado.findByIdAndUpdate(
-      req.params.id,
-      {
-        nombre,
-        departamento,
-        correo,
-        fechaIncorporacion,
-        cargo,
-        estadoLaboral,
-        licenciasAsignadas,
-        azureDevOps,
-        almacenamiento,
-        sistemaOperativo,
-        dispositivosAsignados,
-        asignaciones,
-        reparaciones
-      },
-      { new: true }
-    );
-    if (!empleado) return res.status(404).json({ error: 'Empleado no encontrado' });
+    console.log(`[EMPLEADOS] Edición de empleado: id=${req.params.id}, fecha=${new Date().toISOString()}`);
+    const empleado = await Empleado.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!empleado) {
+      console.warn(`[EMPLEADOS] Empleado no encontrado para edición: ${req.params.id}`);
+      return res.status(404).json({ error: 'Empleado no encontrado' });
+    }
     res.json(empleado);
   } catch (err) {
+    console.error(`[EMPLEADOS] Error al editar empleado (${req.params.id}): ${err.message}`);
     res.status(400).json({ error: err.message });
   }
 });
@@ -111,9 +63,11 @@ router.put('/:id', async (req, res) => {
 // Eliminar un empleado
 router.delete('/:id', async (req, res) => {
   try {
+    console.log(`[EMPLEADOS] Eliminación de empleado: id=${req.params.id}, fecha=${new Date().toISOString()}`);
     await Empleado.findByIdAndDelete(req.params.id);
     res.json({ message: 'Empleado eliminado' });
   } catch (err) {
+    console.error(`[EMPLEADOS] Error al eliminar empleado (${req.params.id}): ${err.message}`);
     res.status(500).json({ error: err.message });
   }
 });
