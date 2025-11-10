@@ -1,3 +1,4 @@
+import session from 'express-session';
 // Backend básico Express + MongoDB (estructura inicial)
 
 
@@ -15,6 +16,12 @@ dotenv.config();
 
 
 const app = express();
+app.use(session({
+  secret: 'intek-it-secret',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
 app.use(cors());
 app.use(express.json());
 // Rutas API

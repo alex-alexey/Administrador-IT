@@ -5,18 +5,19 @@
   "description": "Proyecto base Node.js",
   "main": "server/index.js",
   "scripts": {
-  "start": "node server/index.js",
-  "test": "echo \"No hay pruebas definidas\" && exit 0",
-  "dev": "serve -l 3000 public"
+    "start": "node server/index.js",
+    "test": "echo \"No hay pruebas definidas\" && exit 0",
+    "dev": "serve -l 3000 public"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.0.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "cors": "^2.8.5"
+    "express": "^4.18.2",
+    "express-session": "^1.18.2",
+    "mongoose": "^7.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
