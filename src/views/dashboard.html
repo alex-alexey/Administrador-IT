@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Inventario IT Premium</title>
+<title>INTEK-IT | Inventario IT</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -11,7 +11,240 @@
 :root {
   --color-bg: #f5f7fb;
   --color-primary: #1e3a8a;
-  <link rel="stylesheet" href="/css/dashboard.css">
+  --color-secondary: #3b82f6;
+  --color-accent: #f59e0b;
+  --color-danger: #ef4444;
+  --color-white: #ffffff;
+  --color-gray: #6b7280;
+  --color-border: #e5e7eb;
+  --radius: 12px;
+  --shadow: 0 4px 15px rgba(0,0,0,0.05);
+  --transition: all 0.3s ease;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+
+body {
+  background: var(--color-bg);
+  color:#111827;
+  min-height:100vh;
+  display:flex;
+  font-size:14px;
+}
+
+/* Sidebar */
+aside {
+  width:220px;
+  background: var(--color-primary);
+  color:white;
+  display:flex;
+  flex-direction:column;
+  padding:1.5rem 1rem;
+  height:100vh;
+  position:fixed;
+}
+
+aside .logo {
+  font-size:1.5rem;
+  font-weight:700;
+  margin-bottom:2rem;
+  text-align:center;
+}
+
+aside nav a {
+  color:white;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  gap:0.8rem;
+  padding:0.6rem 0.8rem;
+  border-radius:8px;
+  margin-bottom:0.5rem;
+  transition:var(--transition);
+}
+
+aside nav a:hover,
+aside nav a.active { background: rgba(255,255,255,0.2); }
+
+/* Main content */
+.main-content {
+  margin-left:220px;
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+header {
+  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+  color:white;
+  padding:1rem 2rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:1.2rem;
+  font-weight:600;
+  box-shadow: var(--shadow);
+}
+
+header a {
+  color:white;
+  text-decoration:none;
+  font-size:0.9rem;
+  background: rgba(255,255,255,0.15);
+  padding:0.5rem 1rem;
+  border-radius:8px;
+  transition:var(--transition);
+}
+
+header a:hover { background: rgba(255,255,255,0.25); }
+
+.container {
+  flex:1;
+  padding:2rem;
+}
+
+/* Estadísticas */
+.stats {
+  display:flex;
+  gap:1rem;
+  margin-bottom:1.5rem;
+  flex-wrap:wrap;
+}
+
+.card {
+  flex:1;
+  background:white;
+  padding:1rem 1.2rem;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  min-width:150px;
+  transition: var(--transition);
+}
+
+.card:hover { transform: translateY(-3px); }
+
+.card h3 { font-size:1.1rem; color:var(--color-gray); margin-bottom:0.5rem; }
+.card span { font-size:1.5rem; font-weight:600; color:var(--color-primary); }
+
+/* Buscador y filtro */
+.search-filter {
+  display:flex;
+  flex-wrap:wrap;
+  gap:1rem;
+  margin-bottom:1rem;
+}
+
+.search-filter input,
+.search-filter select {
+  padding:0.5rem 0.8rem;
+  border-radius:6px;
+  border:1px solid var(--color-border);
+  outline:none;
+  transition:var(--transition);
+}
+
+.search-filter input:focus,
+.search-filter select:focus {
+  border-color:var(--color-secondary);
+  box-shadow:0 0 0 2px rgba(59,130,246,0.2);
+}
+
+/* Tabla estilizada */
+.table-wrapper {
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  border-radius:var(--radius);
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  background:white;
+  margin-top:0.5rem;
+}
+
+th, td {
+  padding:0.9rem 1rem;
+  text-align:left;
+  font-size:0.95rem;
+}
+
+th {
+  background:#f3f4f6;
+  color:var(--color-primary);
+  font-weight:600;
+}
+
+tbody tr { border-bottom:1px solid var(--color-border); transition:var(--transition); }
+tbody tr:hover { background:#f9fafb; }
+
+.acciones button {
+  margin-right:0.4rem;
+  padding:0.4rem 0.7rem;
+  border-radius:6px;
+  font-size:0.85rem;
+  font-weight:500;
+  border:none;
+  cursor:pointer;
+  transition:var(--transition);
+}
+
+.acciones button.edit { background:var(--color-accent); color:white; }
+.acciones button.delete { background:var(--color-danger); color:white; }
+.acciones button:hover { transform: translateY(-1px); opacity:0.85; }
+
+/* Botón añadir */
+button#btnAddDevice {
+  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
+  color:white;
+  border:none;
+  border-radius:var(--radius);
+  padding:0.6rem 1.2rem;
+  font-weight:500;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  transition:var(--transition);
+}
+
+button#btnAddDevice:hover { opacity:0.9; transform:translateY(-1px); }
+
+/* Modal */
+#deviceModal {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.4);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+
+#deviceForm {
+  background:white;
+  padding:2rem;
+  border-radius:var(--radius);
+  width:100%;
+  max-width:450px;
+  box-shadow:var(--shadow);
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  animation: slideUp 0.3s ease;
+}
+
+#deviceForm h3 { color:var(--color-primary); margin-bottom:1rem; font-size:1.3rem; }
+#deviceForm label { display:flex; flex-direction:column; gap:0.3rem; font-weight:500; color:var(--color-gray); font-size:0.9rem; }
+#deviceForm input,
+#deviceForm select {
   padding:0.6rem;
   border-radius:6px;
   border:1px solid var(--color-border);
@@ -48,12 +281,12 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
   <a href="/dashboard.html" class="active"><i class="fa-solid fa-gauge"></i> <span>Dashboard</span></a>
   <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
   <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
-  <a href="#empleados"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html" class="fa-solid fa-users"></i> <span>Empleados</span></a>
   <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
   <a href="/"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
   </nav>
 </aside>
-  </aside>
   <div class="main-content">
     <header>
       <span><i class="fa-solid fa-gauge"></i> Dashboard de IT</span>
@@ -61,35 +294,17 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     </header>
     <div class="container">
       <div class="stats">
-  <div class="card"><h3>Usuarios Registrados</h3><span id="totalUsuarios">0</span></div>
-  <div class="card"><h3>Dispositivos IT</h3><span id="totalDispositivos">0</span></div>
-  <div class="card"><h3>Tickets Abiertos</h3><span id="ticketsAbiertos">0</span></div>
-  <div class="card"><h3>Licencias Activas</h3><span id="licenciasPorCaducar">0</span></div>
+        <div class="card"><h3>Usuarios Registrados</h3><span id="totalUsuarios">0</span></div>
+        <div class="card"><h3>Dispositivos IT</h3><span id="totalDispositivos">0</span></div>
+        <div class="card"><h3>Tickets Abiertos</h3><span id="ticketsAbiertos">0</span></div>
+        <div class="card"><h3>Licencias Próximas a Caducar</h3><span id="licenciasPorCaducar">0</span></div>
       </div>
       <!-- Apartado de tickets más urgentes -->
       <div style="margin-bottom:2rem;">
         <h2 style="font-size:1.15rem; color:var(--color-danger); margin-bottom:0.7rem; font-weight:600;">Tickets más urgentes de IT</h2>
-        <div style="display:flex; gap:1.2rem; flex-wrap:wrap;">
-          <div style="flex:1; min-width:260px; background:linear-gradient(135deg,#ef4444 60%,#f59e0b 100%); color:white; border-radius:var(--radius); box-shadow:var(--shadow); padding:1.2rem 1.3rem; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
-            <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.5rem;">
-              <i class="fa-solid fa-triangle-exclamation" style="font-size:1.5rem;"></i>
-              <span style="font-size:1.1rem; font-weight:600;">#1245 - PC no enciende</span>
-            </div>
-            <div style="font-size:0.97rem; margin-bottom:0.4rem;">Usuario: <b>maria.lopez@empresa.com</b></div>
-            <div style="font-size:0.95rem; margin-bottom:0.4rem;">Prioridad: <span style="background:rgba(255,255,255,0.18); padding:0.2rem 0.7rem; border-radius:8px; font-weight:600; color:#fff;">Alta</span></div>
-            <div style="font-size:0.93rem; opacity:0.92;">Fecha: 30/10/2025</div>
-          </div>
-          <div style="flex:1; min-width:260px; background:linear-gradient(135deg,#ef4444 60%,#6366f1 100%); color:white; border-radius:var(--radius); box-shadow:var(--shadow); padding:1.2rem 1.3rem; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden;">
-            <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.5rem;">
-              <i class="fa-solid fa-triangle-exclamation" style="font-size:1.5rem;"></i>
-              <span style="font-size:1.1rem; font-weight:600;">#1246 - Error de red</span>
-            </div>
-            <div style="font-size:0.97rem; margin-bottom:0.4rem;">Usuario: <b>luis.martin@empresa.com</b></div>
-            <div style="font-size:0.95rem; margin-bottom:0.4rem;">Prioridad: <span style="background:rgba(255,255,255,0.18); padding:0.2rem 0.7rem; border-radius:8px; font-weight:600; color:#fff;">Alta</span></div>
-            <div style="font-size:0.93rem; opacity:0.92;">Fecha: 29/10/2025</div>
-          </div>
-        </div>
+        <div id="tickets-urgentes-dashboard" style="display:flex; gap:1.2rem; flex-wrap:wrap;"></div>
       </div>
+      <div id="caducidad-30dias-table" style="margin-bottom:2rem;"></div>
       <!-- Listado visual de licencias próximas a caducar -->
       <div id="listado-licencias-caducar" style="margin-bottom:2rem;"></div>
   
@@ -101,156 +316,97 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     </div>
     <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
   <script>
+    // Cargar datos del dashboard desde la API centralizada
     const API_BASE_URL =
       window.location.hostname === "localhost"
         ? "http://localhost:4000"
         : "https://it-xqhv.onrender.com";
-    // Mostrar listado de dispositivos IT con acceso a detalle (desde backend)
-    async function renderListadoDispositivosDashboard() {
-      let inventory = [];
-      try {
-  const res = await fetch(`${API_BASE_URL}/api/inventario`);
-        if (!res.ok) throw new Error('Error al obtener inventario');
-        inventory = await res.json();
-      } catch { inventory = []; }
-      document.getElementById('totalDispositivos').textContent = inventory.length;
-      let html = '<h2 style="font-size:1.1rem; color:var(--color-secondary); margin-bottom:0.7rem; font-weight:600;">Dispositivos IT</h2>';
-      if (inventory.length === 0) {
-        html += '<div style="color:var(--color-gray); font-size:1rem;">No hay dispositivos registrados.</div>';
-      } else {
-        html += '<ul style="list-style:none; padding:0;">';
-        inventory.forEach((d) => {
-          html += `<li style="background:#fff; border-radius:10px; box-shadow:0 2px 8px #0001; margin-bottom:0.7rem; padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem;">
-            <div>
-              <b style='color:var(--color-secondary);'><a href="/ordenador.html?id=${d._id}" style="color:var(--color-secondary);text-decoration:underline;">${d.modelo}</a></b> &mdash; <span style='color:var(--color-primary);'>${d.tipo}</span>
-              <span style='margin-left:1.2rem; color:var(--color-gray); font-size:0.98rem;'>Nº Serie: <b>${d.serie}</b></span>
-            </div>
-            <span style="color:var(--color-gray); font-size:0.98rem;">Estado: <b>${d.estado}</b></span>
-          </li>`;
-        });
-        html += '</ul>';
-      }
-      document.getElementById('listado-dispositivos-dashboard').innerHTML = html;
-    }
-    renderListadoDispositivosDashboard();
-    // Listado visual de licencias próximas a caducar (desde backend)
-    async function renderListadoLicenciasCaducar() {
-      let licencias = [];
-      try {
-  const res = await fetch(`${API_BASE_URL}/api/licencias`);
-        if (!res.ok) throw new Error('Error al obtener licencias');
-        licencias = await res.json();
-      } catch { licencias = []; }
-      // Ordenar por fecha de expiración ascendente
-      licencias.sort((a, b) => new Date(a.expiracion) - new Date(b.expiracion));
-      let html = '<h2 style="font-size:1.1rem; color:var(--color-secondary); margin-bottom:0.7rem; font-weight:600;">Todas las licencias (ordenadas por caducidad)</h2>';
-      if (licencias.length === 0) {
-        html += '<div style="color:var(--color-gray); font-size:1rem;">No hay licencias registradas.</div>';
-      } else {
-        html += '<ul style="list-style:none; padding:0;">';
-        licencias.forEach(l => {
-          html += `<li style="background:#fff; border-radius:10px; box-shadow:0 2px 8px #0001; margin-bottom:0.7rem; padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem;">
-            <div>
-              <b style='color:var(--color-secondary);'>${l.software}</b> &mdash; <span style='color:var(--color-primary);'>${l.usuario}</span>
-              <span style='margin-left:1.2rem; color:var(--color-gray); font-size:0.98rem;'>Expira: <b>${l.expiracion}</b></span>
-            </div>
-            <a href="/licencias.html?lic=${l._id}" style="color:var(--color-secondary); font-weight:600; text-decoration:underline;">Ver licencia</a>
-          </li>`;
-        });
-        html += '</ul>';
-      }
-      document.getElementById('listado-licencias-caducar').innerHTML = html;
-    }
-    renderListadoLicenciasCaducar();
-    // Mostrar licencias próximas a caducar desde backend
-    async function renderLicenciasProximas() {
-      let licencias = [];
-      try {
-  const res = await fetch(`${API_BASE_URL}/api/licencias`);
-        if (!res.ok) throw new Error('Error al obtener licencias');
-        licencias = await res.json();
-      } catch { licencias = []; }
-      const proximas = licencias.filter(l => l.estado === 'Próxima a caducar');
-      if (proximas.length === 0) {
-        document.getElementById('licencias-proximas-dashboard').innerHTML = '';
-        return;
-      }
-      let html = '<h2 style="font-size:1.15rem; color:var(--color-danger); margin-bottom:0.7rem; font-weight:600;">Licencias próximas a caducar</h2>';
-      html += '<div style="overflow-x:auto;"><table style="min-width:900px;"><thead><tr>' +
-        '<th>Software</th>' +
-        '<th>Usuario</th>' +
-        '<th>Departamento</th>' +
-        '<th>Proveedor</th>' +
-        '<th>Fecha Contratación</th>' +
-        '<th>Fecha Expiración</th>' +
-        '<th>Acción</th>' +
-        '</tr></thead><tbody>';
-      proximas.forEach(l => {
-        html += '<tr>' +
-          `<td>${l.software}</td>` +
-          `<td>${l.usuario}</td>` +
-          `<td>${l.departamento || ''}</td>` +
-          `<td>${l.proveedor || ''}</td>` +
-          `<td>${l.contratacion || ''}</td>` +
-          `<td>${l.expiracion}</td>` +
-          `<td><a href="/licencias.html?lic=${l._id}" style="color:var(--color-secondary); font-weight:600; text-decoration:underline;">Ver licencia</a></td>` +
-        '</tr>';
-      });
-      html += '</tbody></table></div>';
-      document.getElementById('licencias-proximas-dashboard').innerHTML = html;
-    }
-    // Ejecutar al cargar
-    renderLicenciasProximas();
-    // Si quieres refrescar dinámicamente, puedes usar window.addEventListener('storage', renderLicenciasProximas);
-    // Mostrar número de usuarios registrados desde backend
-    async function renderUsuariosRegistrados() {
-      try {
-  const res = await fetch(`${API_BASE_URL}/api/empleados`);
-        if (!res.ok) throw new Error('Error al obtener empleados');
-        const empleados = await res.json();
-        document.getElementById('totalUsuarios').textContent = empleados.length;
-      } catch {
-        document.getElementById('totalUsuarios').textContent = '0';
-      }
-    }
-    renderUsuariosRegistrados();
-    // Cargar datos del dashboard desde la nueva API
+
     async function renderDashboardStats() {
       try {
-  const res = await fetch(`${API_BASE_URL}/api/dashboard`);
+        const res = await fetch(`${API_BASE_URL}/api/dashboard`);
         if (!res.ok) throw new Error('Error al obtener datos del dashboard');
         const data = await res.json();
+        // Mostrar número de usuarios, dispositivos y licencias próximas a caducar
         document.getElementById('totalUsuarios').textContent = data.usuariosRegistrados;
         document.getElementById('totalDispositivos').textContent = data.dispositivosIT;
-        document.getElementById('ticketsAbiertos').textContent = data.ticketsAbiertos;
-        document.getElementById('licenciasPorCaducar').textContent = data.licenciasPorCaducar;
-        // Mostrar últimos dispositivos IT
-        let html = '<h2 style="font-size:1.1rem; color:var(--color-secondary); margin-bottom:0.7rem; font-weight:600;">Últimos dispositivos IT registrados</h2>';
-        if (data.ultimosDispositivos && data.ultimosDispositivos.length > 0) {
-          html += '<ul style="list-style:none; padding:0;">';
-          data.ultimosDispositivos.forEach(d => {
-            html += `<li style="background:#fff; border-radius:10px; box-shadow:0 2px 8px #0001; margin-bottom:0.7rem; padding:1rem 1.2rem; display:flex; align-items:center; justify-content:space-between; gap:1rem;">
-              <div>
-                <b style='color:var(--color-secondary);'><a href="/ordenador.html?id=${d._id}" style="color:var(--color-secondary);text-decoration:underline;">${d.modelo}</a></b> &mdash; <span style='color:var(--color-primary);'>${d.tipo}</span>
-                <span style='margin-left:1.2rem; color:var(--color-gray); font-size:0.98rem;'>Nº Serie: <b>${d.serie}</b></span>
-              </div>
-              <span style="color:var(--color-gray); font-size:0.98rem;">Estado: <b>${d.estado}</b></span>
-            </li>`;
-          });
-          html += '</ul>';
-        } else {
-          html += '<div style="color:var(--color-gray); font-size:1rem;">No hay dispositivos registrados.</div>';
+        if (data.licenciasPorCaducar !== undefined) {
+          document.getElementById('licenciasPorCaducar').textContent = data.licenciasPorCaducar;
         }
-        document.getElementById('listado-dispositivos-dashboard').innerHTML = html;
-      } catch {
+      } catch (err) {
         document.getElementById('totalUsuarios').textContent = '0';
         document.getElementById('totalDispositivos').textContent = '0';
-        document.getElementById('ticketsAbiertos').textContent = '0';
-        document.getElementById('licenciasPorCaducar').textContent = '0';
-        document.getElementById('listado-dispositivos-dashboard').innerHTML = '<div style="color:red;">Error al cargar datos del dashboard</div>';
+        // Mostrar popup de error si el servidor no responde
+        mostrarPopupError('El servidor no responde. Por favor, inténtalo más tarde.');
       }
     }
+    // Popup de error global
+    function mostrarPopupError(mensaje) {
+      let popup = document.createElement('div');
+      popup.style.position = 'fixed';
+      popup.style.top = '0';
+      popup.style.left = '0';
+      popup.style.width = '100vw';
+      popup.style.height = '100vh';
+      popup.style.background = 'rgba(30,58,138,0.85)';
+      popup.style.display = 'flex';
+      popup.style.alignItems = 'center';
+      popup.style.justifyContent = 'center';
+      popup.style.zIndex = '9999';
+      popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+        <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+        ${mensaje}<br><br>
+        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
+      </div>`;
+      document.body.appendChild(popup);
+    }
     renderDashboardStats();
+    // ...existing code...
+    // Tabla de licencias que caducan en los próximos 30 días (máx 3)
+    async function renderCaducidad30DiasTable() {
+      let licencias = [];
+      try {
+  const res = await fetch(`${API_BASE_URL}/api/licencias`);
+        if (!res.ok) throw new Error('Error al obtener licencias');
+        licencias = await res.json();
+      } catch { licencias = []; }
+      const hoy = new Date();
+      hoy.setHours(0,0,0,0);
+      const en30dias = new Date(hoy);
+      en30dias.setDate(hoy.getDate() + 30);
+      const proximas = licencias.filter(l => {
+        if (!l.expiracion) return false;
+        const exp = new Date(l.expiracion);
+        exp.setHours(0,0,0,0);
+        return exp > hoy && exp <= en30dias;
+      }).sort((a,b)=>new Date(a.expiracion)-new Date(b.expiracion)).slice(0,3);
+      let html = '<h2 style="font-size:1.15rem; color:var(--color-accent); margin-bottom:0.7rem; font-weight:600;">Caducidad 30 días</h2>';
+      if (proximas.length === 0) {
+        html += '<div style="color:var(--color-gray); font-size:1rem;">No hay licencias próximas a caducar.</div>';
+      } else {
+        html += '<div class="table-wrapper"><table><thead><tr>' +
+          '<th>Software</th>' +
+          '<th>Usuario</th>' +
+          '<th>Departamento</th>' +
+          '<th>Proveedor</th>' +
+          '<th>Fecha Contratación</th>' +
+          '<th>Fecha Expiración</th>' +
+          '</tr></thead><tbody>';
+        proximas.forEach(l => {
+          html += '<tr>' +
+            `<td>${l.software}</td>` +
+            `<td>${l.usuario}</td>` +
+            `<td>${l.departamento || ''}</td>` +
+            `<td>${l.proveedor || ''}</td>` +
+            `<td>${l.contratacion ? l.contratacion.slice(0,10) : ''}</td>` +
+            `<td>${l.expiracion ? l.expiracion.slice(0,10) : ''}</td>` +
+          '</tr>';
+        });
+        html += '</tbody></table></div>';
+      }
+      document.getElementById('caducidad-30dias-table').innerHTML = html;
+    }
+    renderCaducidad30DiasTable();
   </script>
   </div>
   <!-- Chart.js CDN -->
