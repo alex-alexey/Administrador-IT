@@ -361,7 +361,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     async function renderCaducidad30DiasTable() {
       let licencias = [];
       try {
-        const res = await fetch('http://localhost:4000/api/licencias');
+  const res = await fetch(`${API_BASE_URL}/api/licencias`);
         if (!res.ok) throw new Error('Error al obtener licencias');
         licencias = await res.json();
       } catch { licencias = []; }

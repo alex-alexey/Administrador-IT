@@ -411,9 +411,34 @@ const baja = document.getElementById('baja');
 
 let inventory = [];
 
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://it-xqhv.onrender.com";
+
+function mostrarPopupError(mensaje) {
+  let popup = document.createElement('div');
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.width = '100vw';
+  popup.style.height = '100vh';
+  popup.style.background = 'rgba(30,58,138,0.85)';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'center';
+  popup.style.justifyContent = 'center';
+  popup.style.zIndex = '9999';
+  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+    ${mensaje}<br><br>
+    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
+  </div>`;
+  document.body.appendChild(popup);
+}
+
 async function fetchInventory() {
   try {
-    const res = await fetch('http://localhost:4000/api/inventario');
+    const res = await fetch(`${API_BASE_URL}/api/inventario`);
     if (!res.ok) {
       let errorMsg = 'No se pudo cargar el inventario';
       try {
@@ -434,26 +459,6 @@ async function fetchInventory() {
     }
   }
 }
- // Popup de error global
-    function mostrarPopupError(mensaje) {
-      let popup = document.createElement('div');
-      popup.style.position = 'fixed';
-      popup.style.top = '0';
-      popup.style.left = '0';
-      popup.style.width = '100vw';
-      popup.style.height = '100vh';
-      popup.style.background = 'rgba(30,58,138,0.85)';
-      popup.style.display = 'flex';
-      popup.style.alignItems = 'center';
-      popup.style.justifyContent = 'center';
-      popup.style.zIndex = '9999';
-      popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-        <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-        ${mensaje}<br><br>
-        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-      </div>`;
-      document.body.appendChild(popup);
-    }
     
 function renderTable() {
   tableBody.innerHTML = '';
@@ -487,7 +492,6 @@ function updateStats() {
 
 
 // Modal
-const modal = document.getElementById('deviceModal');
 const form = document.getElementById('deviceForm');
 const btnAdd = document.getElementById('btnAddDevice');
 const btnCancel = document.getElementById('btnCancel');
@@ -527,14 +531,14 @@ form.addEventListener('submit',async e=>{
   try {
     if(editId) {
       // Editar
-  await fetch(`http://localhost:4000/api/inventario/${editId}`, {
+      await fetch(`${API_BASE_URL}/api/inventario/${editId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(device)
       });
     } else {
       // Crear
-  await fetch('http://localhost:4000/api/inventario', {
+      await fetch(`${API_BASE_URL}/api/inventario`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(device)
@@ -542,9 +546,9 @@ form.addEventListener('submit',async e=>{
     }
     modal.style.display='none';
     fetchInventory();
-    } catch {
-      mostrarPopupError('El servidor no responde. No se pudo guardar el dispositivo.');
-    }
+  } catch {
+    mostrarPopupError('El servidor no responde. No se pudo guardar el dispositivo.');
+  }
 });
 
 // Editar dispositivo
@@ -571,31 +575,11 @@ function editDevice(id){
 async function deleteDevice(id){
   if(confirm('¿Estás seguro de eliminar este dispositivo?')){
     try {
-  await fetch(`http://localhost:4000/api/inventario/${id}`, {method:'DELETE'});
+      await fetch(`${API_BASE_URL}/api/inventario/${id}`, {method:'DELETE'});
       fetchInventory();
     } catch {
       mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');
     }
-// Popup de error global
-function mostrarPopupError(mensaje) {
-  let popup = document.createElement('div');
-  popup.style.position = 'fixed';
-  popup.style.top = '0';
-  popup.style.left = '0';
-  popup.style.width = '100vw';
-  popup.style.height = '100vh';
-  popup.style.background = 'rgba(30,58,138,0.85)';
-  popup.style.display = 'flex';
-  popup.style.alignItems = 'center';
-  popup.style.justifyContent = 'center';
-  popup.style.zIndex = '9999';
-  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-    ${mensaje}<br><br>
-    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-  </div>`;
-  document.body.appendChild(popup);
-}
   }
 }
 

@@ -413,96 +413,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 
 <script>
 
-// Botón unificado Importar/Exportar
-document.getElementById('btnImportExport').addEventListener('click', function() {
-  document.getElementById('modalImportExport').style.display = 'flex';
-  document.getElementById('importExportContent').innerHTML = '';
-});
-
-document.getElementById('btnCerrarImportExport').addEventListener('click', function() {
-  document.getElementById('modalImportExport').style.display = 'none';
-});
-
-document.getElementById('selectExport').addEventListener('click', function() {
-  // Exportar inventario actual a Excel (CSV)
-  let csv = 'Categoría,Traza Equipo,Modelo,Marca,Estado,Responsable\n';
-  inventory.forEach(item => {
-    let responsable = item.responsable || item.empleado || '';
-    if (Array.isArray(item.asignaciones) && item.asignaciones.length > 0) {
-      const asignacionesActivas = item.asignaciones.filter(a => !a.fin);
-      if (asignacionesActivas.length > 0) {
-        responsable = asignacionesActivas[asignacionesActivas.length-1].empleado || responsable;
-      } else {
-        const ultima = item.asignaciones[item.asignaciones.length-1];
-        responsable = ultima.empleado || responsable;
-      }
-    }
-    csv += `"${item.categoria||''}","${item.trazaEquipo||''}","${item.modelo||''}","${item.marca||''}","${item.estado||''}","${responsable}"\n`;
-  });
-  const blob = new Blob([csv], {type: 'text/csv'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'inventario.csv';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  document.getElementById('importExportContent').innerHTML = '<span style="color:#22c55e;">Exportación completada. Archivo descargado.</span>';
-});
-
-document.getElementById('selectImport').addEventListener('click', function() {
-  document.getElementById('importExportContent').innerHTML = `
-    <input type="file" id="inputExcelFile" accept=".xlsx,.xls" style="margin-bottom:1.5rem;" />
-    <br>
-    <button id="btnProcesarImport" style="background:#22c55e;color:#fff;padding:0.7em 2em;border:none;border-radius:8px;font-size:1em;cursor:pointer;margin-right:1em;">Procesar</button>
-    <div id="importResult" style="margin-top:1.5rem;font-size:1.1em;"></div>
-  `;
-  setTimeout(() => {
-    document.getElementById('btnProcesarImport').addEventListener('click', async function() {
-      const fileInput = document.getElementById('inputExcelFile');
-      const resultDiv = document.getElementById('importResult');
-      if (!fileInput.files.length) {
-        resultDiv.innerHTML = '<span style="color:#ef4444;">Selecciona un archivo Excel primero.</span>';
-        return;
-      }
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, {type: 'array'});
-          const sheet = workbook.Sheets[workbook.SheetNames[0]];
-          const json = XLSX.utils.sheet_to_json(sheet);
-          let success = 0, fail = 0;
-          for (const equipo of json) {
-            try {
-              await fetch('http://localhost:4000/api/inventario', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify(equipo)
-              });
-              success++;
-            } catch { fail++; }
-          }
-          resultDiv.innerHTML = `<span style='color:#22c55e;'>Importados correctamente: ${success}</span> <span style='color:#ef4444;'>Errores: ${fail}</span>`;
-          fetchInventory();
-        } catch {
-          resultDiv.innerHTML = '<span style="color:#ef4444;">Error al procesar el archivo. Verifica el formato.</span>';
-        }
-      };
-      reader.readAsArrayBuffer(file);
-    });
-  }, 100);
-});
-
-// Cargar SheetJS para procesar Excel
-if (typeof XLSX === 'undefined') {
-  var script = document.createElement('script');
-  script.src = 'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
-  document.head.appendChild(script);
-}
-
+// --- REFACTORIZADO Y LIMPIO ---
 const tableBody = document.getElementById('inventoryTableBody');
 const totalDevices = document.getElementById('totalDevices');
 const operativos = document.getElementById('operativos');
@@ -511,10 +422,34 @@ const reparacion = document.getElementById('reparacion');
 const baja = document.getElementById('baja');
 
 let inventory = [];
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://it-xqhv.onrender.com";
+
+function mostrarPopupError(mensaje) {
+  let popup = document.createElement('div');
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.width = '100vw';
+  popup.style.height = '100vh';
+  popup.style.background = 'rgba(30,58,138,0.85)';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'center';
+  popup.style.justifyContent = 'center';
+  popup.style.zIndex = '9999';
+  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+    ${mensaje}<br><br>
+    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
+  </div>`;
+  document.body.appendChild(popup);
+}
 
 async function fetchInventory() {
   try {
-    const res = await fetch('http://localhost:4000/api/inventario');
+    const res = await fetch(`${API_BASE_URL}/api/inventario`);
     if (!res.ok) {
       let errorMsg = 'No se pudo cargar el inventario';
       try {
@@ -535,45 +470,22 @@ async function fetchInventory() {
     }
   }
 }
- // Popup de error global
-    function mostrarPopupError(mensaje) {
-      let popup = document.createElement('div');
-      popup.style.position = 'fixed';
-      popup.style.top = '0';
-      popup.style.left = '0';
-      popup.style.width = '100vw';
-      popup.style.height = '100vh';
-      popup.style.background = 'rgba(30,58,138,0.85)';
-      popup.style.display = 'flex';
-      popup.style.alignItems = 'center';
-      popup.style.justifyContent = 'center';
-      popup.style.zIndex = '9999';
-      popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-        <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-        ${mensaje}<br><br>
-        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-      </div>`;
-      document.body.appendChild(popup);
-    }
-    
+
 function renderTable() {
   tableBody.innerHTML = '';
   inventory.forEach((item,index)=>{
     const tr = document.createElement('tr');
-  let estadoColor = '#22c55e'; // Operativo
-  const estado = (item.estado || '').toLowerCase();
-  if (estado === 'en reparación') estadoColor = '#f59e42';
-  if (estado === 'baja') estadoColor = '#ef4444';
-  if (estado === 'stock') estadoColor = '#3b82f6';
-    // Obtener responsable actual de la última asignación
+    let estadoColor = '#22c55e';
+    const estado = (item.estado || '').toLowerCase();
+    if (estado === 'en reparación') estadoColor = '#f59e42';
+    if (estado === 'baja') estadoColor = '#ef4444';
+    if (estado === 'stock') estadoColor = '#3b82f6';
     let responsable = item.responsable || item.empleado || '';
     if (Array.isArray(item.asignaciones) && item.asignaciones.length > 0) {
-      // Buscar la última asignación activa (sin fecha de fin o la más reciente)
       const asignacionesActivas = item.asignaciones.filter(a => !a.fin);
       if (asignacionesActivas.length > 0) {
         responsable = asignacionesActivas[asignacionesActivas.length-1].empleado || responsable;
       } else {
-        // Si todas tienen fecha de fin, tomar la más reciente
         const ultima = item.asignaciones[item.asignaciones.length-1];
         responsable = ultima.empleado || responsable;
       }
@@ -591,7 +503,6 @@ function renderTable() {
       </td>`;
     tr.style.cursor = 'pointer';
     tr.addEventListener('click', function(e) {
-      // Evitar que el click en los botones de acción redirija
       if (e.target.closest('.acciones')) return;
       window.location.href = `/ordenador.html?id=${item._id}`;
     });
@@ -607,7 +518,6 @@ function updateStats() {
   reparacion.textContent = inventory.filter(d=> (d.estado||'').toLowerCase() === 'en reparación').length;
   baja.textContent = inventory.filter(d=> (d.estado||'').toLowerCase() === 'baja').length;
 }
-
 
 // Modal
 const modal = document.getElementById('deviceModal');
@@ -629,7 +539,6 @@ window.addEventListener('click',(e)=>{
   if(e.target===modal) modal.style.display='none';
 });
 
-// Guardar dispositivo (crear o editar)
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const formData = new FormData(form);
@@ -649,15 +558,13 @@ form.addEventListener('submit',async e=>{
   const editId = formData.get('editIndex');
   try {
     if(editId) {
-      // Editar
-  await fetch(`http://localhost:4000/api/inventario/${editId}`, {
+      await fetch(`${API_BASE_URL}/api/inventario/${editId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(device)
       });
     } else {
-      // Crear
-  await fetch('http://localhost:4000/api/inventario', {
+      await fetch(`${API_BASE_URL}/api/inventario`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(device)
@@ -665,12 +572,11 @@ form.addEventListener('submit',async e=>{
     }
     modal.style.display='none';
     fetchInventory();
-    } catch {
-      mostrarPopupError('El servidor no responde. No se pudo guardar el dispositivo.');
-    }
+  } catch {
+    mostrarPopupError('El servidor no responde. No se pudo guardar el dispositivo.');
+  }
 });
 
-// Editar dispositivo
 function editDevice(id){
   const device = inventory.find(d=>d._id===id);
   if(!device) return;
@@ -690,40 +596,17 @@ function editDevice(id){
   modal.style.display='flex';
 }
 
-// Eliminar dispositivo
 async function deleteDevice(id){
   if(confirm('¿Estás seguro de eliminar este dispositivo?')){
     try {
-  await fetch(`http://localhost:4000/api/inventario/${id}`, {method:'DELETE'});
+      await fetch(`${API_BASE_URL}/api/inventario/${id}`, {method:'DELETE'});
       fetchInventory();
     } catch {
       mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');
     }
-// Popup de error global
-function mostrarPopupError(mensaje) {
-  let popup = document.createElement('div');
-  popup.style.position = 'fixed';
-  popup.style.top = '0';
-  popup.style.left = '0';
-  popup.style.width = '100vw';
-  popup.style.height = '100vh';
-  popup.style.background = 'rgba(30,58,138,0.85)';
-  popup.style.display = 'flex';
-  popup.style.alignItems = 'center';
-  popup.style.justifyContent = 'center';
-  popup.style.zIndex = '9999';
-  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-    ${mensaje}<br><br>
-    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-  </div>`;
-  document.body.appendChild(popup);
-}
   }
 }
 
-
-// Buscador y filtro
 const searchInput = document.getElementById('searchInput');
 const filterTipo = document.getElementById('filterTipo');
 const filterEstado = document.getElementById('filterEstado');
@@ -735,9 +618,9 @@ function filtrarTabla() {
   const rows = tableBody.querySelectorAll('tr');
   rows.forEach((tr,i)=>{
     const device = inventory[i];
-    const coincideBusqueda = device.tipo.toLowerCase().includes(term) || device.modelo.toLowerCase().includes(term) || (device.empleado||'').toLowerCase().includes(term);
+    const coincideBusqueda = (device.tipo||'').toLowerCase().includes(term) || (device.modelo||'').toLowerCase().includes(term) || (device.empleado||'').toLowerCase().includes(term);
     const coincideTipo = !tipo || device.tipo === tipo || (tipo==='Teclado y ratón' && (device.tipo==='Teclado' || device.tipo==='Ratón')) || (tipo==='Otros' && device.tipo==='Otro');
-  const coincideEstado = !estado || (device.estado||'').toLowerCase() === estado.toLowerCase();
+    const coincideEstado = !estado || (device.estado||'').toLowerCase() === estado.toLowerCase();
     tr.style.display = (coincideBusqueda && coincideTipo && coincideEstado) ? '' : 'none';
   });
 }

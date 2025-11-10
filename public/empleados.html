@@ -379,9 +379,34 @@ const baja = document.getElementById('baja');
 
 let inventory = [];
 
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://it-xqhv.onrender.com";
+
+function mostrarPopupError(mensaje) {
+  let popup = document.createElement('div');
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.width = '100vw';
+  popup.style.height = '100vh';
+  popup.style.background = 'rgba(30,58,138,0.85)';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'center';
+  popup.style.justifyContent = 'center';
+  popup.style.zIndex = '9999';
+  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+    ${mensaje}<br><br>
+    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
+  </div>`;
+  document.body.appendChild(popup);
+}
+
 async function fetchInventory() {
   try {
-  const res = await fetch('http://localhost:4000/api/empleados');
+    const res = await fetch(`${API_BASE_URL}/api/empleados`);
     if (!res.ok) {
       let errorMsg = 'No se pudo cargar el inventario';
       try {
@@ -402,27 +427,7 @@ async function fetchInventory() {
     }
   }
 }
- // Popup de error global
-    function mostrarPopupError(mensaje) {
-      let popup = document.createElement('div');
-      popup.style.position = 'fixed';
-      popup.style.top = '0';
-      popup.style.left = '0';
-      popup.style.width = '100vw';
-      popup.style.height = '100vh';
-      popup.style.background = 'rgba(30,58,138,0.85)';
-      popup.style.display = 'flex';
-      popup.style.alignItems = 'center';
-      popup.style.justifyContent = 'center';
-      popup.style.zIndex = '9999';
-      popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-        <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-        ${mensaje}<br><br>
-        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-      </div>`;
-      document.body.appendChild(popup);
-    }
-    
+
 function renderTable() {
   tableBody.innerHTML = '';
   inventory.forEach((item,index)=>{
@@ -433,8 +438,8 @@ function renderTable() {
       <td>${item.departamento || ''}</td>
       <td>${item.correo || ''}</td>
       <td>${item.fechaIncorporacion ? item.fechaIncorporacion.slice(0,10) : ''}</td>
-      <td>${item.dispositivosAsignados ? item.dispositivosAsignados.join(', ') : ''}</td>
-      <td>${item.licenciasAsignadas ? item.licenciasAsignadas.join(', ') : ''}</td>
+      <td>${Array.isArray(item.dispositivosAsignados) ? item.dispositivosAsignados.join(', ') : ''}</td>
+      <td>${Array.isArray(item.licenciasAsignadas) ? item.licenciasAsignadas.join(', ') : ''}</td>
       <td class="acciones">
         <a href="/empleado.html?id=${item._id}" class="edit" style="background:var(--color-accent);color:white;padding:0.4rem 0.7rem;border-radius:6px;font-size:0.85rem;font-weight:500;text-decoration:none;display:inline-block;margin-right:0.4rem;"><i class="fa-solid fa-pen"></i></a>
         <button class="delete" onclick="deleteDevice('${item._id}')"><i class="fa-solid fa-trash"></i></button>
@@ -451,17 +456,16 @@ function updateStats() {
   baja.textContent = inventory.filter(d=>d.estado==='Baja').length;
 }
 
-
 // Modal
-const modal = document.getElementById('deviceModal');
 const form = document.getElementById('deviceForm');
 const btnAdd = document.getElementById('btnAddDevice');
 const btnCancel = document.getElementById('btnCancel');
 const modalTitle = document.getElementById('modalTitle');
+const modal = document.getElementById('deviceModal');
 
 btnAdd.addEventListener('click',()=>{
   form.reset();
-  modalTitle.textContent='Añadir Dispositivo';
+  modalTitle.textContent='Añadir Empleado';
   form.editIndex.value='';
   modal.style.display='flex';
 });
@@ -472,7 +476,7 @@ window.addEventListener('click',(e)=>{
   if(e.target===modal) modal.style.display='none';
 });
 
-// Guardar dispositivo (crear o editar)
+// Guardar empleado (crear o editar)
 form.addEventListener('submit',async e=>{
   e.preventDefault();
   const formData = new FormData(form);
@@ -488,14 +492,14 @@ form.addEventListener('submit',async e=>{
   try {
     if(editId) {
       // Editar
-      await fetch(`http://localhost:4000/api/empleados/${editId}`, {
+      await fetch(`${API_BASE_URL}/api/empleados/${editId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(empleado)
       });
     } else {
       // Crear
-      await fetch('http://localhost:4000/api/empleados', {
+      await fetch(`${API_BASE_URL}/api/empleados`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(empleado)
@@ -508,58 +512,32 @@ form.addEventListener('submit',async e=>{
   }
 });
 
-// Editar dispositivo
+// Editar empleado
 function editDevice(id){
   const device = inventory.find(d=>d._id===id);
   if(!device) return;
-  form.tipo.value = device.tipo || '';
   form.nombre.value = device.nombre || '';
-  form.categoria.value = device.categoria || '';
-  form.marca.value = device.marca || '';
-  form.modelo.value = device.modelo || '';
-  form.serie.value = device.serie || '';
-  form.estado.value = device.estado || '';
-  form.ubicacion.value = device.ubicacion || '';
-  form.fechaCompra.value = device.fechaCompra ? device.fechaCompra.slice(0,10) : '';
-  form.observaciones.value = device.observaciones || '';
-  form.empleado.value = device.responsable || device.empleado || '';
+  form.departamento.value = device.departamento || '';
+  form.correo.value = device.correo || '';
+  form.fechaIncorporacion.value = device.fechaIncorporacion ? device.fechaIncorporacion.slice(0,10) : '';
+  form.dispositivosAsignados.value = Array.isArray(device.dispositivosAsignados) ? device.dispositivosAsignados.join(', ') : '';
+  form.licenciasAsignadas.value = Array.isArray(device.licenciasAsignadas) ? device.licenciasAsignadas.join(', ') : '';
   form.editIndex.value = device._id || '';
-  modalTitle.textContent='Editar Dispositivo';
+  modalTitle.textContent='Editar Empleado';
   modal.style.display='flex';
 }
 
-// Eliminar dispositivo
+// Eliminar empleado
 async function deleteDevice(id){
-  if(confirm('¿Estás seguro de eliminar este dispositivo?')){
+  if(confirm('¿Estás seguro de eliminar este empleado?')){
     try {
-  await fetch(`http://localhost:4000/api/empleados/${id}`, {method:'DELETE'});
+      await fetch(`${API_BASE_URL}/api/empleados/${id}`, {method:'DELETE'});
       fetchInventory();
     } catch {
-      mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');
+      mostrarPopupError('El servidor no responde. No se pudo eliminar el empleado.');
     }
-// Popup de error global
-function mostrarPopupError(mensaje) {
-  let popup = document.createElement('div');
-  popup.style.position = 'fixed';
-  popup.style.top = '0';
-  popup.style.left = '0';
-  popup.style.width = '100vw';
-  popup.style.height = '100vh';
-  popup.style.background = 'rgba(30,58,138,0.85)';
-  popup.style.display = 'flex';
-  popup.style.alignItems = 'center';
-  popup.style.justifyContent = 'center';
-  popup.style.zIndex = '9999';
-  popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-    ${mensaje}<br><br>
-    <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-  </div>`;
-  document.body.appendChild(popup);
-}
   }
 }
-
 
 // Buscador y filtro
 const searchInput = document.getElementById('searchInput');
@@ -573,8 +551,8 @@ function filtrarTabla() {
   const rows = tableBody.querySelectorAll('tr');
   rows.forEach((tr,i)=>{
     const device = inventory[i];
-    const coincideBusqueda = device.tipo.toLowerCase().includes(term) || device.modelo.toLowerCase().includes(term) || (device.empleado||'').toLowerCase().includes(term);
-    const coincideTipo = !tipo || device.tipo === tipo || (tipo==='Teclado y ratón' && (device.tipo==='Teclado' || device.tipo==='Ratón')) || (tipo==='Otros' && device.tipo==='Otro');
+    const coincideBusqueda = (device.tipo||'').toLowerCase().includes(term) || (device.modelo||'').toLowerCase().includes(term) || (device.nombre||'').toLowerCase().includes(term);
+    const coincideTipo = !tipo || (device.tipo === tipo) || (tipo==='Teclado y ratón' && (device.tipo==='Teclado' || device.tipo==='Ratón')) || (tipo==='Otros' && device.tipo==='Otro');
     const coincideEstado = !estado || device.estado === estado;
     tr.style.display = (coincideBusqueda && coincideTipo && coincideEstado) ? '' : 'none';
   });
@@ -584,6 +562,8 @@ filterTipo.addEventListener('change', filtrarTabla);
 filterEstado.addEventListener('change', filtrarTabla);
 
 fetchInventory();
+
+// ...existing code...
 </script>
 </body>
 </html>

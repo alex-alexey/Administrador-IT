@@ -178,6 +178,11 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 
 <script>
 // --- Licencia Detalle ---
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://it-xqhv.onrender.com";
+
 function getLicenciaIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
@@ -189,7 +194,7 @@ let licenciaData = {};
 async function fetchLicencia() {
   if (!licenciaId) return;
   try {
-    const res = await fetch(`http://localhost:4000/api/licencias/${licenciaId}`);
+    const res = await fetch(`${API_BASE_URL}/api/licencias/${licenciaId}`);
     if (!res.ok) {
       let errorMsg = `Error ${res.status}: No se pudo cargar la licencia`;
       try {
@@ -281,7 +286,7 @@ async function saveModal(){
     estado: document.getElementById('modal_estado').value
   };
   try {
-    const res = await fetch(`http://localhost:4000/api/licencias/${licenciaId}`, {
+    const res = await fetch(`${API_BASE_URL}/api/licencias/${licenciaId}`, {
       method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(update)
