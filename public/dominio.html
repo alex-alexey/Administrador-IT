@@ -8,6 +8,83 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root {
+/* --- CSS MODAL --- */
+#modalOverlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(30,58,138,0.85);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+.modalContent {
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 430px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+.modalContent h3 {
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+.modalContent label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-weight: 500;
+  color: var(--color-gray);
+  font-size: 0.97rem;
+}
+.modalContent input, .modalContent select {
+  padding: 0.5rem;
+  border-radius: 7px;
+  border: 1px solid var(--color-gray);
+  outline: none;
+  transition: var(--transition);
+}
+.modalContent input:focus, .modalContent select:focus {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.18);
+}
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.modalActions .delete-btn {
+  background: var(--color-danger);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 2em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.modalActions .delete-btn:hover {
+  background: #b91c1c;
+}
+.modalActions .save-btn {
+  background: var(--color-secondary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7em 2em;
+  font-size: 1em;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.modalActions .save-btn:hover {
+  background: #1e3a8a;
+}
   --color-primary: #1e3a8a;
   --color-secondary: #3b82f6;
   --color-bg: #f5f7fb;
