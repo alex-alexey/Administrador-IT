@@ -1,244 +1,285 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - INTEK-IT</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    :root {
-      --color-bg: #f5f7fb;
-      --color-primary: #1e3a8a;
-      --color-secondary: #3b82f6;
-      --color-white: #ffffff;
-      --color-gray: #6b7280;
-      --color-border: #e5e7eb;
-      --radius: 12px;
-      --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      --transition: all 0.3s ease;
-    }
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Inter", sans-serif;
-    }
-    body {
-      background: var(--color-bg);
-      color: #111827;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: row;
-    }
-    aside {
-      width: 250px;
-      background-color: var(--color-white);
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--color-border);
-      padding: 1rem 0;
-      min-height: 100vh;
-    }
-    .logo {
-      text-align: center;
-      font-weight: bold;
-      font-size: 1.3rem;
-      color: var(--color-secondary);
-      margin-bottom: 2rem;
-    }
-    nav {
-      display: flex;
-      flex-direction: column;
-    }
-    nav a {
-      text-decoration: none;
-      color: var(--color-gray);
-      padding: 0.8rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 500;
-      transition: 0.3s;
-    }
-    nav a:hover,
-    nav a.active {
-      background-color: #eef2ff;
-      color: var(--color-secondary);
-    }
-    nav i {
-      font-size: 1.1rem;
-    }
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      background: var(--color-bg);
-    }
-    .login-container {
-      background: var(--color-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 2.5rem 2rem 2rem 2rem;
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .login-container h2 {
-      color: var(--color-primary);
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-    }
-    form {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 1.2rem;
-    }
-    label {
-      font-size: 0.98rem;
-      color: var(--color-primary);
-      margin-bottom: 0.3rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.8rem;
-      border-radius: 6px;
-      border: 1px solid var(--color-border);
-      font-size: 1rem;
-      outline: none;
-      transition: var(--transition);
-      background: #f9fafb;
-    }
-    input:focus {
-      border-color: var(--color-secondary);
-      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
-    }
-    .forgot-password {
-      text-align: right;
-      font-size: 0.93rem;
-    }
-    .forgot-password a {
-      color: var(--color-secondary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .forgot-password a:hover {
-      text-decoration: underline;
-    }
-    button[type="submit"] {
-      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-      color: white;
-      border: none;
-      border-radius: var(--radius);
-      padding: 0.8rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: var(--shadow);
-      margin-top: 0.5rem;
-    }
-    button[type="submit"]:hover {
-      opacity: 0.93;
-      transform: translateY(-1px);
-    }
-    .footer {
-      text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.93rem;
-      color: var(--color-gray);
-    }
-    .footer a {
-      color: var(--color-secondary);
-      font-weight: 500;
-      text-decoration: none;
-    }
-    .footer a:hover {
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTEK-IT | Iniciar Sesión</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+  --color-primary: #2563eb;
+  --color-secondary: #1e3a8a;
+  --color-bg: #0f172a;
+  --color-white: #ffffff;
+  --color-gray: #cbd5e1;
+  --radius: 16px;
+  --transition: all 0.35s ease;
+}
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+/* BODY */
+body {
+  background: radial-gradient(circle at top left, #1e3a8a, #0f172a);
+  color: var(--color-white);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* EFECTO DE BURBUJAS */
+body::before,
+body::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+}
+body::before {
+  width: 400px;
+  height: 400px;
+  background: #3b82f6;
+  top: -100px;
+  right: -100px;
+}
+body::after {
+  width: 350px;
+  height: 350px;
+  background: #1e3a8a;
+  bottom: -100px;
+  left: -100px;
+}
+
+/* CONTENEDOR LOGIN */
+.login-container {
+  position: relative;
+  backdrop-filter: blur(16px);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius);
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 1s ease forwards;
+}
+
+/* ANIMACIÓN DE APARICIÓN */
+@keyframes fadeIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-white);
+  letter-spacing: 1px;
+}
+
+.login-container p {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  color: var(--color-gray);
+}
+
+/* FORMULARIO */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+label {
+  font-size: 0.9rem;
+  color: var(--color-gray);
+  font-weight: 500;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group i {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  color: #93c5fd;
+  font-size: 1.1rem;
+}
+
+input {
+  width: 100%;
+  padding: 0.9rem 0.9rem 0.9rem 2.8rem;
+  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-white);
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+input:focus {
+  outline: 2px solid var(--color-primary);
+  background: rgba(255, 255, 255, 0.18);
+}
+
+/* BOTÓN */
+button[type="submit"] {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+  color: white;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(37, 99, 235, 0.55);
+}
+
+/* ENLACES */
+.forgot-password {
+  text-align: right;
+  font-size: 0.9rem;
+}
+
+.forgot-password a {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.forgot-password a:hover {
+  text-decoration: underline;
+}
+
+/* MENSAJE DE ERROR */
+#errorMsg {
+  color: #f87171;
+  text-align: center;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+.footer a {
+  color: #93c5fd;
+  text-decoration: none;
+}
+.footer a:hover {
+  text-decoration: underline;
+}
+</style>
 </head>
 <body>
-  <aside id="sidebarMenu" style="display:none;">
-    <div class="logo">INTEK-IT</div>
-    <nav>
-      <a href="/dashboard.html"><i class="fa-solid fa-gauge"></i> Dashboard</a>
-      <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> Inventario IT</a>
-      <a href="/licencias.html"><i class="fa-solid fa-key"></i> Licencias</a>
-      <a href="/empleados.html"><i class="fa-solid fa-users"></i> Empleados</a>
-    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> Dominios</a>
-      <a href="#helpdesk"><i class="fa-solid fa-headset"></i> Helpdesk</a>
-      <a href="/"><i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión</a>
-    </nav>
-  </aside>
-  <div class="main-content">
 
-    <div class="login-container">
-      <h2>Acceso a INTEK-IT</h2>
-      <form autocomplete="off">
-        <div>
-          <label for="username">Usuario</label>
-          <input type="text" id="username" name="username" required autofocus />
-        </div>
-        <div>
-          <label for="password">Contraseña</label>
-          <input type="password" id="password" name="password" required />
-        </div>
-        <div class="forgot-password">
-          <a href="#">¿Olvidaste tu contraseña?</a>
-        </div>
-        <button type="submit">Entrar</button>
-      </form>
-      <div id="errorMsg" style="color:red; margin-top:1rem; font-weight:500;"></div>
-      <div class="footer">
-        &copy; 2025 INTEK-IT. Todos los derechos reservados.
-      </div>
+<div class="login-container">
+  <h2>INTEK-IT</h2>
+  <p>Accede a tu cuenta para gestionar tus recursos tecnológicos</p>
+
+  <form autocomplete="off">
+    <div class="input-group">
+      <i class="fa-solid fa-user"></i>
+      <input type="text" id="username" name="username" placeholder="Usuario" required autofocus>
     </div>
+
+    <div class="input-group">
+      <i class="fa-solid fa-lock"></i>
+      <input type="password" id="password" name="password" placeholder="Contraseña" required>
+    </div>
+
+    <div class="forgot-password">
+      <a href="#">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <button type="submit">Iniciar sesión</button>
+  </form>
+
+  <div id="errorMsg"></div>
+
+  <div class="footer">
+    &copy; 2025 INTEK-IT. Todos los derechos reservados.
   </div>
-  <script>
-    // Login real contra backend
-    const loginForm = document.querySelector('form');
-    const errorMsg = document.getElementById('errorMsg');
-    if (loginForm) {
-      loginForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        errorMsg.textContent = '';
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        try {
-          // Detectar entorno y construir URL base
-          const API_BASE_URL = window.location.hostname === 'localhost'
-            ? 'http://localhost:4000/api'
-            : 'https://it-xqhv.onrender.com/api';
-          const res = await fetch(`${API_BASE_URL}/usuarios/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-          });
-          const data = await res.json();
-          if (res.ok) {
-            localStorage.setItem('loggedIn', 'true');
-            localStorage.setItem('usuario', JSON.stringify(data.user));
-            window.location.href = '/dashboard.html';
-          } else {
-            if (data.error === 'No existe el usuario') {
-              errorMsg.textContent = 'No existe el usuario.';
-            } else if (data.error === 'La contraseña es incorrecta') {
-              errorMsg.textContent = 'La contraseña es incorrecta.';
-            } else {
-              errorMsg.textContent = data.error || 'Usuario o contraseña incorrectos.';
-            }
-          }
-        } catch {
-          errorMsg.textContent = 'Error de conexión con el servidor.';
-        }
-      });
+</div>
+
+<script>
+const loginForm = document.querySelector('form');
+const errorMsg = document.getElementById('errorMsg');
+
+loginForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  errorMsg.textContent = '';
+
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  try {
+    const API_BASE_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:4000/api'
+      : 'https://it-xqhv.onrender.com/api';
+
+    const res = await fetch(`${API_BASE_URL}/usuarios/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem('loggedIn', 'true');
+      localStorage.setItem('usuario', JSON.stringify(data.user));
+      window.location.href = '/dashboard.html';
+    } else {
+      errorMsg.textContent =
+        data.error === 'No existe el usuario' ? 'No existe el usuario.' :
+        data.error === 'La contraseña es incorrecta' ? 'La contraseña es incorrecta.' :
+        data.error || 'Usuario o contraseña incorrectos.';
     }
-  </script>
+  } catch {
+    errorMsg.textContent = 'Error de conexión con el servidor.';
+  }
+});
+</script>
+
+</body>
+</html>

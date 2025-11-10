@@ -1,275 +1,235 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Inventario IT</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>INTEK-IT | Dashboard</title>
+
+<!-- Fuentes y estilos -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
 <style>
 :root {
-  --color-bg: #f5f7fb;
   --color-primary: #1e3a8a;
   --color-secondary: #3b82f6;
-  --color-accent: #f59e0b;
-  --color-danger: #ef4444;
+  --color-bg: #f5f7fb;
   --color-white: #ffffff;
   --color-gray: #6b7280;
-  --color-border: #e5e7eb;
-  --radius: 12px;
-  --shadow: 0 4px 15px rgba(0,0,0,0.05);
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --radius: 16px;
   --transition: all 0.3s ease;
+  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
 body {
+  display: flex;
+  min-height: 100vh;
   background: var(--color-bg);
-  color:#111827;
-  min-height:100vh;
-  display:flex;
-  font-size:14px;
+  color: #111827;
 }
 
 /* Sidebar */
 aside {
-  width:220px;
-  background: var(--color-primary);
-  color:white;
-  display:flex;
-  flex-direction:column;
-  padding:1.5rem 1rem;
-  height:100vh;
-  position:fixed;
-}
-
-aside .logo {
-  font-size:1.5rem;
-  font-weight:700;
-  margin-bottom:2rem;
-  text-align:center;
-}
-
-aside nav a {
-  color:white;
-  text-decoration:none;
-  display:flex;
-  align-items:center;
-  gap:0.8rem;
-  padding:0.6rem 0.8rem;
-  border-radius:8px;
-  margin-bottom:0.5rem;
-  transition:var(--transition);
-}
-
-aside nav a:hover,
-aside nav a.active { background: rgba(255,255,255,0.2); }
-
-/* Main content */
-.main-content {
-  margin-left:220px;
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-}
-
-header {
-  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
-  color:white;
-  padding:1rem 2rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:1.2rem;
-  font-weight:600;
+  width: 240px;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+  position: fixed;
+  height: 100vh;
   box-shadow: var(--shadow);
 }
 
-header a {
-  color:white;
-  text-decoration:none;
-  font-size:0.9rem;
-  background: rgba(255,255,255,0.15);
-  padding:0.5rem 1rem;
-  border-radius:8px;
-  transition:var(--transition);
+.logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
 }
 
-header a:hover { background: rgba(255,255,255,0.25); }
-
-.container {
-  flex:1;
-  padding:2rem;
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
-/* Estadísticas */
-.stats {
-  display:flex;
-  gap:1rem;
-  margin-bottom:1.5rem;
-  flex-wrap:wrap;
-}
-
-.card {
-  flex:1;
-  background:white;
-  padding:1rem 1.2rem;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  min-width:150px;
+nav a {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 10px;
   transition: var(--transition);
 }
 
+nav a:hover,
+nav a.active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Main content */
+.main-content {
+  margin-left: 240px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+}
+
+header h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+header a {
+  color: white;
+  background: rgba(255,255,255,0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: var(--transition);
+}
+header a:hover { background: rgba(255,255,255,0.3); }
+
+/* Container */
+.container {
+  padding: 2rem;
+  flex: 1;
+}
+
+/* Stats */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card {
+  background: var(--color-white);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
 .card:hover { transform: translateY(-3px); }
 
-.card h3 { font-size:1.1rem; color:var(--color-gray); margin-bottom:0.5rem; }
-.card span { font-size:1.5rem; font-weight:600; color:var(--color-primary); }
-
-/* Buscador y filtro */
-.search-filter {
-  display:flex;
-  flex-wrap:wrap;
-  gap:1rem;
-  margin-bottom:1rem;
+.card h3 { color: var(--color-gray); font-size: 1rem; margin-bottom: 0.4rem; }
+.card span { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); }
+.card i {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  font-size: 2rem;
+  color: rgba(59, 130, 246, 0.3);
 }
 
-.search-filter input,
-.search-filter select {
-  padding:0.5rem 0.8rem;
-  border-radius:6px;
-  border:1px solid var(--color-border);
-  outline:none;
-  transition:var(--transition);
+/* Charts */
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
-.search-filter input:focus,
-.search-filter select:focus {
-  border-color:var(--color-secondary);
-  box-shadow:0 0 0 2px rgba(59,130,246,0.2);
+.chart-card {
+  background: var(--color-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
 }
 
-/* Tabla estilizada */
-.table-wrapper {
-  overflow-x:auto;
+.chart-card h4 {
+  color: var(--color-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-table {
-  width:100%;
-  border-collapse:collapse;
-  border-radius:var(--radius);
-  overflow:hidden;
-  box-shadow:var(--shadow);
-  background:white;
-  margin-top:0.5rem;
+/* Helpdesk Tickets Section */
+.tickets {
+  background: var(--color-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-th, td {
-  padding:0.9rem 1rem;
-  text-align:left;
-  font-size:0.95rem;
+.tickets h4 {
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
 }
 
-th {
-  background:#f3f4f6;
-  color:var(--color-primary);
-  font-weight:600;
+.ticket-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  transition: var(--transition);
 }
+.ticket-item:hover { background: #f9fafb; }
 
-tbody tr { border-bottom:1px solid var(--color-border); transition:var(--transition); }
-tbody tr:hover { background:#f9fafb; }
-
-.acciones button {
-  margin-right:0.4rem;
-  padding:0.4rem 0.7rem;
-  border-radius:6px;
-  font-size:0.85rem;
-  font-weight:500;
-  border:none;
-  cursor:pointer;
-  transition:var(--transition);
+.ticket-info {
+  display: flex;
+  flex-direction: column;
 }
+.ticket-info strong { color: #111827; font-weight: 600; }
+.ticket-info small { color: var(--color-gray); font-size: 0.85rem; }
 
-.acciones button.edit { background:var(--color-accent); color:white; }
-.acciones button.delete { background:var(--color-danger); color:white; }
-.acciones button:hover { transform: translateY(-1px); opacity:0.85; }
-
-/* Botón añadir */
-button#btnAddDevice {
-  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
-  color:white;
-  border:none;
-  border-radius:var(--radius);
-  padding:0.6rem 1.2rem;
-  font-weight:500;
-  cursor:pointer;
-  box-shadow:var(--shadow);
-  display:inline-flex;
-  align-items:center;
-  gap:0.5rem;
-  transition:var(--transition);
+.ticket-priority {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 8px;
+  color: white;
+  text-transform: capitalize;
 }
+.ticket-priority.alta { background: var(--color-danger); }
+.ticket-priority.media { background: var(--color-warning); }
+.ticket-priority.baja { background: var(--color-success); }
 
-button#btnAddDevice:hover { opacity:0.9; transform:translateY(-1px); }
-
-/* Modal */
-#deviceModal {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.4);
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
+/* Footer */
+footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--color-gray);
+  font-size: 0.9rem;
 }
-
-#deviceForm {
-  background:white;
-  padding:2rem;
-  border-radius:var(--radius);
-  width:100%;
-  max-width:450px;
-  box-shadow:var(--shadow);
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  animation: slideUp 0.3s ease;
-}
-
-#deviceForm h3 { color:var(--color-primary); margin-bottom:1rem; font-size:1.3rem; }
-#deviceForm label { display:flex; flex-direction:column; gap:0.3rem; font-weight:500; color:var(--color-gray); font-size:0.9rem; }
-#deviceForm input,
-#deviceForm select {
-  padding:0.6rem;
-  border-radius:6px;
-  border:1px solid var(--color-border);
-  font-size:0.95rem;
-  outline:none;
-  transition:var(--transition);
-}
-#deviceForm input:focus,
-#deviceForm select:focus { border-color:var(--color-secondary); box-shadow:0 0 0 2px rgba(59,130,246,0.2); }
-
-.form-actions { display:flex; justify-content:flex-end; gap:1rem; margin-top:0.5rem; }
-#btnCancel { background:#9ca3af; color:white; }
-
-@keyframes slideUp { from{transform:translateY(20px);opacity:0;} to{transform:translateY(0);opacity:1;} }
-
-footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gray); margin-top:2rem; }
 
 /* Responsivo */
-@media(max-width:768px){
-  aside{ width:60px; padding:1rem 0.5rem; }
-  aside nav a span{ display:none; }
-  .main-content{ margin-left:60px; }
-  header{ flex-direction:column; align-items:flex-start; gap:0.5rem; }
-  .container{ padding:1rem; }
-  .stats{flex-direction:column;}
+@media(max-width: 768px){
+  aside { width: 70px; padding: 1rem 0.3rem; }
+  aside .logo { font-size: 1rem; margin-bottom: 1rem; }
+  nav a span { display: none; }
+  .main-content { margin-left: 70px; }
 }
 </style>
 </head>
@@ -278,206 +238,174 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-  <a href="/dashboard.html" class="active"><i class="fa-solid fa-gauge"></i> <span>Dashboard</span></a>
-  <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-  <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/dashboard.html" class="active"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+    <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
     <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
-    <a href="/empleados.html" class="fa-solid fa-users"></i> <span>Empleados</span></a>
-  <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
-  <div class="main-content">
-    <header>
-      <span><i class="fa-solid fa-gauge"></i> Dashboard de IT</span>
-      <a href="/login.html"><i class="fa-solid fa-arrow-left"></i> Cerrar sesión</a>
-    </header>
-    <div class="container">
-      <div class="stats">
-        <div class="card"><h3>Usuarios Registrados</h3><span id="totalUsuarios">0</span></div>
-        <div class="card"><h3>Dispositivos IT</h3><span id="totalDispositivos">0</span></div>
-        <div class="card"><h3>Tickets Abiertos</h3><span id="ticketsAbiertos">0</span></div>
-        <div class="card"><h3>Licencias Próximas a Caducar</h3><span id="licenciasPorCaducar">0</span></div>
-      </div>
-      <!-- Apartado de tickets más urgentes -->
-      <div style="margin-bottom:2rem;">
-        <h2 style="font-size:1.15rem; color:var(--color-danger); margin-bottom:0.7rem; font-weight:600;">Tickets más urgentes de IT</h2>
-        <div id="tickets-urgentes-dashboard" style="display:flex; gap:1.2rem; flex-wrap:wrap;"></div>
-      </div>
-      <div id="caducidad-30dias-table" style="margin-bottom:2rem;"></div>
-      <!-- Listado visual de licencias próximas a caducar -->
-      <div id="listado-licencias-caducar" style="margin-bottom:2rem;"></div>
-  
-      <!-- Licencias próximas a caducar (dinámico) -->
-      <div id="licencias-proximas-dashboard" style="margin-bottom:2rem;"></div>
-      <!-- Aquí puedes añadir más contenido del dashboard, como gráficos, tablas, etc. -->
-  <!-- Listado de dispositivos IT -->
-  <div id="listado-dispositivos-dashboard" style="margin-bottom:2rem;"></div>
+
+<div class="main-content">
+  <header>
+    <h1><i class="fa-solid fa-gauge"></i> Panel de Control</h1>
+    <a href="/login.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
+  </header>
+
+  <div class="container">
+    <div class="stats">
+      <div class="card"><i class="fa-solid fa-users"></i><h3>Usuarios</h3><span id="usuarios">0</span></div>
+      <div class="card"><i class="fa-solid fa-desktop"></i><h3>Dispositivos</h3><span id="dispositivos">0</span></div>
+      <div class="card"><i class="fa-solid fa-key"></i><h3>Licencias</h3><span id="licencias">0</span></div>
+      <div class="card"><i class="fa-solid fa-triangle-exclamation"></i><h3>Tickets Abiertos</h3><span id="tickets">0</span></div>
     </div>
-    <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
-  <script>
-// Lógica para cerrar sesión desde el botón del sidebar
-document.addEventListener('DOMContentLoaded', function() {
-  const btnLogout = document.getElementById('btnLogout');
-  if (btnLogout) {
-    btnLogout.addEventListener('click', async function(e) {
-      e.preventDefault();
-      try {
-        // Detectar entorno y construir URL base
-        let API_BASE_URL = '';
-        if (window.location.hostname === 'localhost') {
-          API_BASE_URL = 'http://localhost:4000';
-        } else {
-          API_BASE_URL = 'https://it-xqhv.onrender.com';
-        }
-        // Llamada al endpoint de logout
-        await fetch(`${API_BASE_URL}/api/usuarios/logout`, {
-          method: 'POST',
-          credentials: 'include'
-        });
-      } catch (err) {
-        // Ignorar errores de red
-      }
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = '/login.html';
-    });
-  }
-});
-    // Verificación universal de login
+
+    <!-- 🔧 Sección de Tickets Helpdesk Abiertos -->
+    <div class="tickets" style="margin-bottom:2rem;">
+      <h4><i class="fa-solid fa-headset"></i> Tickets de Helpdesk Abiertos</h4>
+      <div id="ticketsHelpdesk"></div>
+    </div>
+
+    <div class="charts">
+      <div class="chart-card">
+        <h4>Estado de Licencias</h4>
+        <canvas id="chartLicencias"></canvas>
+      </div>
+      <div class="chart-card">
+        <h4>Inventario por Categoría</h4>
+        <canvas id="chartInventario"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Seguridad básica
 if (!localStorage.getItem('loggedIn')) {
   window.location.href = '/login.html';
 }
 
-// Cargar datos del dashboard desde la API centralizada
-    async function renderDashboardStats() {
-      try {
-  const res = await fetch('http://localhost:4000/api/dashboard');
-        if (!res.ok) throw new Error('Error al obtener datos del dashboard');
-        const data = await res.json();
-  // Mostrar número de usuarios, dispositivos y licencias próximas a caducar
-  document.getElementById('totalUsuarios').textContent = data.usuariosRegistrados;
-  document.getElementById('totalDispositivos').textContent = data.dispositivosIT;
-  if (data.licenciasPorCaducar !== undefined) {
-    document.getElementById('licenciasPorCaducar').textContent = data.licenciasPorCaducar;
-  }
-      } catch (err) {
-        document.getElementById('totalUsuarios').textContent = '0';
-        document.getElementById('totalDispositivos').textContent = '0';
-        // Mostrar popup de error si el servidor no responde
-        mostrarPopupError('El servidor no responde. Por favor, inténtalo más tarde.');
-      }
-    // Popup de error global
-    function mostrarPopupError(mensaje) {
-      let popup = document.createElement('div');
-      popup.style.position = 'fixed';
-      popup.style.top = '0';
-      popup.style.left = '0';
-      popup.style.width = '100vw';
-      popup.style.height = '100vh';
-      popup.style.background = 'rgba(30,58,138,0.85)';
-      popup.style.display = 'flex';
-      popup.style.alignItems = 'center';
-      popup.style.justifyContent = 'center';
-      popup.style.zIndex = '9999';
-      popup.innerHTML = `<div style="background:#fff; color:#ef4444; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
-        <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
-        ${mensaje}<br><br>
-        <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
-      </div>`;
-      document.body.appendChild(popup);
-    }
-    }
-    renderDashboardStats();
-    // ...existing code...
-    // Tabla de licencias que caducan en los próximos 30 días (máx 3)
-    async function renderCaducidad30DiasTable() {
-      let licencias = [];
-      try {
-        const res = await fetch('http://localhost:4000/api/licencias');
-        if (!res.ok) throw new Error('Error al obtener licencias');
-        licencias = await res.json();
-      } catch { licencias = []; }
-      const hoy = new Date();
-      hoy.setHours(0,0,0,0);
-      const en30dias = new Date(hoy);
-      en30dias.setDate(hoy.getDate() + 30);
-      const proximas = licencias.filter(l => {
-        if (!l.expiracion) return false;
-        const exp = new Date(l.expiracion);
-        exp.setHours(0,0,0,0);
-        return exp > hoy && exp <= en30dias;
-      }).sort((a,b)=>new Date(a.expiracion)-new Date(b.expiracion)).slice(0,3);
-      let html = '<h2 style="font-size:1.15rem; color:var(--color-accent); margin-bottom:0.7rem; font-weight:600;">Caducidad 30 días</h2>';
-      if (proximas.length === 0) {
-        html += '<div style="color:var(--color-gray); font-size:1rem;">No hay licencias próximas a caducar.</div>';
-      } else {
-        html += '<div class="table-wrapper"><table><thead><tr>' +
-          '<th>Software</th>' +
-          '<th>Usuario</th>' +
-          '<th>Departamento</th>' +
-          '<th>Proveedor</th>' +
-          '<th>Fecha Contratación</th>' +
-          '<th>Fecha Expiración</th>' +
-          '</tr></thead><tbody>';
-        proximas.forEach(l => {
-          html += '<tr>' +
-            `<td>${l.software}</td>` +
-            `<td>${l.usuario}</td>` +
-            `<td>${l.departamento || ''}</td>` +
-            `<td>${l.proveedor || ''}</td>` +
-            `<td>${l.contratacion ? l.contratacion.slice(0,10) : ''}</td>` +
-            `<td>${l.expiracion ? l.expiracion.slice(0,10) : ''}</td>` +
-          '</tr>';
-        });
-        html += '</tbody></table></div>';
-      }
-      document.getElementById('caducidad-30dias-table').innerHTML = html;
-    }
-    renderCaducidad30DiasTable();
-  </script>
-  </div>
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const ctxLicencias = document.getElementById('licenciasChart').getContext('2d');
-    new Chart(ctxLicencias, {
+const API_BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:4000/api'
+  : 'https://it-xqhv.onrender.com/api';
+
+// Renderización del Dashboard y gráficos con datos reales
+async function cargarDashboard() {
+  try {
+    // Dashboard resumen
+    const resDash = await fetch(`${API_BASE_URL}/dashboard`);
+    const dash = await resDash.json();
+    document.getElementById('usuarios').textContent = dash.usuariosRegistrados || 0;
+    document.getElementById('dispositivos').textContent = dash.dispositivosIT || 0;
+    // Licencias activas: contar desde /licencias
+    const resLic = await fetch(`${API_BASE_URL}/licencias`);
+    const licencias = await resLic.json();
+    // Estado de licencias por campo 'estado'
+    const estadoLicencias = {};
+    licencias.forEach(l => {
+      const estado = (l.estado || 'Sin estado').trim();
+      estadoLicencias[estado] = (estadoLicencias[estado] || 0) + 1;
+    });
+    // Mostrar total de licencias activas (si existe ese estado)
+    document.getElementById('licencias').textContent = estadoLicencias['activa'] || estadoLicencias['Activa'] || 0;
+
+    // Inventario por categoría
+    const resInv = await fetch(`${API_BASE_URL}/inventario`);
+    const inventario = await resInv.json();
+    // Agrupar por categoría
+    const categorias = {};
+    inventario.forEach(item => {
+      const cat = item.categoria || 'Sin categoría';
+      categorias[cat] = (categorias[cat] || 0) + 1;
+    });
+
+    // Tickets abiertos (si tienes endpoint, aquí puedes añadirlo)
+    document.getElementById('tickets').textContent = dash.ticketsAbiertos || 0;
+
+    // Gráfico de licencias por estado real
+    const ctxLic = document.getElementById('chartLicencias');
+    const estados = Object.keys(estadoLicencias);
+    const colores = ['#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#6366f1', '#9ca3af'];
+    new Chart(ctxLic, {
       type: 'doughnut',
       data: {
-        labels: ['Activas', 'Por vencer', 'Caducadas'],
+        labels: estados,
         datasets: [{
-          data: [12, 5, 2],
-          backgroundColor: ['#3b82f6', '#6366f1', '#f87171'],
-          borderWidth: 1
+          data: estados.map(e => estadoLicencias[e]),
+          backgroundColor: estados.map((_,i) => colores[i%colores.length]),
+          borderWidth: 0
         }]
       },
       options: {
-        responsive: true,
         plugins: { legend: { position: 'bottom' } },
+        cutout: '70%',
         animation: { duration: 1000, easing: 'easeOutQuart' }
       }
     });
 
-    const ctxInventario = document.getElementById('inventarioChart').getContext('2d');
-    new Chart(ctxInventario, {
+    // Gráfico de inventario por categoría
+    const ctxInv = document.getElementById('chartInventario');
+    new Chart(ctxInv, {
       type: 'bar',
       data: {
-        labels: ['PC', 'Laptops', 'Monitores', 'Licencias'],
+        labels: Object.keys(categorias),
         datasets: [{
           label: 'Cantidad',
-          data: [10, 7, 15, 19],
-          backgroundColor: ['#3b82f6', '#6366f1', '#3b82f6', '#6366f1']
+          data: Object.values(categorias),
+          backgroundColor: Object.keys(categorias).map((_,i) => i%2==0 ? '#3b82f6' : '#6366f1'),
+          borderRadius: 8
         }]
       },
       options: {
         responsive: true,
         plugins: { legend: { display: false } },
-        animation: { duration: 1000, easing: 'easeOutQuart' },
         scales: {
-          y: { beginAtZero: true, ticks: { stepSize: 5 } }
-        }
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        },
+        animation: { duration: 1000, easing: 'easeOutQuart' }
       }
     });
-  </script>
+  } catch (e) {
+    console.error("Error al cargar datos:", e);
+  }
+}
+
+// 🔹 Render de Tickets Abiertos
+async function cargarTickets() {
+  const contenedor = document.getElementById('ticketsHelpdesk');
+  contenedor.innerHTML = '<div style="color:#6b7280;">Cargando tickets...</div>';
+  try {
+    const res = await fetch(`${API_BASE_URL}/tickets`);
+    const tickets = await res.json();
+
+    const abiertos = tickets.filter(t => t.estado === 'abierto');
+    if (abiertos.length === 0) {
+      contenedor.innerHTML = '<div style="color:#6b7280;">No hay tickets abiertos actualmente.</div>';
+      return;
+    }
+
+    contenedor.innerHTML = abiertos.slice(0, 5).map(t => `
+      <div class="ticket-item">
+        <div class="ticket-info">
+          <strong>${t.titulo}</strong>
+          <small>${t.solicitante} • ${new Date(t.fecha).toLocaleDateString()}</small>
+        </div>
+        <span class="ticket-priority ${t.prioridad.toLowerCase()}">${t.prioridad}</span>
+      </div>
+    `).join('');
+  } catch (e) {
+    contenedor.innerHTML = '<div style="color:#ef4444;">Error al cargar tickets.</div>';
+  }
+}
+
+cargarDashboard();
+cargarTickets();
+</script>
 </body>
 </html>
