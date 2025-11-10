@@ -364,6 +364,7 @@ document.addEventListener('DOMContentLoaded', function() {
         set('dominioFechaExpiracion', dominioActual.fechaExpiracion ? new Date(dominioActual.fechaExpiracion).toLocaleDateString() : 'No disponible');
         set('dominioCreatedAt', dominioActual.createdAt ? new Date(dominioActual.createdAt).toLocaleString() : 'No disponible');
         set('dominioUpdatedAt', dominioActual.updatedAt ? new Date(dominioActual.updatedAt).toLocaleString() : 'No disponible');
+        document.getElementById('modalOverlay').style.display = 'flex';
       } catch (err) {
         alert('Error al recargar datos: ' + err.message);
       }
