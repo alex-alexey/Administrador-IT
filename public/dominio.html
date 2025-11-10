@@ -304,12 +304,14 @@ async function fetchDominio() {
   }
 }
 
+// Función global para setear valores en el DOM
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.innerText = val;
+}
+
 function renderDominioData(dominio) {
   dominioActual = dominio;
-  const set = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.innerText = val;
-  };
   set('dominioId', dominio._id ? dominio._id : 'No disponible');
   set('dominioNombre', dominio.nombre ? dominio.nombre : 'No disponible');
   set('dominioProveedor', dominio.proveedor ? dominio.proveedor : 'No disponible');
