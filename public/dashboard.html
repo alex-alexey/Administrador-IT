@@ -317,23 +317,29 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
   <script>
     // Cargar datos del dashboard desde la API centralizada
+    const API_BASE_URL =
+      window.location.hostname === "localhost"
+        ? "http://localhost:4000"
+        : "https://administrador-it.onrender.com";
+
     async function renderDashboardStats() {
       try {
-  const res = await fetch('http://localhost:4000/api/dashboard');
+        const res = await fetch(`${API_BASE_URL}/api/dashboard`);
         if (!res.ok) throw new Error('Error al obtener datos del dashboard');
         const data = await res.json();
-  // Mostrar número de usuarios, dispositivos y licencias próximas a caducar
-  document.getElementById('totalUsuarios').textContent = data.usuariosRegistrados;
-  document.getElementById('totalDispositivos').textContent = data.dispositivosIT;
-  if (data.licenciasPorCaducar !== undefined) {
-    document.getElementById('licenciasPorCaducar').textContent = data.licenciasPorCaducar;
-  }
+        // Mostrar número de usuarios, dispositivos y licencias próximas a caducar
+        document.getElementById('totalUsuarios').textContent = data.usuariosRegistrados;
+        document.getElementById('totalDispositivos').textContent = data.dispositivosIT;
+        if (data.licenciasPorCaducar !== undefined) {
+          document.getElementById('licenciasPorCaducar').textContent = data.licenciasPorCaducar;
+        }
       } catch (err) {
         document.getElementById('totalUsuarios').textContent = '0';
         document.getElementById('totalDispositivos').textContent = '0';
         // Mostrar popup de error si el servidor no responde
         mostrarPopupError('El servidor no responde. Por favor, inténtalo más tarde.');
       }
+    }
     // Popup de error global
     function mostrarPopupError(mensaje) {
       let popup = document.createElement('div');
@@ -353,7 +359,6 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
         <button onclick="this.parentElement.parentElement.remove()" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cerrar</button>
       </div>`;
       document.body.appendChild(popup);
-    }
     }
     renderDashboardStats();
     // ...existing code...

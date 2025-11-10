@@ -207,6 +207,10 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </div>
 
 <script>
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://it-xqhv.onrender.com";
 
 // --- Migración a backend ---
 let currentRepairRow = null;
@@ -224,7 +228,7 @@ async function fetchEmpleado() {
   empleadoId = getEmpleadoIdFromUrl();
   if (!empleadoId) return;
   try {
-    const res = await fetch(`http://localhost:4000/api/empleados/${empleadoId}`);
+    const res = await fetch(`${API_BASE_URL}/api/empleados/${empleadoId}`);
     if (!res.ok) {
       let errorMsg = `Error ${res.status}: No se pudo cargar el empleado`;
       try {
@@ -307,7 +311,7 @@ function openEditModal(type, row=null){
       </label>
     `;
     // Cargar dispositivos disponibles y marcar los asignados
-    fetch('http://localhost:4000/api/inventario')
+  fetch(`${API_BASE_URL}/api/inventario`)
       .then(res => res.json())
       .then(dispositivos => {
         const select = document.getElementById('modal_dispositivosAsignados');
@@ -373,7 +377,7 @@ async function saveModal(){
   dispositivosAsignados: Array.from(document.getElementById('modal_dispositivosAsignados').selectedOptions).map(opt => opt.value)
     };
     try {
-  const res = await fetch(`http://localhost:4000/api/empleados/${empleadoId}`, {
+  const res = await fetch(`${API_BASE_URL}/api/empleados/${empleadoId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(update)
@@ -413,7 +417,7 @@ async function saveModal(){
       os: document.getElementById('modal_os').value
     };
     try {
-      await fetch(`http://localhost:4000/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/api/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(update)
@@ -500,7 +504,7 @@ async function deleteRepair(btn){
   try {
     let reparaciones = deviceData.reparaciones || [];
     reparaciones.splice(row.rowIndex, 1);
-    await fetch(`/api/inventario/${deviceId}`, {
+  await fetch(`${API_BASE_URL}/api/inventario/${deviceId}`, {
       method: 'PUT',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({reparaciones})

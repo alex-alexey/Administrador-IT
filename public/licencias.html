@@ -450,6 +450,10 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </div>
 
 <script>
+const API_BASE_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000"
+    : "https://it-xqhv.onrender.com";
 // Botón principal Importar/Exportar Licencias
 document.getElementById('btnImportExportLic').addEventListener('click', function() {
   document.getElementById('modalImportExportLic').style.display = 'flex';
@@ -563,7 +567,7 @@ window.handleImportExportLicModal = function(action) {
                 }
               });
               try {
-                const resp = await fetch('http://localhost:4000/api/licencias', {
+                const resp = await fetch(`${API_BASE_URL}/api/licencias`, {
                   method: 'POST',
                   headers: {'Content-Type':'application/json'},
                   body: JSON.stringify(mapped)
@@ -612,7 +616,7 @@ const caducadas = document.getElementById('caducadas');
 
 async function fetchLicencias() {
   try {
-  const res = await fetch('http://localhost:4000/api/licencias');
+  const res = await fetch(`${API_BASE_URL}/api/licencias`);
     if (!res.ok) {
       let errorMsg = 'Error al obtener licencias';
       try {
@@ -764,14 +768,14 @@ licForm.addEventListener('submit',async e=>{
   try {
     if(editId) {
       // Editar
-      await fetch(`http://localhost:4000/api/licencias/${editId}`, {
+  await fetch(`${API_BASE_URL}/api/licencias/${editId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(licencia)
       });
     } else {
       // Crear
-      await fetch('http://localhost:4000/api/licencias', {
+  await fetch(`${API_BASE_URL}/api/licencias`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(licencia)
@@ -813,7 +817,7 @@ function editLic(id){
 async function deleteLic(id){
   if(confirm('¿Estás seguro de eliminar esta licencia?')){
     try {
-  await fetch(`http://localhost:4000/api/licencias/${id}`, {method:'DELETE'});
+  await fetch(`${API_BASE_URL}/api/licencias/${id}`, {method:'DELETE'});
       fetchLicencias();
     } catch {
       mostrarPopupError('El servidor no responde. No se pudo eliminar la licencia.');

@@ -101,11 +101,15 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     </div>
     <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
   <script>
+    const API_BASE_URL =
+      window.location.hostname === "localhost"
+        ? "http://localhost:4000"
+        : "https://it-xqhv.onrender.com";
     // Mostrar listado de dispositivos IT con acceso a detalle (desde backend)
     async function renderListadoDispositivosDashboard() {
       let inventory = [];
       try {
-        const res = await fetch('/api/inventario');
+  const res = await fetch(`${API_BASE_URL}/api/inventario`);
         if (!res.ok) throw new Error('Error al obtener inventario');
         inventory = await res.json();
       } catch { inventory = []; }
@@ -133,7 +137,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     async function renderListadoLicenciasCaducar() {
       let licencias = [];
       try {
-        const res = await fetch('/api/licencias');
+  const res = await fetch(`${API_BASE_URL}/api/licencias`);
         if (!res.ok) throw new Error('Error al obtener licencias');
         licencias = await res.json();
       } catch { licencias = []; }
@@ -162,7 +166,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     async function renderLicenciasProximas() {
       let licencias = [];
       try {
-        const res = await fetch('/api/licencias');
+  const res = await fetch(`${API_BASE_URL}/api/licencias`);
         if (!res.ok) throw new Error('Error al obtener licencias');
         licencias = await res.json();
       } catch { licencias = []; }
@@ -201,7 +205,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     // Mostrar número de usuarios registrados desde backend
     async function renderUsuariosRegistrados() {
       try {
-        const res = await fetch('/api/empleados');
+  const res = await fetch(`${API_BASE_URL}/api/empleados`);
         if (!res.ok) throw new Error('Error al obtener empleados');
         const empleados = await res.json();
         document.getElementById('totalUsuarios').textContent = empleados.length;
@@ -213,7 +217,7 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     // Cargar datos del dashboard desde la nueva API
     async function renderDashboardStats() {
       try {
-        const res = await fetch('/api/dashboard');
+  const res = await fetch(`${API_BASE_URL}/api/dashboard`);
         if (!res.ok) throw new Error('Error al obtener datos del dashboard');
         const data = await res.json();
         document.getElementById('totalUsuarios').textContent = data.usuariosRegistrados;
