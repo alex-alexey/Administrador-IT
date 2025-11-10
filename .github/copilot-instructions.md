@@ -1,6 +1,7 @@
 - [ ] Clarificar requerimientos del proyecto
 Cuando un usuario no ha iniciado sesión, redirigirlo a la página de login
 Cuando un usuario ha iniciado sesión, permitirle acceder a las demás páginas
+NUNCA AÑADIR CODIGO DUPLICADO
 - [ ] Definir tecnologías y herramientas a utilizar
 Backend: Node.js con Express
 Frontend: HTML, CSS, JavaScript

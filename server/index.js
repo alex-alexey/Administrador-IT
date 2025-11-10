@@ -10,6 +10,7 @@ import licenciasRouter from './routes/licencias.js';
 import inventarioRouter from './routes/inventario.js';
 import usuariosRouter from './routes/usuarios.js';
 import dashboardRouter from './routes/dashboard.js';
+import dominiosRouter from './routes/dominios.js';
 dotenv.config();
 
 
@@ -22,6 +23,7 @@ app.use('/api/licencias', licenciasRouter);
 app.use('/api/inventario', inventarioRouter);
 app.use('/api/usuarios', usuariosRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/dominios', dominiosRouter);
 
 // Conexión a MongoDB
 

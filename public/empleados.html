@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Inventario IT Premium</title>
+<title>INTEK-IT | Empleados</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -246,9 +246,9 @@ footer {
   <nav>
     <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
     <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-    <a href="/licencias.html" class="active"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/licencias.html" class="fa-solid fa-key"></i> <span>Licencias</span></a>
     <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
-    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="/empleados.html" class="active"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
     <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
     <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
@@ -256,42 +256,40 @@ footer {
 
 <div class="main-content">
   <header>
-    <h1><i class="fa-solid fa-boxes-stacked"></i> Inventario Licencias</h1>
+  <h1><i class="fa-solid fa-users"></i> Gestión de Empleados</h1>
     <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
   </header>
 
   <div class="container">
     <div class="stats">
-      <div class="card"><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
-      <div class="card"><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
-      <div class="card"><h3>Caducadas</h3><span id="caducadas">0</span></div>
+  <div class="card"><h3>Total Empleados</h3><span id="totalEmpleados">0</span></div>
+  <div class="card"><h3>Activos</h3><span id="activos">0</span></div>
+  <div class="card"><h3>Inactivos</h3><span id="inactivos">0</span></div>
     </div>
 
     <div class="search-filter">
-      <input type="text" id="searchLicInput" placeholder="Buscar por software o usuario">
-      <select id="filterLicEstado">
+      <input type="text" id="searchEmpInput" placeholder="Buscar por nombre, departamento o estado">
+      <select id="filterEmpEstado">
         <option value="">Filtrar por estado</option>
-        <option value="Activa">Activa</option>
-        <option value="Próxima a caducar">Próxima a caducar</option>
-        <option value="Caducada">Caducada</option>
+        <option value="Activo">Activo</option>
+        <option value="Inactivo">Inactivo</option>
       </select>
-      <button id="btnAddLicense"><i class="fa-solid fa-plus"></i> Añadir</button>
+      <button id="btnAddEmpleado"><i class="fa-solid fa-plus"></i> Añadir Empleado</button>
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>Licencia</th>
-            <th>Proveedor</th>
-            <th>Serial Number</th>
-            <th>Empleado</th>
+            <th>Nombre</th>
+            <th>Email</th>
             <th>Departamento</th>
-            <th>Fecha Renovación</th>
+            <th>Estado</th>
+            <th>Fecha Alta</th>
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="licenseTableBody"></tbody>
+        <tbody id="empleadosTableBody"></tbody>
       </table>
     </div>
   </div>
@@ -308,34 +306,32 @@ const API_BASE_URL = window.location.hostname === 'localhost'
   : 'https://it-xqhv.onrender.com/api';
 
 // Referencias DOM
-const licenseTableBody = document.getElementById('licenseTableBody');
-const totalLicencias = document.getElementById('totalLicencias');
-const proximas = document.getElementById('proximas');
-const caducadas = document.getElementById('caducadas');
+const empleadosTableBody = document.getElementById('empleadosTableBody');
+const totalEmpleados = document.getElementById('totalEmpleados');
+const activos = document.getElementById('activos');
+const inactivos = document.getElementById('inactivos');
 
-// Renderizar la tabla de licencias
-function renderLicTable(licencias) {
-  licenseTableBody.innerHTML = '';
-  if (!licencias.length) {
-    licenseTableBody.innerHTML = '<tr><td colspan="7" style="color:red;">No hay licencias registradas</td></tr>';
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
+// Renderizar la tabla de empleados
+function renderEmpTable(empleados) {
+  empleadosTableBody.innerHTML = '';
+  if (!empleados.length) {
+    empleadosTableBody.innerHTML = '<tr><td colspan="6" style="color:red;">No hay empleados registrados</td></tr>';
+    totalEmpleados.textContent = activos.textContent = inactivos.textContent = '0';
     return;
   }
-  let total = 0, prox = 0, cad = 0;
-  licencias.forEach(lic => {
-    // Estado visual
-    let estado = lic.estado || '';
-    if (estado.toLowerCase() === 'activa') total++;
-    if (estado.toLowerCase().includes('próxima')) prox++;
-    if (estado.toLowerCase() === 'caducada') cad++;
-    licenseTableBody.innerHTML += `
-      <tr class="lic-row" data-id="${lic._id}" style="cursor:pointer;">
-        <td>${lic.licencia || ''}</td>
-        <td>${lic.proveedor || ''}</td>
-        <td>${lic.serialNumber || ''}</td>
-        <td>${lic.empleadoAsignado || lic.usuario || ''}</td>
-        <td>${lic.departamento || ''}</td>
-        <td>${lic.fechaRenovacion || ''}</td>
+  let total = 0, act = 0, inact = 0;
+  empleados.forEach(emp => {
+    let estado = emp.estado || '';
+    total++;
+    if (estado.toLowerCase() === 'activo') act++;
+    if (estado.toLowerCase() === 'inactivo') inact++;
+    empleadosTableBody.innerHTML += `
+      <tr class="emp-row" data-id="${emp._id}" style="cursor:pointer;">
+        <td>${emp.nombre || ''}</td>
+        <td>${emp.email || ''}</td>
+        <td>${emp.departamento || ''}</td>
+        <td>${emp.estado || ''}</td>
+        <td>${emp.fechaAlta || ''}</td>
         <td class="acciones">
           <button class="edit"><i class="fa-solid fa-pen"></i></button>
           <button class="delete"><i class="fa-solid fa-trash"></i></button>
@@ -343,31 +339,31 @@ function renderLicTable(licencias) {
       </tr>
     `;
   });
-  totalLicencias.textContent = total;
-  proximas.textContent = prox;
-  caducadas.textContent = cad;
+  totalEmpleados.textContent = total;
+  activos.textContent = act;
+  inactivos.textContent = inact;
 }
 
-// Obtener licencias de la API
-async function fetchLicencias() {
+// Obtener empleados de la API
+async function fetchEmpleados() {
   try {
-    const res = await fetch(`${API_BASE_URL}/licencias`);
-    if (!res.ok) throw new Error('Error al obtener licencias');
-    const licencias = await res.json();
-    renderLicTable(licencias);
+    const res = await fetch(`${API_BASE_URL}/empleados`);
+    if (!res.ok) throw new Error('Error al obtener empleados');
+    const empleados = await res.json();
+    renderEmpTable(empleados);
   } catch (err) {
-    licenseTableBody.innerHTML = `<tr><td colspan="7" style="color:red;">${err.message}</td></tr>`;
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
+    empleadosTableBody.innerHTML = `<tr><td colspan="6" style="color:red;">${err.message}</td></tr>`;
+    totalEmpleados.textContent = activos.textContent = inactivos.textContent = '0';
   }
 }
 
 // Inicializar
-document.addEventListener('DOMContentLoaded', fetchLicencias);
+document.addEventListener('DOMContentLoaded', fetchEmpleados);
 // Delegación de evento para hacer toda la fila clicable
-licenseTableBody.addEventListener('click', function(e) {
-  let tr = e.target.closest('tr.lic-row');
+empleadosTableBody.addEventListener('click', function(e) {
+  let tr = e.target.closest('tr.emp-row');
   if (tr && tr.dataset.id) {
-    window.location.href = `/licencia.html?id=${tr.dataset.id}`;
+    window.location.href = `/empleado.html?id=${tr.dataset.id}`;
   }
 });
 </script>
