@@ -1,6 +1,7 @@
 {
   "name": "intek-it",
   "version": "1.0.0",
+  "type": "module",
   "description": "Proyecto base Node.js",
   "main": "server/index.js",
   "scripts": {
