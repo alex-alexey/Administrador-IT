@@ -16,6 +16,10 @@ dotenv.config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Redirigir /login a /login.html para evitar error 404
+app.get('/login', (req, res) => {
+  res.redirect('/login.html');
+});
 // Rutas API
 app.use('/api/empleados', empleadosRouter);
 app.use('/api/licencias', licenciasRouter);
@@ -37,6 +41,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`Servidor backend escuchando en puerto ${PORT}`);
+app.listen(4000, () => {
+  console.log('Servidor backend escuchando en http://localhost:4000');
 });

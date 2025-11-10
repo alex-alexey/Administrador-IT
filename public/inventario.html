@@ -412,7 +412,10 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
 </div>
 
 <script>
-
+// Proteger acceso: si no está logueado, redirigir a login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = '/login.html';
+}
 // --- REFACTORIZADO Y LIMPIO ---
 const tableBody = document.getElementById('inventoryTableBody');
 const totalDevices = document.getElementById('totalDevices');

@@ -284,13 +284,13 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
     <a href="/empleados.html" class="fa-solid fa-users"></i> <span>Empleados</span></a>
   <a href="#helpdesk"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="/"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
+  <a href="#" id="cerrarSesionSidebar"><i class="fa-solid fa-right-from-bracket"></i> <span>Cerrar Sesión</span></a>
   </nav>
 </aside>
   <div class="main-content">
     <header>
-      <span><i class="fa-solid fa-gauge"></i> Dashboard de IT</span>
-      <a href="/login.html"><i class="fa-solid fa-arrow-left"></i> Cerrar sesión</a>
+  <span><i class="fa-solid fa-gauge"></i> Dashboard de IT</span>
+  <a href="#" id="cerrarSesionBtn"><i class="fa-solid fa-arrow-left"></i> Cerrar sesión</a>
     </header>
     <div class="container">
       <div class="stats">
@@ -316,6 +316,31 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
     </div>
     <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
   <script>
+    // Proteger acceso: si no está logueado, redirigir a login
+    if (!localStorage.getItem('loggedIn')) {
+      window.location.href = '/login.html';
+    }
+
+    // Función para cerrar sesión correctamente
+    async function cerrarSesion() {
+      try {
+        await fetch(`${API_BASE_URL}/api/usuarios/logout`, { method: 'POST', credentials: 'include' });
+      } catch {}
+      localStorage.removeItem('loggedIn');
+      localStorage.removeItem('usuario');
+      sessionStorage.clear();
+      window.location.href = '/login.html';
+    }
+    // Cerrar sesión (cabecera)
+    document.getElementById('cerrarSesionBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      cerrarSesion();
+    });
+    // Cerrar sesión (sidebar)
+    document.getElementById('cerrarSesionSidebar').addEventListener('click', function(e) {
+      e.preventDefault();
+      cerrarSesion();
+    });
     // Cargar datos del dashboard desde la API centralizada
     const API_BASE_URL =
       window.location.hostname === "localhost"

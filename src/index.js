@@ -8,6 +8,11 @@ const path = require('path');
 app.use(express.static(path.join(__dirname, '../public')));
 app.use(express.urlencoded({ extended: true }));
 
+// Servir login.html en /login
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/login.html'));
+});
+
 // Usuarios simulados
 const users = [
   {

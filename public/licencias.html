@@ -471,7 +471,10 @@ document.getElementById('btnImportExportLic').addEventListener('click', function
     <div id='importExportLicProcess'></div>
   `;
 });
-
+// Proteger acceso: si no está logueado, redirigir a login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = '/login.html';
+}
 document.getElementById('btnCerrarImportExportLic').addEventListener('click', function() {
   document.getElementById('modalImportExportLic').style.display = 'none';
 });

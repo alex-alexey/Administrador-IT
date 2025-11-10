@@ -316,7 +316,10 @@ const API_BASE_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:4000"
     : "https://it-xqhv.onrender.com";
-
+// Proteger acceso: si no está logueado, redirigir a login
+if (!localStorage.getItem('loggedIn')) {
+  window.location.href = '/login.html';
+}
 // --- Migración a backend ---
 let currentRepairRow = null;
 let modalType = '';

@@ -2,9 +2,9 @@
   "name": "intek-it",
   "version": "1.0.0",
   "description": "Proyecto base Node.js",
-  "main": "src/index.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "node src/index.js",
+  "start": "node server/index.js",
     "test": "echo \"No hay pruebas definidas\" && exit 0"
   },
   "keywords": [],
