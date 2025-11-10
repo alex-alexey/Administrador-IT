@@ -5,6 +5,7 @@ const router = express.Router();
 // Obtener una licencia por ID
 router.get('/:id', async (req, res) => {
   try {
+    console.log(`[LICENCIAS] Consulta GET /api/licencias/${req.params.id} - ${new Date().toISOString()}`);
     const licencia = await Licencia.findById(req.params.id);
     if (!licencia) return res.status(404).json({ error: 'Licencia no encontrada' });
     res.json(licencia);
@@ -16,6 +17,7 @@ router.get('/:id', async (req, res) => {
 // Obtener todas las licencias
 router.get('/', async (req, res) => {
   try {
+    console.log(`[LICENCIAS] Consulta GET /api/licencias - ${new Date().toISOString()}`);
     const licencias = await Licencia.find();
     res.json(licencias);
   } catch (err) {
@@ -26,6 +28,7 @@ router.get('/', async (req, res) => {
 // Crear una nueva licencia
 router.post('/', async (req, res) => {
   try {
+    console.log(`[LICENCIAS] Consulta POST /api/licencias - ${new Date().toISOString()}`);
     // Limpiar y convertir campos
     const body = { ...req.body };
     // Convertir costeSinIva
@@ -68,6 +71,7 @@ router.post('/', async (req, res) => {
 // Actualizar una licencia
 router.put('/:id', async (req, res) => {
   try {
+    console.log(`[LICENCIAS] Consulta PUT /api/licencias/${req.params.id} - ${new Date().toISOString()}`);
     const licencia = await Licencia.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!licencia) return res.status(404).json({ error: 'Licencia no encontrada' });
     res.json(licencia);
@@ -79,6 +83,7 @@ router.put('/:id', async (req, res) => {
 // Eliminar una licencia
 router.delete('/:id', async (req, res) => {
   try {
+    console.log(`[LICENCIAS] Consulta DELETE /api/licencias/${req.params.id} - ${new Date().toISOString()}`);
     const licencia = await Licencia.findByIdAndDelete(req.params.id);
     if (!licencia) return res.status(404).json({ error: 'Licencia no encontrada' });
     res.json({ message: 'Licencia eliminada' });

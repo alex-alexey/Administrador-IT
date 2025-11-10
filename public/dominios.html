@@ -249,7 +249,8 @@ footer {
   <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
   <a href="/dominios.html" class="active"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
   <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
-  <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+  <a href="/gastos.html"><i class="fa-solid fa-money-bill-wave"></i> <span>Gastos</span></a>
+  <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
   <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
@@ -263,8 +264,8 @@ footer {
   <div class="container">
     <div class="stats">
   <div class="card"><h3>Total Dominios</h3><span id="totalDominios">0</span></div>
-  <div class="card"><h3>Activos</h3><span id="activosDom">0</span></div>
-  <div class="card"><h3>Expirados</h3><span id="expiradosDom">0</span></div>
+  <div class="card"><h3>Activos</h3><span id="activosDom">0</div>
+  <div class="card"><h3>Expirados</h3><span id="expiradosDom">0</div>
     </div>
 
     <div class="search-filter">
@@ -351,15 +352,19 @@ function renderDomTable(dominios) {
     total++;
     if (estado.toLowerCase() === 'activo') act++;
     if (estado.toLowerCase() === 'expirado') exp++;
+    // Formatear fechas
+    let fechaCompra = dom.fechaCompra ? new Date(dom.fechaCompra).toLocaleDateString() : '';
+    let fechaExpiracion = dom.fechaExpiracion ? new Date(dom.fechaExpiracion).toLocaleDateString() : '';
+    console.log('Dominio:', dom.nombre, 'ID:', dom._id);
     dominiosTableBody.innerHTML += `
       <tr class="dom-row" data-id="${dom._id}" style="cursor:pointer;">
         <td>${dom.nombre || ''}</td>
         <td>${dom.proveedor || ''}</td>
         <td>${dom.estado || ''}</td>
-        <td>${dom.fechaCompra || ''}</td>
-        <td>${dom.fechaExpiracion || ''}</td>
+        <td>${fechaCompra}</td>
+        <td>${fechaExpiracion}</td>
         <td class="acciones">
-          <button class="edit"><i class="fa-solid fa-pen"></i></button>
+          <button class="edit" onclick="editDominio('${dom._id}')"><i class="fa-solid fa-pen"></i></button>
           <button class="delete"><i class="fa-solid fa-trash"></i></button>
         </td>
       </tr>
@@ -387,6 +392,27 @@ async function fetchDominios() {
 document.addEventListener('DOMContentLoaded', fetchDominios);
 
 // Modal lógica
+// Editar dominio
+async function editDominio(id) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/dominios/${id}`);
+    if (!res.ok) throw new Error('No se pudo cargar el dominio');
+    const dominio = await res.json();
+    // Rellenar el formulario
+    formDominio.reset();
+    for (const key in dominio) {
+      if (formDominio.elements[key]) {
+        formDominio.elements[key].value = dominio[key] || '';
+      }
+    }
+    formDominio.setAttribute('data-edit-id', dominio._id);
+    dominioMsg.textContent = '';
+    modalDominio.style.display = 'flex';
+  } catch (err) {
+    dominioMsg.textContent = err.message;
+    modalDominio.style.display = 'flex';
+  }
+}
 const modalDominio = document.getElementById('modalDominio');
 const btnAddDominio = document.getElementById('btnAddDominio');
 const btnCancelarDominio = document.getElementById('btnCancelarDominio');
@@ -409,15 +435,26 @@ formDominio.addEventListener('submit', async function(e) {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(formDominio));
   dominioMsg.textContent = '';
+  const editId = formDominio.getAttribute('data-edit-id');
   try {
-    const res = await fetch(`${API_BASE_URL}/dominios`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    if (!res.ok) throw new Error('Error al crear el dominio');
-    dominioMsg.textContent = 'Dominio añadido correctamente.';
+    let res;
+    if (editId) {
+      res = await fetch(`${API_BASE_URL}/dominios/${editId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    } else {
+      res = await fetch(`${API_BASE_URL}/dominios`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    }
+    if (!res.ok) throw new Error(editId ? 'Error al modificar el dominio' : 'Error al crear el dominio');
+    dominioMsg.textContent = editId ? 'Dominio modificado correctamente.' : 'Dominio añadido correctamente.';
     modalDominio.style.display = 'none';
+    formDominio.removeAttribute('data-edit-id');
     fetchDominios();
   } catch (err) {
     dominioMsg.textContent = err.message;
@@ -427,10 +464,59 @@ formDominio.addEventListener('submit', async function(e) {
 // Delegación de evento para hacer toda la fila clicable
 dominiosTableBody.addEventListener('click', function(e) {
   let tr = e.target.closest('tr.dom-row');
-  if (tr && tr.dataset.id) {
-    window.location.href = `/dominio.html?id=${tr.dataset.id}`;
+  if (!tr) return;
+  const id = tr.getAttribute('data-id');
+  if (!id) return;
+  // Si se pulsa el botón de borrar
+  if (e.target.closest('button.delete')) {
+    mostrarPopupConfirmacion('¿Estás seguro que deseas eliminar este dominio?', async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/dominios/${id}`, {
+          method: 'DELETE'
+        });
+        if (!res.ok) throw new Error('Error al borrar el dominio');
+        fetchDominios();
+      } catch (err) {
+        alert(err.message);
+      }
+    });
+    return;
+  }
+  // Redirige solo si se pulsa en la celda del nombre (primer td)
+  if (e.target.tagName === 'TD' && e.target.cellIndex === 0) {
+    console.log('Click en nombre dominio, id:', id);
+    window.location.href = `/dominio.html?id=${encodeURIComponent(id)}`;
   }
 });
+
+// Popup de confirmación reutilizable
+function mostrarPopupConfirmacion(mensaje, onConfirm) {
+  let popup = document.createElement('div');
+  popup.style.position = 'fixed';
+  popup.style.top = '0';
+  popup.style.left = '0';
+  popup.style.width = '100vw';
+  popup.style.height = '100vh';
+  popup.style.background = 'rgba(30,58,138,0.85)';
+  popup.style.display = 'flex';
+  popup.style.alignItems = 'center';
+  popup.style.justifyContent = 'center';
+  popup.style.zIndex = '9999';
+  popup.innerHTML = `<div style="background:#fff; color:#1e3a8a; padding:2.5rem 2.5rem; border-radius:16px; box-shadow:0 4px 24px rgba(0,0,0,0.12); font-size:1.2rem; font-weight:600; text-align:center; max-width:90vw;">
+    <i class='fa-solid fa-triangle-exclamation' style='font-size:2.5rem; color:#ef4444; margin-bottom:1rem;'></i><br>
+    ${mensaje}<br><br>
+    <button id="popupConfirmBtn" style="margin-top:1rem; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer; margin-right:1rem;">Eliminar</button>
+    <button id="popupCancelBtn" style="margin-top:1rem; background:#9ca3af; color:#fff; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-size:1rem; cursor:pointer;">Cancelar</button>
+  </div>`;
+  document.body.appendChild(popup);
+  document.getElementById('popupConfirmBtn').onclick = async () => {
+    document.body.removeChild(popup);
+    if (onConfirm) await onConfirm();
+  };
+  document.getElementById('popupCancelBtn').onclick = () => {
+    document.body.removeChild(popup);
+  };
+}
 </script>
 </body>
 </html>

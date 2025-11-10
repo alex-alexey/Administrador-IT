@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Inventario IT Premium</title>
+<title>INTEK-IT | Helpdesk</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -244,55 +244,60 @@ footer {
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-  <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
-  <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-  <a href="/licencias.html" class="active"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
-  <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
-  <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
-  <a href="/gastos.html"><i class="fa-solid fa-money-bill-wave"></i> <span>Gastos</span></a>
-  <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
+    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+  <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="/gastos.html"><i class="fa-solid fa-money-bill-wave"></i> <span>Gastos</span></a>
+  <a href="/helpdesk.html" class="active"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
 
 <div class="main-content">
   <header>
-    <h1><i class="fa-solid fa-boxes-stacked"></i> Inventario Licencias</h1>
+  <h1><i class="fa-solid fa-headset"></i> Helpdesk</h1>
     <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
   </header>
 
   <div class="container">
     <div class="stats">
-      <div class="card"><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
-      <div class="card"><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
-      <div class="card"><h3>Caducadas</h3><span id="caducadas">0</span></div>
+      <div class="card"><h3>Total Tickets</h3><span id="totalTickets">0</span></div>
+      <div class="card"><h3>Abiertos</h3><span id="abiertosTickets">0</span></div>
+      <div class="card"><h3>Cerrados</h3><span id="cerradosTickets">0</span></div>
     </div>
 
     <div class="search-filter">
-      <input type="text" id="searchLicInput" placeholder="Buscar por software o usuario">
-      <select id="filterLicEstado">
+      <input type="text" id="searchTicketInput" placeholder="Buscar por asunto, usuario o estado">
+      <select id="filterTicketEstado">
         <option value="">Filtrar por estado</option>
-        <option value="Activa">Activa</option>
-        <option value="Próxima a caducar">Próxima a caducar</option>
-        <option value="Caducada">Caducada</option>
+        <option value="Abierto">Abierto</option>
+        <option value="En progreso">En progreso</option>
+        <option value="Cerrado">Cerrado</option>
       </select>
-      <button id="btnAddLicense"><i class="fa-solid fa-plus"></i> Añadir</button>
+      <select id="filterTicketPrioridad">
+        <option value="">Filtrar por prioridad</option>
+        <option value="Alta">Alta</option>
+        <option value="Media">Media</option>
+        <option value="Baja">Baja</option>
+      </select>
+      <button id="btnAddTicket"><i class="fa-solid fa-plus"></i> Añadir Ticket</button>
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>Licencia</th>
-            <th>Proveedor</th>
-            <th>Serial Number</th>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Fecha Renovación</th>
+            <th>Asunto</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>Usuario</th>
+            <th>Fecha Creación</th>
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="licenseTableBody"></tbody>
+        <tbody id="ticketTableBody"></tbody>
       </table>
     </div>
   </div>
@@ -309,34 +314,32 @@ const API_BASE_URL = window.location.hostname === 'localhost'
   : 'https://it-xqhv.onrender.com/api';
 
 // Referencias DOM
-const licenseTableBody = document.getElementById('licenseTableBody');
-const totalLicencias = document.getElementById('totalLicencias');
-const proximas = document.getElementById('proximas');
-const caducadas = document.getElementById('caducadas');
+const ticketTableBody = document.getElementById('ticketTableBody');
+const totalTickets = document.getElementById('totalTickets');
+const abiertosTickets = document.getElementById('abiertosTickets');
+const cerradosTickets = document.getElementById('cerradosTickets');
 
-// Renderizar la tabla de licencias
-function renderLicTable(licencias) {
-  licenseTableBody.innerHTML = '';
-  if (!licencias.length) {
-    licenseTableBody.innerHTML = '<tr><td colspan="7" style="color:red;">No hay licencias registradas</td></tr>';
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
+// Renderizar la tabla de tickets
+function renderTicketTable(tickets) {
+  ticketTableBody.innerHTML = '';
+  if (!tickets.length) {
+    ticketTableBody.innerHTML = '<tr><td colspan="6" style="color:red;">No hay tickets registrados</td></tr>';
+    totalTickets.textContent = abiertosTickets.textContent = cerradosTickets.textContent = '0';
     return;
   }
-  let total = 0, prox = 0, cad = 0;
-  licencias.forEach(lic => {
-    // Estado visual
-    let estado = lic.estado || '';
-    if (estado.toLowerCase() === 'activa') total++;
-    if (estado.toLowerCase().includes('próxima')) prox++;
-    if (estado.toLowerCase() === 'caducada') cad++;
-    licenseTableBody.innerHTML += `
-      <tr class="lic-row" data-id="${lic._id}" style="cursor:pointer;">
-        <td>${lic.licencia || ''}</td>
-        <td>${lic.proveedor || ''}</td>
-        <td>${lic.serialNumber || ''}</td>
-        <td>${lic.empleadoAsignado || lic.usuario || ''}</td>
-        <td>${lic.departamento || ''}</td>
-        <td>${lic.fechaRenovacion || ''}</td>
+  let total = 0, abiertos = 0, cerrados = 0;
+  tickets.forEach(ticket => {
+    let estado = ticket.estado || '';
+    total++;
+    if (estado.toLowerCase() === 'abierto') abiertos++;
+    if (estado.toLowerCase() === 'cerrado') cerrados++;
+    ticketTableBody.innerHTML += `
+      <tr class="ticket-row" data-id="${ticket._id}" style="cursor:pointer;">
+        <td>${ticket.asunto || ''}</td>
+        <td>${ticket.estado || ''}</td>
+        <td>${ticket.prioridad || ''}</td>
+        <td>${ticket.usuario || ''}</td>
+        <td>${ticket.fechaCreacion || ''}</td>
         <td class="acciones">
           <button class="edit"><i class="fa-solid fa-pen"></i></button>
           <button class="delete"><i class="fa-solid fa-trash"></i></button>
@@ -344,31 +347,31 @@ function renderLicTable(licencias) {
       </tr>
     `;
   });
-  totalLicencias.textContent = total;
-  proximas.textContent = prox;
-  caducadas.textContent = cad;
+  totalTickets.textContent = total;
+  abiertosTickets.textContent = abiertos;
+  cerradosTickets.textContent = cerrados;
 }
 
-// Obtener licencias de la API
-async function fetchLicencias() {
+// Obtener tickets de la API
+async function fetchTickets() {
   try {
-    const res = await fetch(`${API_BASE_URL}/licencias`);
-    if (!res.ok) throw new Error('Error al obtener licencias');
-    const licencias = await res.json();
-    renderLicTable(licencias);
+    const res = await fetch(`${API_BASE_URL}/tickets`);
+    if (!res.ok) throw new Error('Error al obtener tickets');
+    const tickets = await res.json();
+    renderTicketTable(tickets);
   } catch (err) {
-    licenseTableBody.innerHTML = `<tr><td colspan="7" style="color:red;">${err.message}</td></tr>`;
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
+    ticketTableBody.innerHTML = `<tr><td colspan="6" style="color:red;">${err.message}</td></tr>`;
+    totalTickets.textContent = abiertosTickets.textContent = cerradosTickets.textContent = '0';
   }
 }
 
 // Inicializar
-document.addEventListener('DOMContentLoaded', fetchLicencias);
+document.addEventListener('DOMContentLoaded', fetchTickets);
 // Delegación de evento para hacer toda la fila clicable
-licenseTableBody.addEventListener('click', function(e) {
-  let tr = e.target.closest('tr.lic-row');
+ticketTableBody.addEventListener('click', function(e) {
+  let tr = e.target.closest('tr.ticket-row');
   if (tr && tr.dataset.id) {
-    window.location.href = `/licencia.html?id=${tr.dataset.id}`;
+    window.location.href = `/ticket.html?id=${tr.dataset.id}`;
   }
 });
 </script>

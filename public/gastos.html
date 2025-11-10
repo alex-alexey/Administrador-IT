@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Inventario IT Premium</title>
+<title>INTEK-IT | Gastos</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -244,55 +244,53 @@ footer {
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-  <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
-  <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-  <a href="/licencias.html" class="active"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
-  <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
-  <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
-  <a href="/gastos.html"><i class="fa-solid fa-money-bill-wave"></i> <span>Gastos</span></a>
-  <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
+    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+    <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="/gastos.html" class="active"><i class="fa-solid fa-money-bill-wave"></i> <span>Gastos</span></a>
+    <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
 
 <div class="main-content">
   <header>
-    <h1><i class="fa-solid fa-boxes-stacked"></i> Inventario Licencias</h1>
+  <h1><i class="fa-solid fa-money-bill-wave"></i> Gastos</h1>
     <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
   </header>
 
   <div class="container">
     <div class="stats">
-      <div class="card"><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
-      <div class="card"><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
-      <div class="card"><h3>Caducadas</h3><span id="caducadas">0</span></div>
+      <div class="card"><h3>Total Gastos</h3><span id="totalGastos">0</span></div>
+      <div class="card"><h3>Pendientes</h3><span id="pendientesGastos">0</span></div>
+      <div class="card"><h3>Pagados</h3><span id="pagadosGastos">0</span></div>
     </div>
 
     <div class="search-filter">
-      <input type="text" id="searchLicInput" placeholder="Buscar por software o usuario">
-      <select id="filterLicEstado">
+      <input type="text" id="searchGastoInput" placeholder="Buscar por concepto, usuario o estado">
+      <select id="filterGastoEstado">
         <option value="">Filtrar por estado</option>
-        <option value="Activa">Activa</option>
-        <option value="Próxima a caducar">Próxima a caducar</option>
-        <option value="Caducada">Caducada</option>
+        <option value="Pendiente">Pendiente</option>
+        <option value="Pagado">Pagado</option>
       </select>
-      <button id="btnAddLicense"><i class="fa-solid fa-plus"></i> Añadir</button>
+      <button id="btnAddGasto"><i class="fa-solid fa-plus"></i> Añadir Gasto</button>
     </div>
 
     <div class="table-wrapper">
       <table>
         <thead>
           <tr>
-            <th>Licencia</th>
-            <th>Proveedor</th>
-            <th>Serial Number</th>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Fecha Renovación</th>
+            <th>Concepto</th>
+            <th>Estado</th>
+            <th>Importe</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="licenseTableBody"></tbody>
+        <tbody id="gastosTableBody"></tbody>
       </table>
     </div>
   </div>
@@ -309,34 +307,32 @@ const API_BASE_URL = window.location.hostname === 'localhost'
   : 'https://it-xqhv.onrender.com/api';
 
 // Referencias DOM
-const licenseTableBody = document.getElementById('licenseTableBody');
-const totalLicencias = document.getElementById('totalLicencias');
-const proximas = document.getElementById('proximas');
-const caducadas = document.getElementById('caducadas');
+const gastosTableBody = document.getElementById('gastosTableBody');
+const totalGastos = document.getElementById('totalGastos');
+const pendientesGastos = document.getElementById('pendientesGastos');
+const pagadosGastos = document.getElementById('pagadosGastos');
 
-// Renderizar la tabla de licencias
-function renderLicTable(licencias) {
-  licenseTableBody.innerHTML = '';
-  if (!licencias.length) {
-    licenseTableBody.innerHTML = '<tr><td colspan="7" style="color:red;">No hay licencias registradas</td></tr>';
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
+// Renderizar la tabla de gastos
+function renderGastosTable(gastos) {
+  gastosTableBody.innerHTML = '';
+  if (!gastos.length) {
+    gastosTableBody.innerHTML = '<tr><td colspan="6" style="color:red;">No hay gastos registrados</td></tr>';
+    totalGastos.textContent = pendientesGastos.textContent = pagadosGastos.textContent = '0';
     return;
   }
-  let total = 0, prox = 0, cad = 0;
-  licencias.forEach(lic => {
-    // Estado visual
-    let estado = lic.estado || '';
-    if (estado.toLowerCase() === 'activa') total++;
-    if (estado.toLowerCase().includes('próxima')) prox++;
-    if (estado.toLowerCase() === 'caducada') cad++;
-    licenseTableBody.innerHTML += `
-      <tr class="lic-row" data-id="${lic._id}" style="cursor:pointer;">
-        <td>${lic.licencia || ''}</td>
-        <td>${lic.proveedor || ''}</td>
-        <td>${lic.serialNumber || ''}</td>
-        <td>${lic.empleadoAsignado || lic.usuario || ''}</td>
-        <td>${lic.departamento || ''}</td>
-        <td>${lic.fechaRenovacion || ''}</td>
+  let total = 0, pendientes = 0, pagados = 0;
+  gastos.forEach(gasto => {
+    let estado = gasto.estado || '';
+    total++;
+    if (estado.toLowerCase() === 'pendiente') pendientes++;
+    if (estado.toLowerCase() === 'pagado') pagados++;
+    gastosTableBody.innerHTML += `
+      <tr class="gasto-row" data-id="${gasto._id}" style="cursor:pointer;">
+        <td>${gasto.concepto || ''}</td>
+        <td>${gasto.estado || ''}</td>
+        <td>${gasto.importe || ''}</td>
+        <td>${gasto.usuario || ''}</td>
+        <td>${gasto.fecha || ''}</td>
         <td class="acciones">
           <button class="edit"><i class="fa-solid fa-pen"></i></button>
           <button class="delete"><i class="fa-solid fa-trash"></i></button>
@@ -344,31 +340,31 @@ function renderLicTable(licencias) {
       </tr>
     `;
   });
-  totalLicencias.textContent = total;
-  proximas.textContent = prox;
-  caducadas.textContent = cad;
+  totalGastos.textContent = total;
+  pendientesGastos.textContent = pendientes;
+  pagadosGastos.textContent = pagados;
 }
 
-// Obtener licencias de la API
-async function fetchLicencias() {
+// Obtener gastos de la API
+async function fetchGastos() {
   try {
-    const res = await fetch(`${API_BASE_URL}/licencias`);
-    if (!res.ok) throw new Error('Error al obtener licencias');
-    const licencias = await res.json();
-    renderLicTable(licencias);
+    const res = await fetch(`${API_BASE_URL}/gastos`);
+    if (!res.ok) throw new Error('Error al obtener gastos');
+    const gastos = await res.json();
+    renderGastosTable(gastos);
   } catch (err) {
-    licenseTableBody.innerHTML = `<tr><td colspan="7" style="color:red;">${err.message}</td></tr>`;
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
+    gastosTableBody.innerHTML = `<tr><td colspan="6" style="color:red;">${err.message}</td></tr>`;
+    totalGastos.textContent = pendientesGastos.textContent = pagadosGastos.textContent = '0';
   }
 }
 
 // Inicializar
-document.addEventListener('DOMContentLoaded', fetchLicencias);
+document.addEventListener('DOMContentLoaded', fetchGastos);
 // Delegación de evento para hacer toda la fila clicable
-licenseTableBody.addEventListener('click', function(e) {
-  let tr = e.target.closest('tr.lic-row');
+gastosTableBody.addEventListener('click', function(e) {
+  let tr = e.target.closest('tr.gasto-row');
   if (tr && tr.dataset.id) {
-    window.location.href = `/licencia.html?id=${tr.dataset.id}`;
+    window.location.href = `/gasto.html?id=${tr.dataset.id}`;
   }
 });
 </script>

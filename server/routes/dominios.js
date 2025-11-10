@@ -5,6 +5,7 @@ const router = Router();
 // Obtener todos los dominios
 router.get('/', async (req, res) => {
   try {
+    console.log(`[DOMINIOS] Consulta GET /api/dominios - ${new Date().toISOString()}`);
     const dominios = await Dominio.find();
     res.json(dominios);
   } catch (err) {
@@ -15,6 +16,7 @@ router.get('/', async (req, res) => {
 // Obtener un dominio por ID
 router.get('/:id', async (req, res) => {
   try {
+    console.log(`[DOMINIOS] Consulta GET /api/dominios/${req.params.id} - ${new Date().toISOString()}`);
     const dominio = await Dominio.findById(req.params.id);
     if (!dominio) return res.status(404).json({ error: 'Dominio no encontrado' });
     res.json(dominio);
@@ -26,6 +28,7 @@ router.get('/:id', async (req, res) => {
 // Crear un dominio
 router.post('/', async (req, res) => {
   try {
+    console.log(`[DOMINIOS] Consulta POST /api/dominios - ${new Date().toISOString()}`);
     const dominio = new Dominio(req.body);
     await dominio.save();
     res.status(201).json(dominio);
@@ -37,6 +40,7 @@ router.post('/', async (req, res) => {
 // Actualizar un dominio
 router.put('/:id', async (req, res) => {
   try {
+    console.log(`[DOMINIOS] Consulta PUT /api/dominios/${req.params.id} - ${new Date().toISOString()}`);
     const dominio = await Dominio.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!dominio) return res.status(404).json({ error: 'Dominio no encontrado' });
     res.json(dominio);
@@ -48,6 +52,7 @@ router.put('/:id', async (req, res) => {
 // Eliminar un dominio
 router.delete('/:id', async (req, res) => {
   try {
+    console.log(`[DOMINIOS] Consulta DELETE /api/dominios/${req.params.id} - ${new Date().toISOString()}`);
     const dominio = await Dominio.findByIdAndDelete(req.params.id);
     if (!dominio) return res.status(404).json({ error: 'Dominio no encontrado' });
     res.json({ message: 'Dominio eliminado' });
