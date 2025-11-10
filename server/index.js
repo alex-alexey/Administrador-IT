@@ -32,19 +32,25 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/intek-it', 
 
 // Servir archivos estáticos desde public
 
+
 import path from 'path';
 const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, '../public')));
 
-// Redirigir /login y /login.html a public/login.html
-app.get(['/login', '/login.html'], (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/login.html'));
+// Detectar si public está en la raíz o en /server
+import fs from 'fs';
+let publicPath = path.join(__dirname, 'public');
+if (!fs.existsSync(publicPath)) {
+  publicPath = path.join(__dirname, '../public');
+}
+app.use(express.static(publicPath));
+
+
+// Redirigir /login, /login.html y la raíz / a public/login.html
+app.get(['/', '/login', '/login.html'], (req, res) => {
+  // Buscar login.html en publicPath
+  const loginPath = path.join(publicPath, 'login.html');
+  res.sendFile(loginPath);
 });
-
-// Redirigir cualquier ruta no encontrada a login.html (opcional, solo si quieres que todo vaya a login)
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../public/login.html'));
-// });
 
 
 const PORT = process.env.PORT || 4000;
