@@ -5,8 +5,9 @@
   "description": "Proyecto base Node.js",
   "main": "server/index.js",
   "scripts": {
-    "start": "node server/index.js",
-    "test": "echo \"No hay pruebas definidas\" && exit 0"
+  "start": "node server/index.js",
+  "test": "echo \"No hay pruebas definidas\" && exit 0",
+  "dev": "serve -l 3000 public"
   },
   "keywords": [],
   "author": "",
