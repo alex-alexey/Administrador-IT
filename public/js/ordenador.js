@@ -36,14 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // --- Funciones migradas desde ordenador.html ---
 
-function getDeviceIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
+
+function getDeviceIdFromPath() {
+  const match = window.location.pathname.match(/\/ordenador\/(\w+)/);
+  return match ? match[1] : null;
 }
 
 async function fetchDevice() {
     try {
-      deviceId = getDeviceIdFromUrl();
+  deviceId = getDeviceIdFromPath();
       if (!deviceId) {
         document.querySelector('.container').innerHTML = `<div style='color:#ef4444;font-size:1.2em;padding:2em;text-align:center;'>No se ha especificado ningún dispositivo.<br>Vuelve al <a href='/inventario.html'>Inventario</a>.</div>`;
         return;
@@ -436,7 +437,6 @@ async function saveModal(){
     await mostrarPopupConfirmacion('¿Seguro que quieres guardar estos datos?', async () => {
       const update = getBasicFormData();
       try {
-        // CAMBIO: la ruta debe ser /ordenador/${deviceId}
         const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
           method: 'PUT',
           headers: {'Content-Type':'application/json'},
@@ -452,9 +452,38 @@ async function saveModal(){
           return;
         }
         await fetchDevice();
-               closeModal();
+        closeModal();
       } catch (err) {
         alert('Error al actualizar el dispositivo: ' + err.message);
+      }
+    }, { confirmText: 'Guardar', cancelText: 'Cancelar', iconColor: '#3b82f6' });
+  }
+  else if(modalType==='features'){
+    if (!isFeaturesDataChanged()) {
+      closeModal();
+      return;
+    }
+    await mostrarPopupConfirmacion('¿Seguro que quieres guardar las características?', async () => {
+      const update = getFeaturesFormData();
+      try {
+        const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
+          method: 'PUT',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(update)
+        });
+        if (!res.ok) {
+          let errorMsg = 'Error al actualizar las características';
+          try {
+            const errorData = await res.json();
+            errorMsg = errorData.error || errorMsg;
+          } catch {}
+          alert(errorMsg);
+          return;
+        }
+        await fetchDevice();
+        closeModal();
+      } catch (err) {
+        alert('Error al actualizar las características: ' + err.message);
       }
     }, { confirmText: 'Guardar', cancelText: 'Cancelar', iconColor: '#3b82f6' });
   }

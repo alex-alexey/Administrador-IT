@@ -1,6 +1,7 @@
 import express from 'express';
 import Licencia from '../models/Licencia.js';
 const router = express.Router();
+import path from 'path';
 
 // Obtener una licencia por ID
 router.get('/:id', async (req, res) => {
@@ -85,6 +86,12 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: 'Error al eliminar licencia' });
   }
+});
+
+// Obtener una licencia por ID (para el frontend)
+router.get('/licencia/:id', (req, res) => {
+  const licenciaPath = path.join(publicPath, 'licencia.html');
+  res.sendFile(licenciaPath);
 });
 
 export default router;
