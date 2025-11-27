@@ -220,6 +220,7 @@ function openEditModal(type, row=null){
   const modalFields = document.getElementById('modalFields');
   modalFields.innerHTML = '';
 
+  // ...existing code...
   if(type==='basic'){
     document.getElementById('modalTitle').innerText = 'Editar Información Básica';
     modalFields.innerHTML = `
@@ -256,47 +257,19 @@ function openEditModal(type, row=null){
           <label>Observaciones: <input type="text" id="modal_observaciones" value="${deviceData.observaciones || ''}"></label>
         </div>
       </div>
-    `;
-    document.getElementById('modalOverlay').style.display = 'flex';
-  }
-  if(type==='basic'){
-    document.getElementById('modalTitle').innerText = 'Editar Información Básica';
-    modalFields.innerHTML = `
-      <div style="display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;">
-        <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:1rem;">
-          <label>TRAZA: <input type="text" id="modal_trazaEquipo" value="${deviceData.trazaEquipo || ''}"></label>
-          <label>Tipo:
-            <select id="modal_tipo">
-              <option value="Ordenador" ${deviceData.tipo==='Ordenador'?'selected':''}>Ordenador</option>
-              <option value="Móvil" ${deviceData.tipo==='Móvil'?'selected':''}>Móvil</option>
-              <option value="Pantalla" ${deviceData.tipo==='Pantalla'?'selected':''}>Pantalla</option>
-              <option value="Teclado" ${deviceData.tipo==='Teclado'?'selected':''}>Teclado</option>
-              <option value="Ratón" ${deviceData.tipo==='Ratón'?'selected':''}>Ratón</option>
-              <option value="Otro" ${deviceData.tipo==='Otro'?'selected':''}>Otro</option>
-            </select>
-          </label>
-          <label>Categoría: <input type="text" id="modal_categoria" value="${deviceData.categoria || ''}"></label>
-          <label>Modelo: <input type="text" id="modal_modelo" value="${deviceData.modelo || ''}"></label>
-          <label>Marca: <input type="text" id="modal_marca" value="${deviceData.marca || ''}"></label>
-          <label>Nº Serie: <input type="text" id="modal_serie" value="${deviceData.serie || ''}"></label>
-        </div>
-        <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:1rem;">
-          <label>Estado:
-            <select id="modal_estado">
-              <option value="Operativo" ${deviceData.estado==='Operativo'?'selected':''}>Operativo</option>
-              <option value="En reparación" ${deviceData.estado==='En reparación'?'selected':''}>En reparación</option>
-              <option value="Baja" ${deviceData.estado==='Baja'?'selected':''}>Baja</option>
-              <option value="Stock" ${deviceData.estado==='Stock'?'selected':''}>Stock</option>
-            </select>
-          </label>
-          <label>Ubicación: <input type="text" id="modal_ubicacion" value="${deviceData.ubicacion || ''}"></label>
-          <label>Fecha de compra: <input type="date" id="modal_fechaCompra" value="${deviceData.fechaCompra ? deviceData.fechaCompra.slice(0,10) : ''}"></label>
-          <label>Responsable: <input type="text" id="modal_empleadoActual" value="${deviceData.responsable || deviceData.empleado || ''}"></label>
-          <label>Observaciones: <input type="text" id="modal_observaciones" value="${deviceData.observaciones || ''}"></label>
-        </div>
+      <div class="modalActions" style="display:flex;justify-content:center;gap:2rem;margin-top:2rem;">
+        <button id="btnGuardarModal" class="save-btn" style="background:#3b82f6;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Guardar</button>
+        <button id="btnCancelarModal" class="cancel-btn" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
       </div>
     `;
     document.getElementById('modalOverlay').style.display = 'flex';
+    // Conectar los botones de la modal a las funciones
+    setTimeout(() => {
+      const btnGuardar = document.getElementById('btnGuardarModal');
+      const btnCancelar = document.getElementById('btnCancelarModal');
+      if(btnGuardar) btnGuardar.onclick = saveModal;
+      if(btnCancelar) btnCancelar.onclick = closeModal;
+    }, 10);
   }
   else if(type==='features'){
     document.getElementById('modalTitle').innerText = 'Editar Características';
@@ -305,11 +278,71 @@ function openEditModal(type, row=null){
       <label>RAM: <input type="text" id="modal_ram" value="${deviceData.ram || ''}"></label>
       <label>Almacenamiento: <input type="text" id="modal_storage" value="${deviceData.storage || ''}"></label>
       <label>Sistema Operativo: <input type="text" id="modal_os" value="${deviceData.os || ''}"></label>
+      <div style="display:flex;justify-content:center;gap:2rem;margin-top:2rem;">
+        <button id="btnGuardarModal" style="background:#3b82f6;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Guardar</button>
+        <button id="btnCancelarModal" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
+      </div>
     `;
     document.getElementById('modalOverlay').style.display = 'flex';
+    setTimeout(() => {
+      document.getElementById('btnGuardarModal').onclick = saveModal;
+      document.getElementById('btnCancelarModal').onclick = closeModal;
+    }, 10);
+  }
+  else if(type==='assignment'){
+    document.getElementById('modalTitle').innerText = 'Añadir/Editar Asignación';
+    modalFields.innerHTML = `
+      <label>Empleado: <input type="text" id="modal_empleado" value=""></label>
+      <label>Departamento: <input type="text" id="modal_depto" value=""></label>
+      <label>Fecha inicio: <input type="date" id="modal_start" value=""></label>
+      <label>Fecha fin: <input type="date" id="modal_end" value=""></label>
+      <div style="display:flex;justify-content:center;gap:2rem;margin-top:2rem;">
+        <button id="btnGuardarModal" style="background:#3b82f6;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Guardar</button>
+        <button id="btnCancelarModal" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
+      </div>
+    `;
+    document.getElementById('modalOverlay').style.display = 'flex';
+    setTimeout(() => {
+      document.getElementById('btnGuardarModal').onclick = saveModal;
+      document.getElementById('btnCancelarModal').onclick = closeModal;
+    }, 10);
+  }
+  else if(type==='repair'){
+    document.getElementById('modalTitle').innerText = row !== null ? 'Editar Reparación' : 'Añadir Reparación';
+    let tecnicoValue = '';
+    // Si estamos añadiendo, el técnico es el usuario logueado
+    if (row === null) {
+      const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+      tecnicoValue = usuario.nombre || '';
+    } else {
+      if (deviceData.reparaciones && deviceData.reparaciones[row]) {
+        tecnicoValue = deviceData.reparaciones[row].tecnico || '';
+      }
+    }
+    modalFields.innerHTML = `
+      <label>Fecha: <input type="date" id="modal_fecha" value=""></      localStorage.setItem('usuario', JSON.stringify(usuario));label>
+      <label>Técnico: <input type="text" id="modal_tecnico" value="${tecnicoValue}" readonly></label>
+      <label>Estado:
+        <select id="modal_estado">
+          <option value="Pendiente">Pendiente</option>
+          <option value="En proceso">En proceso</option>
+          <option value="Resuelto">Resuelto</option>
+        </select>
+      </label>
+      <label>Problema: <input type="text" id="modal_problema" value=""></label>
+      <div style="display:flex;justify-content:center;gap:2rem;margin-top:2rem;">
+        <button id="btnGuardarModal" style="background:#3b82f6;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Guardar</button>
+        <button id="btnCancelarModal" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
+      </div>
+    `;
+    document.getElementById('modalOverlay').style.display = 'flex';
+    setTimeout(() => {
+      document.getElementById('btnGuardarModal').onclick = saveModal;
+      document.getElementById('btnCancelarModal').onclick = closeModal;
+    }, 10);
   }
     // El manejo de errores ya está dentro del fetch de empleados, no debe ir aquí fuera de bloque
-  }
+  } // <-- Esta llave cierra la función openEditModal
 
 function closeModal(){
   document.getElementById('modalOverlay').style.display='none';
@@ -518,7 +551,7 @@ async function deleteRepair(idx) {
   await mostrarPopupConfirmacion('¿Seguro que quieres eliminar este historial?', async () => {
     let reparaciones = deviceData.reparaciones || [];
     reparaciones.splice(idx, 1);
-  await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
+    await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reparaciones })
@@ -526,5 +559,3 @@ async function deleteRepair(idx) {
     await fetchDevice();
   });
 }
-
-
