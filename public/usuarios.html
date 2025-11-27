@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Usuarios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/usuarios.css">
+</head>
+<body>
+  <aside>
+    <div class="logo">INTEK-IT</div>
+    <nav>
+      <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+      <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+      <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+      <a href="/controlgastos.html"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
+      <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+      <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+      <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+      <a href="#" id="btnLogout"><i class="fa-solid fa-sign-out-alt"></i> <span>Salir</span></a>
+      <a href="/usuarios.html" class="active"><i class="fa-solid fa-user"></i> <span>Usuarios</span></a>
+    </nav>
+  </aside>
+  <div class="main-content">
+    <header>
+  <h1><i class="fa-solid fa-user"></i> Gestión de Usuarios</h1>
+  <a href="/dashboard.html" class="btn" style="margin-left:1rem;"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+  <button id="btnAddUser" class="btn"><i class="fa-solid fa-plus"></i> Añadir Usuario</button>
+    </header>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Departamento</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="usuariosTableBody"></tbody>
+      </table>
+    </div>
+    <!-- Modal añadir/editar usuario -->
+    <div id="modalUserOverlay" style="display:none;">
+      <div class="modal">
+        <h3 id="modalUserTitle">Añadir Usuario</h3>
+        <form id="formUser">
+          <label>Nombre:<input type="text" name="nombre" required></label>
+          <label>Email:<input type="email" name="email" required></label>
+          <label>Departamento:<input type="text" name="departamento"></label>
+          <label>Rol:
+            <select name="rol" required>
+              <option value="empleado">Empleado</option>
+              <option value="tecnico">Técnico</option>
+              <option value="rrhh">RRHH</option>
+              <option value="adminIT">Administrador IT</option>
+              <option value="manager">Manager</option>
+            </select>
+          </label>
+          <label>Contraseña:<input type="password" name="contrasena" required></label>
+          <div class="actions">
+            <button type="submit" class="btn">Guardar</button>
+            <button type="button" class="btn cancel" id="btnCancelUser">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="/js/usuarios.js"></script>
+  <script>
+    document.getElementById('btnLogout')?.addEventListener('click', function() {
+      localStorage.removeItem('token');
+      window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>
