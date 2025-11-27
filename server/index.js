@@ -11,6 +11,7 @@ import inventarioRouter from './routes/inventario.js';
 import usuariosRouter from './routes/usuarios.js';
 import dashboardRouter from './routes/dashboard.js';
 import dominiosRouter from './routes/dominios.js';
+import ordenadorRoutes from './routes/ordenador.js';
 dotenv.config();
 
 
@@ -24,6 +25,7 @@ app.use('/api/inventario', inventarioRouter);
 app.use('/api/usuarios', usuariosRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/dominios', dominiosRouter);
+app.use('/api/ordenador', ordenadorRoutes);
 
 // Conexión a MongoDB
 
@@ -47,11 +49,19 @@ if (!fs.existsSync(publicPath)) {
 app.use(express.static(publicPath));
 
 
+
 // Redirigir /login, /login.html y la raíz / a public/login.html
 app.get(['/', '/login', '/login.html'], (req, res) => {
-  // Buscar login.html en publicPath
   const loginPath = path.join(publicPath, 'login.html');
   res.sendFile(loginPath);
+});
+
+// Redirigir /ordenador a /ordenador.html manteniendo parámetros
+app.get('/ordenador', (req, res) => {
+  let query = req.url.split('?')[1];
+  let target = '/ordenador.html';
+  if (query) target += '?' + query;
+  res.redirect(target);
 });
 
 
