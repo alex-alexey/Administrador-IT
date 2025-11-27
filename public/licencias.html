@@ -3,374 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Inventario IT Premium</title>
+<title>INTEK-IT | Licencias</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<style>
-:root {
-  --color-primary: #1e3a8a;
-  --color-secondary: #3b82f6;
-  --color-bg: #f5f7fb;
-  --color-white: #ffffff;
-  --color-gray: #6b7280;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --radius: 16px;
-  --transition: all 0.3s ease;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
-
-body {
-  display: flex;
-  background: var(--color-bg);
-  color: #111827;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* === SIDEBAR === */
-aside {
-  width: 240px;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem 1rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  height: 100vh;
-  justify-content: flex-start;
-  box-shadow: var(--shadow);
-  overflow-y: auto;
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  letter-spacing: 1px;
-}
-
-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  flex: 1;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.6rem 0.9rem;
-  border-radius: 10px;
-  transition: var(--transition);
-}
-
-nav a:hover,
-nav a.active {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* === MAIN CONTENT === */
-.main-content {
-  margin-left: 240px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* === HEADER === */
-header {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow);
-}
-
-header h1 {
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-header a {
-  color: white;
-  background: rgba(255,255,255,0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: var(--transition);
-}
-header a:hover { background: rgba(255,255,255,0.3); }
-
-/* === CONTAINER === */
-.container {
-  padding: 2rem;
-  flex: 1;
-}
-
-/* === STATS === */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.card {
-  background: var(--color-white);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-.card h3 { color: var(--color-gray); margin-bottom: .4rem; }
-.card span { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); }
-
-/* === TABLE === */
-.table-wrapper { overflow-x: auto; }
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  box-shadow: var(--shadow);
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-th, td {
-  padding: 1rem;
-  text-align: left;
-  font-size: 0.95rem;
-}
-
-th {
-  background: #f3f4f6;
-  color: var(--color-primary);
-}
-
-tbody tr:hover { background: #f9fafb; }
-
-/* === ACTION BUTTONS === */
-.acciones button {
-  margin-right: 0.4rem;
-  padding: 0.4rem 0.7rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.acciones .edit { background: var(--color-warning); color: white; }
-.acciones .delete { background: var(--color-danger); color: white; }
-.acciones button:hover { transform: translateY(-1px); opacity: 0.85; }
-
-/* === SEARCH / FILTER === */
-.search-filter {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.search-filter input, .search-filter select {
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-.search-filter button {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.6rem 1.2rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: var(--transition);
-}
-.search-filter button:hover { opacity: 0.9; transform: translateY(-1px); }
-
-/* === FOOTER === */
-footer {
-  text-align: center;
-  padding: 1rem;
-  color: var(--color-gray);
-  font-size: 0.9rem;
-  background: var(--color-bg);
-  margin-top: auto; /* empuja hacia abajo sin usar position:fixed */
-}
-
-/* === RESPONSIVE === */
-@media(max-width: 768px) {
-  aside {
-    width: 70px;
-    padding: 1rem 0.3rem;
-  }
-  aside .logo { font-size: 1rem; margin-bottom: 1rem; }
-  nav a span { display: none; }
-  .main-content { margin-left: 70px; }
-}
-</style>
+<link rel="stylesheet" href="css/licencias.css">
 </head>
 
 <body>
+
+<!-- ================= SIDEBAR ================= -->
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-  <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
-  <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-  <a href="/licencias.html" class="active"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
-  <a href="/controlgastos.html"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
-  <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
-  <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
-  <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-  <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
+    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+    <a href="/licencias.html" class="active"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/controlgastos.html"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+      <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-sign-out-alt"></i> <span>Salir</span></a>
   </nav>
 </aside>
 
+<!-- ================= MAIN ================= -->
 <div class="main-content">
-  <header>
-    <h1><i class="fa-solid fa-boxes-stacked"></i> Inventario Licencias</h1>
-    <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
-  </header>
 
-  <div class="container">
-    <div class="stats">
-      <div class="card"><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
-      <div class="card"><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
-      <div class="card"><h3>Caducadas</h3><span id="caducadas">0</span></div>
-    </div>
+<header>
+  <h1><i class="fa-solid fa-key"></i> Gestión de Licencias</h1>
+  <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+</header>
 
-    <div class="search-filter">
-      <input type="text" id="searchLicInput" placeholder="Buscar por software o usuario">
-      <select id="filterLicEstado">
-        <option value="">Filtrar por estado</option>
-        <option value="Activa">Activa</option>
-        <option value="Próxima a caducar">Próxima a caducar</option>
-        <option value="Caducada">Caducada</option>
-      </select>
-      <button id="btnAddLicense"><i class="fa-solid fa-plus"></i> Añadir</button>
-    </div>
-
-    <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Licencia</th>
-            <th>Proveedor</th>
-            <th>Serial Number</th>
-            <th>Empleado</th>
-            <th>Departamento</th>
-            <th>Fecha Renovación</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="licenseTableBody"></tbody>
-      </table>
+<div class="container">
+  <!-- MODAL NUEVA LICENCIA -->
+  <div id="modalAddOverlay" style="display:none;">
+    <div class="modal" id="modalAddForm">
+      <h3>Añadir Licencia</h3>
+      <form id="formAddLicencia">
+        <label>Software:<input type="text" name="software" required></label>
+        <label>Nombre Licencia:<input type="text" name="nombreLicencia" required></label>
+        <label>Licencia:<input type="text" name="licencia" required></label>
+        <label>Usuario:<input type="text" name="usuario"></label>
+        <label>Empleado Asignado:<input type="text" name="empleadoAsignado"></label>
+        <label>Departamento:<input type="text" name="departamento"></label>
+        <label>Proveedor:<input type="text" name="proveedor"></label>
+        <label>Expiración:<input type="date" name="expiracion"></label>
+        <label>Estado:<input type="text" name="estado"></label>
+        <label>Fecha Adquisición:<input type="date" name="fechaAdquisicion"></label>
+        <label>Fecha Última Renovación:<input type="date" name="fechaUltimaRenovacion"></label>
+        <label>Fecha Renovación:<input type="date" name="fechaRenovacion"></label>
+        <div class="actions">
+          <button type="submit" class="btn">Guardar</button>
+          <button type="button" class="btn cancel" id="btnCancelAdd">Cancelar</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <footer>
-    &copy; 2025 INTEK-IT. Todos los derechos reservados.
-  </footer>
+  <!-- == STATS == -->
+  <div class="stats">
+    <div class="card"><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
+    <div class="card"><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
+    <div class="card"><h3>Caducadas</h3><span id="caducadas">0</span></div>
+  </div>
+
+  <!-- == SEARCH FILTERS == -->
+  <div class="search-filter">
+    <input type="text" id="searchLicInput" placeholder="Buscar por software, usuario o proveedor">
+    <select id="filterLicEstado">
+      <option value="">Estado</option>
+      <option value="Activa">Activa</option>
+      <option value="Próxima a caducar">Próxima a caducar</option>
+      <option value="Caducada">Caducada</option>
+    </select>
+    <button id="btnAddLicense"><i class="fa-solid fa-plus"></i> Añadir</button>
+  </div>
+
+  <!-- == TABLE == -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Software</th>
+          <th>Licencia</th>
+          <th>Proveedor</th>
+          <th>Usuario</th>
+          <th>Expira</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="licenseTableBody"></tbody>
+    </table>
+  </div>
+
 </div>
 
-<script>
-// API base URL
-const API_BASE_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:4000/api'
-  : 'https://it-xqhv.onrender.com/api';
+<footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
 
-// Referencias DOM
-const licenseTableBody = document.getElementById('licenseTableBody');
-const totalLicencias = document.getElementById('totalLicencias');
-const proximas = document.getElementById('proximas');
-const caducadas = document.getElementById('caducadas');
-
-// Renderizar la tabla de licencias
-function renderLicTable(licencias) {
-  licenseTableBody.innerHTML = '';
-  if (!licencias.length) {
-    licenseTableBody.innerHTML = '<tr><td colspan="7" style="color:red;">No hay licencias registradas</td></tr>';
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
-    return;
-  }
-  let total = 0, prox = 0, cad = 0;
-  licencias.forEach(lic => {
-    // Estado visual
-    let estado = lic.estado || '';
-    if (estado.toLowerCase() === 'activa') total++;
-    if (estado.toLowerCase().includes('próxima')) prox++;
-    if (estado.toLowerCase() === 'caducada') cad++;
-    licenseTableBody.innerHTML += `
-      <tr class="lic-row" data-id="${lic._id}" style="cursor:pointer;">
-        <td>${lic.licencia || ''}</td>
-        <td>${lic.proveedor || ''}</td>
-        <td>${lic.serialNumber || ''}</td>
-        <td>${lic.empleadoAsignado || lic.usuario || ''}</td>
-        <td>${lic.departamento || ''}</td>
-        <td>${lic.fechaRenovacion || ''}</td>
-        <td class="acciones">
-          <button class="edit"><i class="fa-solid fa-pen"></i></button>
-          <button class="delete"><i class="fa-solid fa-trash"></i></button>
-        </td>
-      </tr>
-    `;
-  });
-  totalLicencias.textContent = total;
-  proximas.textContent = prox;
-  caducadas.textContent = cad;
-}
-
-// Obtener licencias de la API
-async function fetchLicencias() {
-  try {
-    const res = await fetch(`${API_BASE_URL}/licencias`);
-    if (!res.ok) throw new Error('Error al obtener licencias');
-    const licencias = await res.json();
-    renderLicTable(licencias);
-  } catch (err) {
-    licenseTableBody.innerHTML = `<tr><td colspan="7" style="color:red;">${err.message}</td></tr>`;
-    totalLicencias.textContent = proximas.textContent = caducadas.textContent = '0';
-  }
-}
-
-// Inicializar
-document.addEventListener('DOMContentLoaded', fetchLicencias);
-// Delegación de evento para hacer toda la fila clicable
-licenseTableBody.addEventListener('click', function(e) {
-  let tr = e.target.closest('tr.lic-row');
-  if (tr && tr.dataset.id) {
-    window.location.href = `/licencia.html?id=${tr.dataset.id}`;
-  }
-});
-</script>
+</div>
+<script src="js/licencias.js"></script>
 </body>
 </html>

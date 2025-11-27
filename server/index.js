@@ -56,11 +56,11 @@ app.get(['/', '/login', '/login.html'], (req, res) => {
   res.sendFile(loginPath);
 });
 
-// Redirigir /ordenador a /ordenador.html manteniendo parámetros
-app.get('/ordenador', (req, res) => {
-  let query = req.url.split('?')[1];
-  let target = '/ordenador.html';
-  if (query) target += '?' + query;
+
+// Redirigir /licencias/:id a licencia.html manteniendo el id como query
+app.get('/licencias/:id', (req, res) => {
+  const id = req.params.id;
+  const target = `/licencia.html?id=${id}`;
   res.redirect(target);
 });
 

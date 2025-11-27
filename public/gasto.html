@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INTEK-IT | Detalle del Gasto</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+/* EL MISMO CSS QUE LICENCIAS – COPIADO TAL CUAL */
+:root {
+  --bg:#f5f7fb; --white:#fff; --primary:#1e40af; --secondary:#3b82f6;
+  --gray:#6b7280; --light-gray:#eef0f5; --success:#16a34a; 
+  --danger:#dc2626; --warning:#f59e0b;
+  --radius:16px; --shadow:0 4px 18px rgba(0,0,0,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:var(--bg);display:flex;}
+aside{width:240px;background:linear-gradient(180deg,var(--primary),var(--secondary));
+color:white;padding:2rem 1rem;height:100vh;position:fixed;}
+aside .logo{text-align:center;font-size:1.6rem;font-weight:700;margin-bottom:2rem;}
+aside nav a{display:flex;gap:.8rem;padding:.7rem 1rem;margin-bottom:.5rem;
+border-radius:10px;text-decoration:none;color:white;}
+aside nav a:hover{background:rgba(255,255,255,.25);}
+aside nav a.active{background:rgba(255,255,255,.35);}
+.main{margin-left:240px;padding:2rem;width:100%;}
+.header{background:linear-gradient(135deg,var(--primary),var(--secondary));padding:1rem 2rem;
+border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;color:white;}
+.cards{display:flex;gap:1.5rem;margin-top:2rem;flex-wrap:wrap;}
+.card{background:white;padding:1.6rem;border-radius:var(--radius);box-shadow:var(--shadow);flex:1;}
+.btn{background:var(--secondary);padding:.7rem 1.2rem;border:none;color:white;border-radius:12px;cursor:pointer;}
+#modalOverlay{position:fixed;display:none;width:100%;height:100%;top:0;left:0;background:rgba(0,0,0,.4);justify-content:center;align-items:center;}
+.modal{background:white;padding:2rem;border-radius:16px;box-shadow:var(--shadow);width:100%;max-width:480px;}
+.modal input{width:100%;padding:.6rem;border:1px solid var(--light-gray);margin-bottom:.9rem;border-radius:6px;}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="logo">INTEK-IT</div>
+  <nav>
+    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> Inventario IT</a>
+    <a href="/licencias.html"><i class="fa-solid fa-key"></i> Licencias</a>
+    <a href="/controlgastos.html" class="active"><i class="fa-solid fa-coins"></i> Gastos</a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> Dominios</a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> Empleados</a>
+    <a href="#"><i class="fa-solid fa-headset"></i> Helpdesk</a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+  </nav>
+</aside>
+
+<div class="main">
+
+  <div class="header">
+    <h2><i class="fa-solid fa-coins"></i> Detalle del Gasto</h2>
+    <a href="/controlgastos.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Información General</h3>
+      <p>Concepto: <strong id="g_concepto"></strong></p>
+      <p>Monto: <strong id="g_monto"></strong></p>
+      <p>Categoría: <strong id="g_categoria"></strong></p>
+    </div>
+
+    <div class="card">
+      <h3>Registro</h3>
+      <p>Fecha: <strong id="g_fecha"></strong></p>
+      <p>Usuario: <strong id="g_usuario"></strong></p>
+      <button class="btn" onclick="openModal()">Editar Gasto</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="modalOverlay">
+  <div class="modal">
+    <h3>Editar Gasto</h3>
+    <div id="modalFields"></div>
+
+    <button class="btn" onclick="saveModal()">Guardar</button>
+    <button class="btn" style="background:#dc2626" onclick="closeModal()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+let gastoId = new URLSearchParams(window.location.search).get("id");
+let gastoData = {};
+
+/* LOGOUT */
+document.getElementById("btnLogout").onclick = () => {
+  localStorage.clear(); sessionStorage.clear();
+  window.location.href = "/login.html";
+};
+
+/* FETCH */
+async function fetchGasto(){
+  const res = await fetch(`http://localhost:4000/api/gastos/${gastoId}`);
+  gastoData = await res.json();
+  render();
+}
+
+function render(){
+  const s = (id,val)=>document.getElementById(id).innerText = val || "—";
+
+  s("g_concepto", gastoData.concepto);
+  s("g_monto", "$"+gastoData.monto);
+  s("g_categoria", gastoData.categoria);
+  s("g_fecha", gastoData.fecha?.slice(0,10));
+  s("g_usuario", gastoData.usuario);
+}
+
+/* MODAL */
+function openModal(){
+  const fields = Object.keys(gastoData).map(k=>`
+    <label>${k}</label>
+    <input id="modal_${k}" value="${gastoData[k]||""}">
+  `).join("");
+
+  document.getElementById("modalFields").innerHTML = fields;
+  document.getElementById("modalOverlay").style.display="flex";
+}
+function closeModal(){
+  document.getElementById("modalOverlay").style.display="none";
+}
+
+/* SAVE */
+async function saveModal(){
+  let updated = {};
+  Object.keys(gastoData).forEach(k=>{
+    updated[k] = document.getElementById("modal_"+k)?.value;
+  });
+
+  await fetch(`http://localhost:4000/api/gastos/${gastoId}`, {
+    method:"PUT",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(updated)
+  });
+
+  closeModal();
+  fetchGasto();
+}
+
+fetchGasto();
+</script>
+
+</body>
+</html>

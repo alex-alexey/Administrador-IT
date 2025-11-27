@@ -3,259 +3,24 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>INTEK-IT | Detalle del Dispositivo Editable</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>INTEK-IT | Licencia Detallada</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<style>
-
-/* Botones principales */
-button, .search-filter button {
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  font-weight: 500;
-  padding: 0.6rem 1.2rem;
-  box-shadow: var(--shadow);
-  transition: var(--transition);
-}
-#btnAddDevice {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  color: white;
-}
-#btnAddDevice:hover { opacity: 0.9; transform: translateY(-1px); }
-#btnImportExport {
-  background: #6366f1;
-  color: white;
-}
-#btnImportExport:hover { opacity: 0.9; transform: translateY(-1px); }
-
-/* Tabla personalizada */
-.table-wrapper { overflow-x: auto; }
-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: var(--radius);
-  overflow: hidden;
-  box-shadow: var(--shadow);
-  background: white;
-}
-th, td {
-  padding: 1rem;
-  text-align: left;
-  font-size: 0.95rem;
-}
-th {
-  background: #f3f4f6;
-  color: var(--color-primary);
-  font-weight: 600;
-}
-tbody tr:hover { background: #f9fafb; transition: var(--transition); }
-.acciones button {
-  margin-right: 0.4rem;
-  padding: 0.4rem 0.7rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-}
-.acciones .edit { background: var(--color-warning); color: white; }
-.acciones .delete { background: var(--color-danger); color: white; }
-.acciones button:hover { transform: translateY(-1px); opacity: 0.85; }
-
-/* Modal personalizada */
-#modalOverlay {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(30,58,138,0.15);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-.modalContent {
-  background: #fff;
-  padding: 2rem;
-  border-radius: var(--radius);
-  width: 100%;
-  max-width: 450px;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  animation: slideUp 0.3s ease;
-}
-.modalContent h3 { color: var(--color-primary); margin-bottom: 0.5rem; }
-.modalContent label { display: flex; flex-direction: column; gap: 0.3rem; font-weight: 500; color: var(--color-gray); font-size: 0.9rem; }
-.modalContent input, .modalContent select {
-  padding: 0.5rem;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  outline: none;
-  transition: var(--transition);
-}
-.modalContent input:focus, .modalContent select:focus {
-  border-color: var(--color-secondary);
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
-}
-.modalActions { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 0.5rem; }
-
-@keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-:root {
-  --color-primary: #1e3a8a;
-  --color-secondary: #3b82f6;
-  --color-bg: #f5f7fb;
-  --color-white: #ffffff;
-  --color-gray: #6b7280;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --radius: 16px;
-  --transition: all 0.3s ease;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
-
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Inter',sans-serif; }
-body { background: var(--color-bg); color:#111827; min-height:100vh; display:flex; font-size:14px; }
-
-aside {
-  width: 240px;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem 1rem;
-  position: fixed;
-  height: 100vh;
-  box-shadow: var(--shadow);
-}
-aside .logo { font-size:1.5rem; font-weight:700; margin-bottom:2rem; text-align:center; }
-aside .logo {
-  font-weight: 700;
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  letter-spacing: 1px;
-}
-aside nav a { color:white; text-decoration:none; display:flex; align-items:center; gap:0.8rem; padding:0.6rem 0.8rem; border-radius:8px; margin-bottom:0.5rem; transition:var(--transition); }
-aside nav a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.6rem 0.9rem;
-  border-radius: 10px;
-  transition: var(--transition);
-}
-aside nav a:hover, aside nav a.active { background: rgba(255,255,255,0.2); }
-aside nav a:hover,
-aside nav a.active {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.main-content {
-  margin-left: 240px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-header {
-  background: linear-gradient(135deg,var(--color-primary),var(--color-secondary));
-  color:white;
-  padding:1rem 2rem;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:1.2rem;
-  font-weight:600;
-  box-shadow: var(--shadow);
-}
-header a { color:white; text-decoration:none; font-size:0.9rem; background: rgba(255,255,255,0.15); padding:0.5rem 1rem; border-radius:8px; transition:var(--transition); }
-header a:hover { background: rgba(255,255,255,0.25); }
-
-.container { flex:1; padding:2rem; }
-
-/* Tarjetas */
-.device-info {
-  display:flex;
-  gap:2rem;
-  flex-wrap:wrap;
-  margin-bottom:2rem;
-}
-.device-card {
-  flex:1;
-  background:white;
-  padding:1.5rem;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  min-width:250px;
-}
-.device-card h3 { margin-bottom:1rem; color:var(--color-primary); }
-.device-card p { margin-bottom:0.5rem; font-size:0.95rem; color:var(--color-gray); }
-.device-card span { font-weight:600; color:#111827; }
-
-/* Secciones */
-.section {
-  background:white;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:1rem 1.5rem;
-  margin-bottom:1.5rem;
-}
-.section h3 { margin-bottom:1rem; color:var(--color-primary); }
-.section table { width:100%; border-collapse:collapse; margin-top:0.5rem; }
-.section th, .section td { padding:0.8rem 1rem; text-align:left; font-size:0.9rem; }
-.section th { background:#f3f4f6; color:var(--color-primary); font-weight:600; }
-.section tbody tr { border-bottom:1px solid var(--color-border); transition:var(--transition); }
-.section tbody tr:hover { background:#f9fafb; }
-
-/* Botones */
-button.action-btn {
-  background: var(--color-secondary);
-  color:white;
-  border:none;
-  border-radius:var(--radius);
-  padding:0.5rem 1rem;
-  margin-bottom:1rem;
-  cursor:pointer;
-  transition:var(--transition);
-}
-button.action-btn:hover { opacity:0.9; transform:translateY(-1px); }
-button.delete-btn { background:var(--color-danger); margin-left:0.5rem; }
-
-/* Modal */
-#modalOverlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); justify-content:center; align-items:center; z-index:1000; }
-.modalContent { background:white; padding:1.5rem 2rem; border-radius:var(--radius); width:100%; max-width:450px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:1rem; }
-.modalContent h3 { color:var(--color-primary); margin-bottom:0.5rem; }
-.modalContent label { display:flex; flex-direction:column; gap:0.3rem; font-weight:500; color:var(--color-gray); font-size:0.9rem; }
-.modalContent input, .modalContent select { padding:0.5rem; border-radius:6px; border:1px solid var(--color-border); outline:none; transition:var(--transition); }
-.modalContent input:focus, .modalContent select:focus { border-color:var(--color-secondary); box-shadow:0 0 0 2px rgba(59,130,246,0.2); }
-.modalActions { display:flex; justify-content:flex-end; gap:1rem; margin-top:0.5rem; }
-
-footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gray); margin-top:2rem; }
-@media(max-width: 768px){
-  aside { width: 70px; padding: 1rem 0.3rem; }
-  aside .logo { font-size: 1rem; margin-bottom: 1rem; }
-  nav a span { display: none; }
-  .main-content { margin-left: 70px; }
-  header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-}
-</style>
+<link rel="stylesheet" href="css/licencia.css">
 </head>
+
 <body>
+
+<!-- ========================================== -->
+<!--                SIDEBAR                    -->
+<!-- ========================================== -->
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
     <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
     <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
-    <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/licencias.html" class="active"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/controlgastos.html"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
     <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
     <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
     <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
@@ -263,206 +28,77 @@ footer { text-align:center; padding:1rem; font-size:0.9rem; color:var(--color-gr
   </nav>
 </aside>
 
-<div class="main-content">
-<header>
-  <span><i class="fa-solid fa-key"></i> Detalle de la Licencia</span>
-  <a href="/licencias.html"><i class="fa-solid fa-arrow-left"></i> Volver a Licencias</a>
-</header>
+<!-- ========================================== -->
+<!--                MAIN AREA                   -->
+<!-- ========================================== -->
+<div class="main">
 
-<div class="container">
-  <div class="device-info">
-    <div class="device-card" id="licenciaInfoCard">
-      <h3>Información de la Licencia</h3>
+  <div class="header">
+    <h2><i class="fa-solid fa-key"></i> Detalle de Licencia</h2>
+    <a href="/licencias.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+  </div>
+
+  <!-- TARJETAS PRINCIPALES -->
+  <div class="cards">
+    <div class="card">
+      <h3>Información General</h3>
       <p>ID: <span id="lic_id"></span></p>
       <p>Software: <span id="lic_software"></span></p>
       <p>Nombre Licencia: <span id="lic_nombreLicencia"></span></p>
       <p>Licencia: <span id="lic_licencia"></span></p>
+    </div>
+
+    <div class="card">
+      <h3>Asignación</h3>
       <p>Usuario: <span id="lic_usuario"></span></p>
       <p>Empleado Asignado: <span id="lic_empleadoAsignado"></span></p>
       <p>Departamento: <span id="lic_departamento"></span></p>
       <p>Proveedor: <span id="lic_proveedor"></span></p>
-      <p>Serial Number: <span id="lic_serialNumber"></span></p>
-      <p>Coste sin IVA: <span id="lic_costeSinIva"></span></p>
-      <p>Fecha Adquisición: <span id="lic_fechaAdquisicion"></span></p>
-      <p>Fecha Última Renovación: <span id="lic_fechaUltimaRenovacion"></span></p>
-      <p>Tiempo Restante Renovación: <span id="lic_tiempoRestanteRenovacion"></span></p>
-      <p>Fecha Renovación: <span id="lic_fechaRenovacion"></span></p>
-      <p>Contratación: <span id="lic_contratacion"></span></p>
+    </div>
+
+    <div class="card">
+      <h3>Renovación</h3>
       <p>Expiración: <span id="lic_expiracion"></span></p>
-      <p>Estado: <span id="lic_estado"></span></p>
-      <button class="action-btn" onclick="openEditModal('licencia')">Editar Licencia</button>
+      <p>Días restantes: <span id="lic_tiempoRestanteRenovacion"></span></p>
+      <p>Estado: <span id="lic_estado" class="badge"></span></p>
+      <button class="btn" onclick="openModal()">Editar Licencia</button>
     </div>
   </div>
+
+  <!-- TIMELINE -->
+  <div class="timeline">
+    <h3>Línea de tiempo</h3>
+    <div class="timeline-item">
+      <strong>Fecha de adquisición:</strong>
+      <span id="lic_fechaAdquisicion"></span>
+    </div>
+    <div class="timeline-item">
+      <strong>Última renovación:</strong>
+      <span id="lic_fechaUltimaRenovacion"></span>
+    </div>
+    <div class="timeline-item">
+      <strong>Próxima renovación:</strong>
+      <span id="lic_fechaRenovacion"></span>
+    </div>
+  </div>
+
+  <footer>© 2025 INTEK-IT | Todos los derechos reservados</footer>
 </div>
 
-<footer>© 2025 INTEK-IT | Todos los derechos reservados</footer>
-</div>
-
-<!-- Modal Reutilizable -->
+<!-- ========================================== -->
+<!--               MODAL EDITAR                 -->
+<!-- ========================================== -->
 <div id="modalOverlay">
-  <div class="modalContent">
-    <h3 id="modalTitle">Editar</h3>
+  <div class="modal">
+    <h3>Editar Licencia</h3>
     <div id="modalFields"></div>
-    <div class="modalActions">
-      <button class="action-btn" onclick="saveModal()">Guardar</button>
-      <button class="delete-btn" onclick="closeModal()">Cancelar</button>
+
+    <div class="actions">
+      <button class="btn" onclick="saveModal()">Guardar</button>
+      <button class="btn cancel" onclick="closeModal()">Cancelar</button>
     </div>
   </div>
 </div>
+<script src="js/licencia.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const btnLogout = document.getElementById('btnLogout');
-  if (btnLogout) {
-    btnLogout.addEventListener('click', async function(e) {
-      e.preventDefault();
-      try {
-        const API_BASE_URL = window.location.hostname === 'localhost'
-          ? 'http://localhost:4000/api'
-          : 'https://it-xqhv.onrender.com/api';
-        await fetch(`${API_BASE_URL}/api/usuarios/logout`, {
-          method: 'POST',
-          credentials: 'include'
-        });
-      } catch (err) {}
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = '/login.html';
-    });
-  }
-});
-// Verificación universal de login
-if (!localStorage.getItem('loggedIn')) {
-  window.location.href = '/login.html';
-}
 
-// --- Licencia Detalle ---
-function getLicenciaIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
-}
-const licenciaId = getLicenciaIdFromUrl();
-
-let licenciaData = {};
-
-async function fetchLicencia() {
-  if (!licenciaId) return;
-  try {
-    const res = await fetch(`http://localhost:4000/api/licencias/${licenciaId}`);
-    if (!res.ok) {
-      let errorMsg = `Error ${res.status}: No se pudo cargar la licencia`;
-      try {
-        const errorData = await res.json();
-        errorMsg = errorData.error ? `${errorMsg}\n${errorData.error}` : errorMsg;
-      } catch {}
-      alert(errorMsg);
-      return;
-    }
-    licenciaData = await res.json();
-    renderLicenciaData();
-  } catch (err) {
-    alert('Error de conexión: ' + err.message);
-  }
-}
-
-function renderLicenciaData() {
-  const set = (id, val) => {
-    const el = document.getElementById(id);
-    if (el) el.innerText = val;
-  };
-  set('lic_id', licenciaData._id || '');
-  set('lic_software', licenciaData.software || '');
-  set('lic_nombreLicencia', licenciaData.nombreLicencia || '');
-  set('lic_licencia', licenciaData.licencia || '');
-  set('lic_usuario', licenciaData.usuario || '');
-  set('lic_empleadoAsignado', licenciaData.empleadoAsignado || '');
-  set('lic_departamento', licenciaData.departamento || '');
-  set('lic_proveedor', licenciaData.proveedor || '');
-  set('lic_serialNumber', licenciaData.serialNumber || '');
-  set('lic_costeSinIva', licenciaData.costeSinIva !== undefined ? licenciaData.costeSinIva : '');
-  set('lic_fechaAdquisicion', licenciaData.fechaAdquisicion ? licenciaData.fechaAdquisicion.slice(0,10) : '');
-  set('lic_fechaUltimaRenovacion', licenciaData.fechaUltimaRenovacion ? licenciaData.fechaUltimaRenovacion.slice(0,10) : '');
-  set('lic_tiempoRestanteRenovacion', licenciaData.tiempoRestanteRenovacion || '');
-  set('lic_fechaRenovacion', licenciaData.fechaRenovacion ? licenciaData.fechaRenovacion.slice(0,10) : '');
-  set('lic_contratacion', licenciaData.contratacion ? licenciaData.contratacion.slice(0,10) : '');
-  set('lic_expiracion', licenciaData.expiracion ? licenciaData.expiracion.slice(0,10) : '');
-  set('lic_estado', licenciaData.estado || '');
-}
-
-function openEditModal(type){
-  if(type!=='licencia') return;
-  document.getElementById('modalTitle').innerText = 'Editar Licencia';
-  const modalFields = document.getElementById('modalFields');
-  modalFields.innerHTML = `
-    <label>ID: <input type="text" id="modal_id" value="${licenciaData._id || ''}" readonly></label>
-    <label>Software: <input type="text" id="modal_software" value="${licenciaData.software || ''}"></label>
-    <label>Nombre Licencia: <input type="text" id="modal_nombreLicencia" value="${licenciaData.nombreLicencia || ''}"></label>
-    <label>Licencia: <input type="text" id="modal_licencia" value="${licenciaData.licencia || ''}"></label>
-    <label>Usuario: <input type="text" id="modal_usuario" value="${licenciaData.usuario || ''}"></label>
-    <label>Empleado Asignado: <input type="text" id="modal_empleadoAsignado" value="${licenciaData.empleadoAsignado || ''}"></label>
-    <label>Departamento: <input type="text" id="modal_departamento" value="${licenciaData.departamento || ''}"></label>
-    <label>Proveedor: <input type="text" id="modal_proveedor" value="${licenciaData.proveedor || ''}"></label>
-    <label>Serial Number: <input type="text" id="modal_serialNumber" value="${licenciaData.serialNumber || ''}"></label>
-    <label>Coste sin IVA: <input type="number" id="modal_costeSinIva" value="${licenciaData.costeSinIva !== undefined ? licenciaData.costeSinIva : ''}"></label>
-    <label>Fecha Adquisición: <input type="date" id="modal_fechaAdquisicion" value="${licenciaData.fechaAdquisicion ? licenciaData.fechaAdquisicion.slice(0,10) : ''}"></label>
-    <label>Fecha Última Renovación: <input type="date" id="modal_fechaUltimaRenovacion" value="${licenciaData.fechaUltimaRenovacion ? licenciaData.fechaUltimaRenovacion.slice(0,10) : ''}"></label>
-    <label>Tiempo Restante Renovación: <input type="text" id="modal_tiempoRestanteRenovacion" value="${licenciaData.tiempoRestanteRenovacion || ''}"></label>
-    <label>Fecha Renovación: <input type="date" id="modal_fechaRenovacion" value="${licenciaData.fechaRenovacion ? licenciaData.fechaRenovacion.slice(0,10) : ''}"></label>
-    <label>Contratación: <input type="date" id="modal_contratacion" value="${licenciaData.contratacion ? licenciaData.contratacion.slice(0,10) : ''}"></label>
-    <label>Expiración: <input type="date" id="modal_expiracion" value="${licenciaData.expiracion ? licenciaData.expiracion.slice(0,10) : ''}"></label>
-    <label>Estado: <input type="text" id="modal_estado" value="${licenciaData.estado || ''}"></label>
-  `;
-  document.getElementById('modalOverlay').style.display='flex';
-}
-
-function closeModal(){
-  document.getElementById('modalOverlay').style.display='none';
-}
-
-async function saveModal(){
-  if(!licenciaId) return;
-  const update = {
-    software: document.getElementById('modal_software').value,
-    nombreLicencia: document.getElementById('modal_nombreLicencia').value,
-    licencia: document.getElementById('modal_licencia').value,
-    usuario: document.getElementById('modal_usuario').value,
-    empleadoAsignado: document.getElementById('modal_empleadoAsignado').value,
-    departamento: document.getElementById('modal_departamento').value,
-    proveedor: document.getElementById('modal_proveedor').value,
-    serialNumber: document.getElementById('modal_serialNumber').value,
-    costeSinIva: document.getElementById('modal_costeSinIva').value,
-    fechaAdquisicion: document.getElementById('modal_fechaAdquisicion').value,
-    fechaUltimaRenovacion: document.getElementById('modal_fechaUltimaRenovacion').value,
-    tiempoRestanteRenovacion: document.getElementById('modal_tiempoRestanteRenovacion').value,
-    fechaRenovacion: document.getElementById('modal_fechaRenovacion').value,
-    contratacion: document.getElementById('modal_contratacion').value,
-    expiracion: document.getElementById('modal_expiracion').value,
-    estado: document.getElementById('modal_estado').value
-  };
-  try {
-    const res = await fetch(`http://localhost:4000/api/licencias/${licenciaId}`, {
-      method: 'PUT',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(update)
-    });
-    if (!res.ok) {
-      let errorMsg = 'Error al actualizar la licencia';
-      try {
-        const errorData = await res.json();
-        errorMsg = errorData.error || errorMsg;
-      } catch {}
-      alert(errorMsg);
-      return;
-    }
-    await fetchLicencia();
-    closeModal();
-  } catch (err) {
-    alert('Error al actualizar la licencia: ' + err.message);
-  }
-}
-
-// Inicializar
-fetchLicencia();
-</script>
-</body>
-</html>
