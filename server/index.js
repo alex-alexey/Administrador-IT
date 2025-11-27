@@ -1,5 +1,3 @@
-// Backend básico Express + MongoDB (estructura inicial)
-
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -14,7 +12,6 @@ import dominiosRouter from './routes/dominios.js';
 import ordenadorRoutes from './routes/ordenador.js';
 dotenv.config();
 
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -28,15 +25,12 @@ app.use('/api/dominios', dominiosRouter);
 app.use('/api/ordenador', ordenadorRoutes);
 
 // Conexión a MongoDB
-
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/intek-it', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
 
 // Servir archivos estáticos desde public
-
-
 import path from 'path';
 const __dirname = path.resolve();
 
@@ -46,9 +40,21 @@ let publicPath = path.join(__dirname, 'public');
 if (!fs.existsSync(publicPath)) {
   publicPath = path.join(__dirname, '../public');
 }
+app.get('/licencia/:id', (req, res) => {
+  const licenciaPath = path.join(publicPath, 'licencia.html');
+  res.sendFile(licenciaPath);
+});
+// Permitir también /licencias/:id para compatibilidad
+app.get('/licencias/:id', (req, res) => {
+  const licenciaPath = path.join(publicPath, 'licencia.html');
+  res.sendFile(licenciaPath);
+});
+// Ruta para ordenador
+app.get('/ordenador/:id', (req, res) => {
+  const ordenadorPath = path.join(publicPath, 'ordenador.html');
+  res.sendFile(ordenadorPath);
+});
 app.use(express.static(publicPath));
-
-
 
 // Redirigir /login, /login.html y la raíz / a public/login.html
 app.get(['/', '/login', '/login.html'], (req, res) => {
@@ -56,16 +62,8 @@ app.get(['/', '/login', '/login.html'], (req, res) => {
   res.sendFile(loginPath);
 });
 
-
-// Redirigir /licencias/:id a licencia.html manteniendo el id como query
-app.get('/licencias/:id', (req, res) => {
-  const id = req.params.id;
-  const target = `/licencia.html?id=${id}`;
-  res.redirect(target);
-});
-
-
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor backend escuchando en puerto ${PORT}`);
 });
+

@@ -36,14 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // --- Funciones migradas desde ordenador.html ---
 
-function getDeviceIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
+
+function getDeviceIdFromPath() {
+  const match = window.location.pathname.match(/\/ordenador\/(\w+)/);
+  return match ? match[1] : null;
 }
 
 async function fetchDevice() {
     try {
-      deviceId = getDeviceIdFromUrl();
+  deviceId = getDeviceIdFromPath();
       if (!deviceId) {
         document.querySelector('.container').innerHTML = `<div style='color:#ef4444;font-size:1.2em;padding:2em;text-align:center;'>No se ha especificado ningún dispositivo.<br>Vuelve al <a href='/inventario.html'>Inventario</a>.</div>`;
         return;

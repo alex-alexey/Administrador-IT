@@ -150,13 +150,13 @@ function renderTable() {
     // Redirección al hacer clic en la fila (excepto acciones)
     tr.addEventListener('click', function(e) {
       if (e.target.closest('.acciones')) return;
-      window.location.href = `/ordenador?id=${item._id}`;
+  window.location.href = `/ordenador/${item._id}`;
     });
 
     // Redirección al hacer clic en el icono de editar
     tr.querySelector('.edit').addEventListener('click', function(e) {
       e.preventDefault();
-      window.location.href = `/ordenador?id=${item._id}`;
+  window.location.href = `/ordenador/${item._id}`;
     });
 
     tablaBody.appendChild(tr);

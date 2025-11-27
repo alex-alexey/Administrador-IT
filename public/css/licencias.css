@@ -21,17 +21,22 @@
   position: fixed !important;
   top: 0 !important; left: 0 !important;
   width: 100vw !important; height: 100vh !important;
-  background: rgba(30,58,138,0.15) !important;
+  background: rgba(30,58,138,0.85) !important;
   justify-content: center !important;
   align-items: center !important;
   z-index: 9999 !important;
 }
-#modalAddForm {
+#modalAddOverlay[style*="display: flex"] {
+  display: flex !important;
+}
+ #modalAddForm {
   background: #fff !important;
   padding: 2rem !important;
   border-radius: var(--radius) !important;
   width: 100% !important;
   max-width: 450px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
   box-shadow: var(--shadow) !important;
   display: flex !important;
   flex-direction: column !important;
@@ -81,8 +86,10 @@
 }
 @media (max-width: 500px) {
   #modalAddForm {
-    padding: 1rem;
-    max-width: 98vw;
+    padding: 1rem !important;
+    max-width: 98vw !important;
+    max-height: 98vh !important;
+    overflow-y: auto !important;
   }
 }
 

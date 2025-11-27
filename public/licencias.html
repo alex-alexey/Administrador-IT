@@ -7,7 +7,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="css/licencias.css">
+<link rel="stylesheet" href="/css/licencias.css">
 </head>
 
 <body>
@@ -41,18 +41,17 @@
     <div class="modal" id="modalAddForm">
       <h3>Añadir Licencia</h3>
       <form id="formAddLicencia">
-        <label>Software:<input type="text" name="software" required></label>
-        <label>Nombre Licencia:<input type="text" name="nombreLicencia" required></label>
-        <label>Licencia:<input type="text" name="licencia" required></label>
-        <label>Usuario:<input type="text" name="usuario"></label>
-        <label>Empleado Asignado:<input type="text" name="empleadoAsignado"></label>
-        <label>Departamento:<input type="text" name="departamento"></label>
-        <label>Proveedor:<input type="text" name="proveedor"></label>
-        <label>Expiración:<input type="date" name="expiracion"></label>
-        <label>Estado:<input type="text" name="estado"></label>
-        <label>Fecha Adquisición:<input type="date" name="fechaAdquisicion"></label>
-        <label>Fecha Última Renovación:<input type="date" name="fechaUltimaRenovacion"></label>
-        <label>Fecha Renovación:<input type="date" name="fechaRenovacion"></label>
+  <label>Software:<input type="text" name="software" required></label>
+  <label>Nombre Licencia:<input type="text" name="nombreLicencia" required></label>
+  <label>Licencia:<input type="text" name="licencia" required></label>
+  <label>Empleado Asignado:<select name="empleadoAsignado" id="add_empleadoAsignado"><option value="">Cargando...</option></select></label>
+  <label>Departamento:<input type="text" name="departamento"></label>
+  <label>Proveedor:<input type="text" name="proveedor"></label>
+  <label>Expiración:<input type="date" name="expiracion"></label>
+  <label>Estado:<input type="text" name="estado" style="display:none;"></label>
+  <label>Fecha Adquisición:<input type="date" name="fechaAdquisicion"></label>
+  <label>Fecha Última Renovación:<input type="date" name="fechaUltimaRenovacion"></label>
+  <label>Fecha Renovación:<input type="date" name="fechaRenovacion"></label>
         <div class="actions">
           <button type="submit" class="btn">Guardar</button>
           <button type="button" class="btn cancel" id="btnCancelAdd">Cancelar</button>
@@ -103,6 +102,6 @@
 <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
 
 </div>
-<script src="js/licencias.js"></script>
+<script src="/js/licencias.js"></script>
 </body>
 </html>

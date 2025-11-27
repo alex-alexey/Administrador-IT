@@ -6,11 +6,12 @@ document.getElementById("btnLogout").addEventListener("click", () => {
 });
 
 /* Get ID */
-function getLicenciaIdFromUrl() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
+function getLicenciaIdFromPath() {
+  // Extrae el ID de la ruta /licencia/ID
+  const match = window.location.pathname.match(/\/licencia\/(\w+)/);
+  return match ? match[1] : null;
 }
-const licenciaId = getLicenciaIdFromUrl();
+const licenciaId = getLicenciaIdFromPath();
 let licenciaData = {};
 
 async function fetchLicencia() {
@@ -23,12 +24,9 @@ async function fetchLicencia() {
       ? 'http://localhost:4000/api'
       : 'https://it-xqhv.onrender.com/api';
     const url = `${API_BASE_URL}/licencias/${licenciaId}`;
-    console.log('Request:', url);
-    const res = await fetch(url);
-    console.log('Response status:', res.status);
-    if (!res.ok) throw new Error('No se pudo obtener la licencia');
-    licenciaData = await res.json();
-    console.log('Response data:', licenciaData);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('No se pudo obtener la licencia');
+  licenciaData = await res.json();
     renderLicencia();
   } catch (err) {
     document.querySelector('.main').innerHTML += `<div style="color:red;margin-top:2rem;">Error al cargar la licencia: ${err.message}</div>`;
@@ -54,7 +52,29 @@ function renderLicencia() {
   const diasRestantes = calcularDiasRestantes(licenciaData.expiracion);
   document.getElementById("lic_tiempoRestanteRenovacion").innerText = diasRestantes + " días";
 
-  updateEstado(diasRestantes);
+  // Calcular estado por fecha de expiración
+  const estadoEl = document.getElementById("lic_estado");
+  let estado = "Sin estado";
+  let badgeClass = "badge";
+  if (licenciaData.expiracion) {
+    const hoy = new Date();
+    const exp = new Date(licenciaData.expiracion);
+    const diasRestantes = Math.ceil((exp - hoy) / (1000*60*60*24));
+    if (exp >= hoy) {
+      if (diasRestantes <= 30) {
+        estado = "Pendiente de renovación";
+        badgeClass = "badge warning";
+      } else {
+        estado = "Activa";
+        badgeClass = "badge success";
+      }
+    } else {
+      estado = "Caducada";
+      badgeClass = "badge danger";
+    }
+  }
+  estadoEl.textContent = estado;
+  estadoEl.className = badgeClass;
 }
 
 function updateEstado(dias) {
@@ -78,37 +98,64 @@ function calcularDiasRestantes(exp) {
   return Math.ceil((expDate - today) / (1000*60*60*24));
 }
 
-function openModal() {
-  const fields = Object.keys(licenciaData).map(key => {
-    return `
-      <label>${key}:
-        <input type="text" id="modal_${key}" value="${licenciaData[key] || ""}">
-      </label>
-    `;
-  }).join("");
-  document.getElementById("modalFields").innerHTML = fields;
+window.openModal = function openModal() {
+  // Generar los campos editables en la modal
+  document.getElementById("modalFields").innerHTML = `
+    <label>Software:<input type="text" id="modal_software" value="${licenciaData.software || ''}"></label>
+    <label>Nombre Licencia:<input type="text" id="modal_nombreLicencia" value="${licenciaData.nombreLicencia || ''}"></label>
+    <label>Licencia:<input type="text" id="modal_licencia" value="${licenciaData.licencia || ''}"></label>
+    <label>Empleado Asignado:<select id="modal_empleadoAsignado"></select></label>
+    <label>Departamento:<input type="text" id="modal_departamento" value="${licenciaData.departamento || ''}"></label>
+    <label>Proveedor:<input type="text" id="modal_proveedor" value="${licenciaData.proveedor || ''}"></label>
+    <label>Expiración:<input type="date" id="modal_expiracion" value="${licenciaData.expiracion ? licenciaData.expiracion.slice(0,10) : ''}"></label>
+    <label>Fecha Adquisición:<input type="date" id="modal_fechaAdquisicion" value="${licenciaData.fechaAdquisicion ? licenciaData.fechaAdquisicion.slice(0,10) : ''}"></label>
+    <label>Fecha Última Renovación:<input type="date" id="modal_fechaUltimaRenovacion" value="${licenciaData.fechaUltimaRenovacion ? licenciaData.fechaUltimaRenovacion.slice(0,10) : ''}"></label>
+    <label>Fecha Renovación:<input type="date" id="modal_fechaRenovacion" value="${licenciaData.fechaRenovacion ? licenciaData.fechaRenovacion.slice(0,10) : ''}"></label>
+  `;
+  // Cargar lista de empleados en el select
+  fetchEmpleadosList(licenciaData.empleadoAsignado);
   document.getElementById("modalOverlay").style.display = "flex";
+}
+
+function fetchEmpleadosList(selected) {
+  const API_BASE_URL = window.location.hostname === 'localhost'
+    ? 'http://localhost:4000/api'
+    : 'https://it-xqhv.onrender.com/api';
+  fetch(`${API_BASE_URL}/empleados`)
+    .then(res => res.json())
+    .then(empleados => {
+      const select = document.getElementById('modal_empleadoAsignado');
+      select.innerHTML = '<option value="">Selecciona empleado...</option>' +
+        empleados.map(emp => `<option value="${emp.nombre}"${emp.nombre === selected ? ' selected' : ''}>${emp.nombre}</option>`).join('');
+    });
 }
 function closeModal() {
   document.getElementById("modalOverlay").style.display = "none";
 }
 
 async function saveModal() {
-  const updated = {};
-  Object.keys(licenciaData).forEach(key => {
-    updated[key] = document.getElementById("modal_" + key)?.value;
-  });
+  const updated = {
+    software: document.getElementById('modal_software').value,
+    nombreLicencia: document.getElementById('modal_nombreLicencia').value,
+    licencia: document.getElementById('modal_licencia').value,
+    empleadoAsignado: document.getElementById('modal_empleadoAsignado').value,
+    departamento: document.getElementById('modal_departamento').value,
+    proveedor: document.getElementById('modal_proveedor').value,
+    expiracion: document.getElementById('modal_expiracion').value,
+    fechaAdquisicion: document.getElementById('modal_fechaAdquisicion').value,
+    fechaUltimaRenovacion: document.getElementById('modal_fechaUltimaRenovacion').value,
+    fechaRenovacion: document.getElementById('modal_fechaRenovacion').value
+  };
   const API_BASE_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000/api'
     : 'https://it-xqhv.onrender.com/api';
   const url = `${API_BASE_URL}/licencias/${licenciaId}`;
-  console.log('PUT Request:', url, updated);
   const res = await fetch(url, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updated)
   });
-  console.log('PUT Response status:', res.status);
+  //
   closeModal();
   fetchLicencia();
 }
