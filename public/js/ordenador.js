@@ -92,12 +92,14 @@ function renderDeviceData() {
   window.guardarNuevoEstado = async function() {
     const nuevoEstado = document.getElementById('selectNuevoEstado').value;
     try {
-  await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
+      await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ estado: nuevoEstado })
       });
-      await fetchDevice();
+      // Actualiza solo el estado en el DOM sin recargar toda la página
+      deviceData.estado = nuevoEstado;
+      renderDeviceData();
       cerrarModalEstado();
     } catch { mostrarPopupError('No se pudo actualizar el estado.'); }
   }
@@ -215,6 +217,10 @@ function renderRepairs() {
 }
 
 function openEditModal(type, row=null){
+  if (!deviceData || Object.keys(deviceData).length === 0) {
+    mostrarPopupError('Los datos del dispositivo no están cargados. Intenta recargar la página.');
+    return;
+  }
   modalType = type;
   currentRepairRow = row;
   const modalFields = document.getElementById('modalFields');
@@ -262,7 +268,10 @@ function openEditModal(type, row=null){
         <button id="btnCancelarModal" class="cancel-btn" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
       </div>
     `;
-    document.getElementById('modalOverlay').style.display = 'flex';
+    const modalOverlay = document.getElementById('modalOverlay');
+    if (modalOverlay) {
+      modalOverlay.style.display = 'flex';
+    }
     // Conectar los botones de la modal a las funciones
     setTimeout(() => {
       const btnGuardar = document.getElementById('btnGuardarModal');
@@ -283,7 +292,10 @@ function openEditModal(type, row=null){
         <button id="btnCancelarModal" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
       </div>
     `;
-    document.getElementById('modalOverlay').style.display = 'flex';
+    const modalOverlay = document.getElementById('modalOverlay');
+    if (modalOverlay) {
+      modalOverlay.style.display = 'flex';
+    }
     setTimeout(() => {
       document.getElementById('btnGuardarModal').onclick = saveModal;
       document.getElementById('btnCancelarModal').onclick = closeModal;
@@ -310,9 +322,12 @@ function openEditModal(type, row=null){
   else if(type==='repair'){
     document.getElementById('modalTitle').innerText = row !== null ? 'Editar Reparación' : 'Añadir Reparación';
     let tecnicoValue = '';
-    // Si estamos añadiendo, el técnico es el usuario logueado
     if (row === null) {
-      const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+      let usuarioRaw = localStorage.getItem('usuario');
+      let usuario = {};
+      if (usuarioRaw && usuarioRaw !== 'undefined') {
+        usuario = JSON.parse(usuarioRaw);
+      }
       tecnicoValue = usuario.nombre || '';
     } else {
       if (deviceData.reparaciones && deviceData.reparaciones[row]) {
@@ -320,7 +335,7 @@ function openEditModal(type, row=null){
       }
     }
     modalFields.innerHTML = `
-      <label>Fecha: <input type="date" id="modal_fecha" value=""></      localStorage.setItem('usuario', JSON.stringify(usuario));label>
+      <label>Fecha: <input type="date" id="modal_fecha"></label>
       <label>Técnico: <input type="text" id="modal_tecnico" value="${tecnicoValue}" readonly></label>
       <label>Estado:
         <select id="modal_estado">
@@ -329,13 +344,16 @@ function openEditModal(type, row=null){
           <option value="Resuelto">Resuelto</option>
         </select>
       </label>
-      <label>Problema: <input type="text" id="modal_problema" value=""></label>
+      <label>Problema: <input type="text" id="modal_problema"></label>
       <div style="display:flex;justify-content:center;gap:2rem;margin-top:2rem;">
         <button id="btnGuardarModal" style="background:#3b82f6;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Guardar</button>
         <button id="btnCancelarModal" style="background:#9ca3af;color:#fff;padding:0.7rem 2rem;border:none;border-radius:8px;font-size:1.1rem;cursor:pointer;">Cancelar</button>
       </div>
     `;
-    document.getElementById('modalOverlay').style.display = 'flex';
+    const modalOverlay = document.getElementById('modalOverlay');
+    if (modalOverlay) {
+      modalOverlay.style.display = 'flex';
+    }
     setTimeout(() => {
       document.getElementById('btnGuardarModal').onclick = saveModal;
       document.getElementById('btnCancelarModal').onclick = closeModal;
@@ -440,26 +458,8 @@ async function saveModal(){
       }
     }, { confirmText: 'Guardar', cancelText: 'Cancelar', iconColor: '#3b82f6' });
   }
-  else if(modalType==='features'){
-    if (!isFeaturesDataChanged()) {
-      closeModal();
-      return;
-    }
-    await mostrarPopupConfirmacion('¿Seguro que quieres guardar estos datos?', async () => {
-      const update = getFeaturesFormData();
-      try {
-        // CAMBIO: la ruta debe ser /ordenador/${deviceId}
-        await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
-          method: 'PUT',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(update)
-        });
-        await fetchDevice();
-        closeModal();
-      } catch { mostrarPopupError('El servidor no responde. No se pudo actualizar el dispositivo.'); }
-    }, { confirmText: 'Guardar', cancelText: 'Cancelar', iconColor: '#3b82f6' });
-  }
   else if(modalType==='assignment'){
+    // Guardar asignación (añadir o editar)
     const nueva = {
       empleado: document.getElementById('modal_empleado').value,
       departamento: document.getElementById('modal_depto').value,
@@ -474,7 +474,6 @@ async function saveModal(){
       } else {
         asignaciones.push(nueva);
       }
-      // CAMBIO: la ruta debe ser /ordenador/${deviceId}
       await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
@@ -500,7 +499,6 @@ async function saveModal(){
       } else {
         reparaciones.push(nueva);
       }
-      // CAMBIO: la ruta debe ser /ordenador/${deviceId}
       await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

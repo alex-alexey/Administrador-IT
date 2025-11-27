@@ -267,7 +267,8 @@ loginForm.addEventListener('submit', async (e) => {
 
     if (res.ok) {
       localStorage.setItem('loggedIn', 'true');
-      localStorage.setItem('usuario', JSON.stringify(data.user));
+      // data.data contiene el usuario según el backend
+      localStorage.setItem('usuario', JSON.stringify(data.data));
       window.location.href = '/dashboard.html';
     } else {
       errorMsg.textContent =
