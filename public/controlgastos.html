@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="/js/auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INTEK-IT | Control de Gastos</title>
@@ -115,6 +116,25 @@ tr:hover{ background:#eef4ff; cursor:pointer; }
 </head>
 
 <body>
+<script>
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+requireAuth(['adminIT', 'manager']);
+document.addEventListener('DOMContentLoaded', () => {
+  if (!user) return;
+  const navLinks = document.querySelectorAll('nav a');
+  navLinks.forEach(link => {
+    if (user.rol === 'adminIT') return; // adminIT ve todo
+    if (link.href.includes('inventario.html') && !['adminIT','tecnico'].includes(user.rol)) link.style.display = 'none';
+    if (link.href.includes('empleados.html') && !['adminIT','rrhh'].includes(user.rol)) link.style.display = 'none';
+    if (link.href.includes('licencias.html') && !['adminIT','rrhh','manager'].includes(user.rol)) link.style.display = 'none';
+    if (link.href.includes('usuarios.html') && user.rol !== 'adminIT') link.style.display = 'none';
+    if (user.rol === 'manager' && !(link.href.includes('dashboard.html') || link.href.includes('controlgastos.html') || link.href.includes('licencias.html'))) link.style.display = 'none';
+    if (user.rol === 'empleado' && !(link.href.includes('dashboard.html') || link.href.includes('helpdesk'))) link.style.display = 'none';
+  });
+  // Llamada a gastos al cargar la página
+  if (typeof cargarGastos === 'function') cargarGastos();
+});
+</script>
 
 <!-- SIDEBAR -->
 <aside>
@@ -177,60 +197,6 @@ tr:hover{ background:#eef4ff; cursor:pointer; }
     <button class="btn" style="background:#dc2626" onclick="closeModal()">Cancelar</button>
   </div>
 </div>
-
-<script>
-/* LOGOUT */
-document.getElementById("btnLogout").onclick = () => {
-  localStorage.clear(); sessionStorage.clear();
-  window.location.href = "/login.html";
-};
-
-/* MODAL */
-function openModal(){ document.getElementById("modalOverlay").style.display = "flex"; }
-function closeModal(){ document.getElementById("modalOverlay").style.display = "none"; }
-
-/* CARGAR GASTOS */
-async function cargarGastos(){
-  const res = await fetch("http://localhost:4000/api/gastos");
-  const datos = await res.json();
-
-  const t = document.getElementById("tablaGastos");
-  t.innerHTML = "";
-
-  datos.forEach(g=>{
-    const tr = document.createElement("tr");
-    tr.onclick = ()=>window.location.href=`/gasto.html?id=${g._id}`;
-    tr.innerHTML = `
-      <td>${g.concepto}</td>
-      <td>$${g.monto}</td>
-      <td>${g.categoria}</td>
-      <td>${g.fecha?.slice(0,10)}</td>
-    `;
-    t.appendChild(tr);
-  });
-}
-
-/* GUARDAR */
-async function guardarGasto(){
-  const data = {
-    concepto: m_concepto.value,
-    monto: m_monto.value,
-    categoria: m_categoria.value,
-    fecha: m_fecha.value
-  };
-
-  await fetch("http://localhost:4000/api/gastos", {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify(data)
-  });
-
-  closeModal();
-  cargarGastos();
-}
-
-cargarGastos();
-</script>
-
+<link src="/js/controlgastos.js"></link>
 </body>
 </html>

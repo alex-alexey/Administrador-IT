@@ -13,7 +13,16 @@ let usuarios = [];
 let editUserId = null;
 
 async function fetchUsuarios() {
-  const res = await fetch(`${API_BASE_URL}/usuarios`);
+  const token = localStorage.getItem('token');
+  if (!token) {
+    usuariosTableBody.innerHTML = '<tr><td colspan="5">No tienes acceso. Inicia sesión.</td></tr>';
+    return;
+  }
+  const res = await fetch(`${API_BASE_URL}/usuarios`, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
   const data = await res.json();
   usuarios = data.usuarios || [];
   renderUsuariosTable();
@@ -53,22 +62,32 @@ btnCancelUser.onclick = () => {
 formUser.onsubmit = async function(e) {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(formUser));
-  let url = `${API_BASE_URL}/usuarios/register`;
+  const token = localStorage.getItem('token');
+  let url = `${API_BASE_URL}/usuarios/crear`;
   let method = 'POST';
   if (editUserId) {
     url = `${API_BASE_URL}/usuarios/${editUserId}`;
     method = 'PUT';
   }
-  const res = await fetch(url, {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (res.ok) {
-    modalUserOverlay.style.display = 'none';
-    fetchUsuarios();
-  } else {
-    alert('Error al guardar el usuario');
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      alert(result.mensaje || 'Usuario creado correctamente');
+      modalUserOverlay.style.display = 'none';
+      fetchUsuarios();
+    } else {
+      alert(result.error || 'Error al guardar el usuario');
+    }
+  } catch (err) {
+    alert('Error de red o servidor.');
   }
 };
 
@@ -80,16 +99,29 @@ function openEditUser(user) {
   formUser.departamento.value = user.departamento || '';
   formUser.rol.value = user.rol;
   formUser.contrasena.value = '';
-  formUser.equipoAsignado.value = user.equipoAsignado || '';
-  formUser.pantallaAsignada.value = user.pantallaAsignada || '';
   modalUserOverlay.style.display = 'flex';
 }
 
 async function deleteUser(id) {
   if (!confirm('¿Eliminar este usuario?')) return;
-  const res = await fetch(`${API_BASE_URL}/usuarios/${id}`, { method: 'DELETE' });
-  if (res.ok) fetchUsuarios();
-  else alert('Error al eliminar usuario');
+  const token = localStorage.getItem('token');
+  try {
+    const res = await fetch(`${API_BASE_URL}/usuarios/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const result = await res.json();
+    if (res.ok && result.success) {
+      alert(result.mensaje || 'Usuario eliminado correctamente');
+      fetchUsuarios();
+    } else {
+      alert(result.error || 'Error al eliminar usuario');
+    }
+  } catch (err) {
+    alert('Error de red o servidor.');
+  }
 }
 
 document.addEventListener('DOMContentLoaded', fetchUsuarios);

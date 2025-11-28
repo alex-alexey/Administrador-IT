@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="/js/auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INTEK-IT | Inventario IT Premium</title>
@@ -9,6 +10,23 @@
 <link rel="stylesheet" href="css/inventario.css">
 </head>
 <body>
+<script>
+const user = JSON.parse(localStorage.getItem('user') || 'null');
+requireAuth(['adminIT', 'tecnico']);
+document.addEventListener('DOMContentLoaded', () => {
+  if (!user) return;
+  const navLinks = document.querySelectorAll('nav a');
+  navLinks.forEach(link => {
+    if (user.rol === 'adminIT') return; // adminIT ve todo
+    if (link.href.includes('inventario.html') && !['adminIT','tecnico'].includes(user.rol)) link.style.display = 'none';
+    if (link.href.includes('empleados.html') && !['adminIT','rrhh'].includes(user.rol)) link.style.display = 'none';
+    if (link.href.includes('licencias.html') && !['adminIT','rrhh'].includes(user.rol)) link.style.display = 'none';
+    if (link.href.includes('usuarios.html') && user.rol !== 'adminIT') link.style.display = 'none';
+    if (user.rol === 'manager' && !(link.href.includes('dashboard.html') || link.href.includes('controlgastos.html') || link.href.includes('licencias.html'))) link.style.display = 'none';
+    if (user.rol === 'empleado' && !(link.href.includes('dashboard.html') || link.href.includes('helpdesk'))) link.style.display = 'none';
+  });
+});
+</script>
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>

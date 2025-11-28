@@ -91,7 +91,10 @@ function mostrarPopupError(mensaje) {
 // Obtener inventario desde la API
 async function fetchInventory() {
   try {
-    const res = await fetch(`${API_BASE_URL}/inventario`);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_BASE_URL}/inventario`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     if (!res.ok) {
       let errorMsg = 'No se pudo cargar el inventario';
       try {
@@ -147,16 +150,29 @@ function renderTable() {
       </td>`;
     tr.style.cursor = 'pointer';
 
-    // Redirección al hacer clic en la fila (excepto acciones)
-    tr.addEventListener('click', function(e) {
+    // Al hacer clic en la fila, primero consulta la API del equipo y redirige con URL absoluta
+    tr.addEventListener('click', async function(e) {
       if (e.target.closest('.acciones')) return;
-  window.location.href = `/ordenador/${item._id}`;
+      const token = localStorage.getItem('token');
+      const baseHost = window.location.hostname;
+      const basePort = (window.location.hostname === 'localhost') ? '4000' : window.location.port;
+      try {
+        const res = await fetch(`${API_BASE_URL}/ordenador/${item._id}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('No se encontró el equipo');
+        window.location.href = `http://${baseHost}:${basePort}/ordenador/${item._id}`;
+      } catch {
+        mostrarPopupError('No se encontró el equipo o ha sido eliminado.');
+      }
     });
 
     // Redirección al hacer clic en el icono de editar
     tr.querySelector('.edit').addEventListener('click', function(e) {
       e.preventDefault();
-  window.location.href = `/ordenador/${item._id}`;
+      const baseHost = window.location.hostname;
+      const basePort = (window.location.hostname === 'localhost') ? '4000' : window.location.port;
+      window.location.href = `http://${baseHost}:${basePort}/ordenador/${item._id}`;
     });
 
     tablaBody.appendChild(tr);

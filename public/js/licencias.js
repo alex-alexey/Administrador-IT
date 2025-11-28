@@ -41,7 +41,10 @@ function setupLogout() {
 // -------------------- FETCH LICENCIAS --------------------
 async function fetchLicencias() {
   try {
-    const res = await fetch(`${API_BASE_URL}/licencias`);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_BASE_URL}/licencias`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     if (!res.ok) throw new Error('No se pudo cargar las licencias');
     licencias = await res.json();
     renderTable();
@@ -91,7 +94,7 @@ function renderTable() {
       <td>${lic.expiracion ? lic.expiracion.slice(0, 10) : ''}</td>
       <td><span class="badge ${badgeClass}">${estado}</span></td>
       <td class="acciones">
-        <a href="#" class="edit" data-id="${lic._id}"><i class="fa-solid fa-pen"></i></a>
+        <button class="edit" onclick="window.location.href='/licencia/${lic._id}'"><i class="fa-solid fa-pen"></i></button>
         <button class="delete" onclick="deleteLicencia('${lic._id}')"><i class="fa-solid fa-trash"></i></button>
       </td>
     `;
@@ -134,7 +137,11 @@ function updateStats() {
 async function deleteLicencia(id) {
   if (confirm('¿Estás seguro de eliminar esta licencia?')) {
     try {
-      await fetch(`${API_BASE_URL}/licencias/${id}`, { method: 'DELETE' });
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/licencias/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       fetchLicencias();
     } catch {
       alert('Error al eliminar la licencia');
@@ -165,7 +172,10 @@ document.getElementById('btnAddLicense').addEventListener('click', () => {
   fetchEmpleadosAddList();
 });
 function fetchEmpleadosAddList() {
-  fetch(`${API_BASE_URL}/empleados`)
+  const token = localStorage.getItem('token');
+  fetch(`${API_BASE_URL}/empleados`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
     .then(res => res.json())
     .then(empleados => {
       const select = document.getElementById('add_empleadoAsignado');

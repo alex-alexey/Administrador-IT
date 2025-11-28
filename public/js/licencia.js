@@ -24,7 +24,11 @@ async function fetchLicencia() {
       ? 'http://localhost:4000/api'
       : 'https://it-xqhv.onrender.com/api';
     const url = `${API_BASE_URL}/licencias/${licenciaId}`;
-  const res = await fetch(url);
+    const token = localStorage.getItem('token');
+    console.log('Token usado en GET /api/licencias/:id:', token);
+    const res = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
   if (!res.ok) throw new Error('No se pudo obtener la licencia');
   licenciaData = await res.json();
     renderLicencia();
@@ -121,7 +125,11 @@ function fetchEmpleadosList(selected) {
   const API_BASE_URL = window.location.hostname === 'localhost'
     ? 'http://localhost:4000/api'
     : 'https://it-xqhv.onrender.com/api';
-  fetch(`${API_BASE_URL}/empleados`)
+  const token = localStorage.getItem('token');
+  console.log('Token usado en GET /api/empleados:', token);
+  fetch(`${API_BASE_URL}/empleados`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
     .then(res => res.json())
     .then(empleados => {
       const select = document.getElementById('modal_empleadoAsignado');
@@ -150,9 +158,14 @@ async function saveModal() {
     ? 'http://localhost:4000/api'
     : 'https://it-xqhv.onrender.com/api';
   const url = `${API_BASE_URL}/licencias/${licenciaId}`;
+  const token = localStorage.getItem('token');
+  console.log('Token usado en PUT /api/licencias/:id:', token);
   const res = await fetch(url, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
     body: JSON.stringify(updated)
   });
   //

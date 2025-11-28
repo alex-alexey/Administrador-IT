@@ -1,3 +1,4 @@
+
 // Funciones JS para ordenador.html
 
 const API_BASE_URL = window.location.hostname === 'localhost'
@@ -49,7 +50,11 @@ async function fetchDevice() {
         document.querySelector('.container').innerHTML = `<div style='color:#ef4444;font-size:1.2em;padding:2em;text-align:center;'>No se ha especificado ningún dispositivo.<br>Vuelve al <a href='/inventario.html'>Inventario</a>.</div>`;
         return;
       }
-      const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`);
+      const token = localStorage.getItem('token');
+      console.log('Token usado en GET /api/ordenador/:id:', token);
+      const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (!res.ok) throw new Error('No se pudo cargar el dispositivo');
       deviceData = await res.json();
       renderDeviceData();
@@ -93,9 +98,14 @@ function renderDeviceData() {
   window.guardarNuevoEstado = async function() {
     const nuevoEstado = document.getElementById('selectNuevoEstado').value;
     try {
+  const token = localStorage.getItem('token');
+  console.log('Token usado en PUT /api/ordenador/:id:', token);
       await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
         method: 'PUT',
-        headers: {'Content-Type':'application/json'},
+        headers: {
+          'Content-Type':'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ estado: nuevoEstado })
       });
       // Actualiza solo el estado en el DOM sin recargar toda la página
@@ -437,9 +447,14 @@ async function saveModal(){
     await mostrarPopupConfirmacion('¿Seguro que quieres guardar estos datos?', async () => {
       const update = getBasicFormData();
       try {
+        const token = localStorage.getItem('token');
+        console.log('Token usado en PUT modal basic:', token);
         const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
           method: 'PUT',
-          headers: {'Content-Type':'application/json'},
+          headers: {
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify(update)
         });
         if (!res.ok) {
@@ -466,9 +481,14 @@ async function saveModal(){
     await mostrarPopupConfirmacion('¿Seguro que quieres guardar las características?', async () => {
       const update = getFeaturesFormData();
       try {
+        const token = localStorage.getItem('token');
+        console.log('Token usado en PUT modal features:', token);
         const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
           method: 'PUT',
-          headers: {'Content-Type':'application/json'},
+          headers: {
+            'Content-Type':'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify(update)
         });
         if (!res.ok) {
