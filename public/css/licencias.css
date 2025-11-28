@@ -281,7 +281,7 @@ tbody tr:hover { background: #f9fafb; }
   transition: var(--transition);
   margin-right: .3rem;
 }
-.edit { background: #f59e0b; }
+.edit { background: #f59e0b; display: inline-flex; align-items: center; justify-content: center; }
 .delete { background: #dc2626; }
 .acciones button:hover { transform: translateY(-2px); opacity: .85; }
 

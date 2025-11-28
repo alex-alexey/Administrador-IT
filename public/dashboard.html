@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="/js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>INTEK-IT | Dashboard</title>
@@ -8,229 +10,9 @@
 <!-- Fuentes y estilos -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
+<link rel="stylesheet" href="/css/dashboard.css" />
 <style>
-:root {
-  --color-primary: #1e3a8a;
-  --color-secondary: #3b82f6;
-  --color-bg: #f5f7fb;
-  --color-white: #ffffff;
-  --color-gray: #6b7280;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-danger: #ef4444;
-  --radius: 16px;
-  --transition: all 0.3s ease;
-  --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-}
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
-body {
-  display: flex;
-  min-height: 100vh;
-  background: var(--color-bg);
-  color: #111827;
-}
-
-/* Sidebar */
-aside {
-  width: 240px;
-  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
-  color: white;
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem 1rem;
-  position: fixed;
-  height: 100vh;
-  box-shadow: var(--shadow);
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.4rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  letter-spacing: 1px;
-}
-
-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-nav a {
-  color: white;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.6rem 0.9rem;
-  border-radius: 10px;
-  transition: var(--transition);
-}
-
-nav a:hover,
-nav a.active {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Main content */
-.main-content {
-  margin-left: 240px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-/* Header */
-header {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-  color: white;
-  padding: 1rem 2rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--shadow);
-}
-
-header h1 {
-  font-size: 1.4rem;
-  font-weight: 600;
-}
-
-header a {
-  color: white;
-  background: rgba(255,255,255,0.2);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  text-decoration: none;
-  transition: var(--transition);
-}
-header a:hover { background: rgba(255,255,255,0.3); }
-
-/* Container */
-.container {
-  padding: 2rem;
-  flex: 1;
-}
-
-/* Stats */
-.stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.card {
-  background: var(--color-white);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  box-shadow: var(--shadow);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-.card:hover { transform: translateY(-3px); }
-
-.card h3 { color: var(--color-gray); font-size: 1rem; margin-bottom: 0.4rem; }
-.card span { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); }
-.card i {
-  position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
-  font-size: 2rem;
-  color: rgba(59, 130, 246, 0.3);
-}
-
-/* Charts */
-.charts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-bottom: 2rem;
-}
-
-.chart-card {
-  background: var(--color-white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-}
-
-.chart-card h4 {
-  color: var(--color-primary);
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-/* Helpdesk Tickets Section */
-.tickets {
-  background: var(--color-white);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.tickets h4 {
-  color: var(--color-primary);
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.ticket-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.8rem 1rem;
-  border-bottom: 1px solid #e5e7eb;
-  transition: var(--transition);
-}
-.ticket-item:hover { background: #f9fafb; }
-
-.ticket-info {
-  display: flex;
-  flex-direction: column;
-}
-.ticket-info strong { color: #111827; font-weight: 600; }
-.ticket-info small { color: var(--color-gray); font-size: 0.85rem; }
-
-.ticket-priority {
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 0.3rem 0.7rem;
-  border-radius: 8px;
-  color: white;
-  text-transform: capitalize;
-}
-.ticket-priority.alta { background: var(--color-danger); }
-.ticket-priority.media { background: var(--color-warning); }
-.ticket-priority.baja { background: var(--color-success); }
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 1rem;
-  color: var(--color-gray);
-  font-size: 0.9rem;
-}
-
-/* Responsivo */
-@media(max-width: 768px){
-  aside { width: 70px; padding: 1rem 0.3rem; }
-  aside .logo { font-size: 1rem; margin-bottom: 1rem; }
-  nav a span { display: none; }
-  .main-content { margin-left: 70px; }
-}
 </style>
 </head>
 
@@ -244,6 +26,7 @@ footer {
   <a href="/controlgastos.html"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
   <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
   <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+  <a href="/usuarios.html"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a>
   <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
   <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
@@ -264,7 +47,7 @@ footer {
     </div>
 
     <!-- 🔧 Sección de Tickets Helpdesk Abiertos -->
-    <div class="tickets" style="margin-bottom:2rem;">
+  <div class="tickets">
       <h4><i class="fa-solid fa-headset"></i> Tickets de Helpdesk Abiertos</h4>
       <div id="ticketsHelpdesk"></div>
     </div>
@@ -283,130 +66,6 @@ footer {
 
   <footer>&copy; 2025 INTEK-IT. Todos los derechos reservados.</footer>
 </div>
-
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-// Seguridad básica
-if (!localStorage.getItem('loggedIn')) {
-  window.location.href = '/login.html';
-}
-
-const API_BASE_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:4000/api'
-  : 'https://it-xqhv.onrender.com/api';
-
-// Renderización del Dashboard y gráficos con datos reales
-async function cargarDashboard() {
-  try {
-    // Dashboard resumen
-    const resDash = await fetch(`${API_BASE_URL}/dashboard`);
-    const dash = await resDash.json();
-    document.getElementById('usuarios').textContent = dash.usuariosRegistrados || 0;
-    document.getElementById('dispositivos').textContent = dash.dispositivosIT || 0;
-    // Licencias activas: contar desde /licencias
-    const resLic = await fetch(`${API_BASE_URL}/licencias`);
-    const licencias = await resLic.json();
-    // Estado de licencias por campo 'estado'
-    const estadoLicencias = {};
-    licencias.forEach(l => {
-      const estado = (l.estado || 'Sin estado').trim();
-      estadoLicencias[estado] = (estadoLicencias[estado] || 0) + 1;
-    });
-    // Mostrar total de licencias activas (si existe ese estado)
-    document.getElementById('licencias').textContent = estadoLicencias['activa'] || estadoLicencias['Activa'] || 0;
-
-    // Inventario por categoría
-    const resInv = await fetch(`${API_BASE_URL}/inventario`);
-    const inventario = await resInv.json();
-    // Agrupar por categoría
-    const categorias = {};
-    inventario.forEach(item => {
-      const cat = item.categoria || 'Sin categoría';
-      categorias[cat] = (categorias[cat] || 0) + 1;
-    });
-
-    // Tickets abiertos (si tienes endpoint, aquí puedes añadirlo)
-    document.getElementById('tickets').textContent = dash.ticketsAbiertos || 0;
-
-    // Gráfico de licencias por estado real
-    const ctxLic = document.getElementById('chartLicencias');
-    const estados = Object.keys(estadoLicencias);
-    const colores = ['#3b82f6', '#f59e0b', '#ef4444', '#10b981', '#6366f1', '#9ca3af'];
-    new Chart(ctxLic, {
-      type: 'doughnut',
-      data: {
-        labels: estados,
-        datasets: [{
-          data: estados.map(e => estadoLicencias[e]),
-          backgroundColor: estados.map((_,i) => colores[i%colores.length]),
-          borderWidth: 0
-        }]
-      },
-      options: {
-        plugins: { legend: { position: 'bottom' } },
-        cutout: '70%',
-        animation: { duration: 1000, easing: 'easeOutQuart' }
-      }
-    });
-
-    // Gráfico de inventario por categoría
-    const ctxInv = document.getElementById('chartInventario');
-    new Chart(ctxInv, {
-      type: 'bar',
-      data: {
-        labels: Object.keys(categorias),
-        datasets: [{
-          label: 'Cantidad',
-          data: Object.values(categorias),
-          backgroundColor: Object.keys(categorias).map((_,i) => i%2==0 ? '#3b82f6' : '#6366f1'),
-          borderRadius: 8
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false } },
-        scales: {
-          y: { beginAtZero: true, ticks: { stepSize: 1 } }
-        },
-        animation: { duration: 1000, easing: 'easeOutQuart' }
-      }
-    });
-  } catch (e) {
-    console.error("Error al cargar datos:", e);
-  }
-}
-
-// 🔹 Render de Tickets Abiertos
-async function cargarTickets() {
-  const contenedor = document.getElementById('ticketsHelpdesk');
-  contenedor.innerHTML = '<div style="color:#6b7280;">Cargando tickets...</div>';
-  try {
-    const res = await fetch(`${API_BASE_URL}/tickets`);
-    const tickets = await res.json();
-
-    const abiertos = tickets.filter(t => t.estado === 'abierto');
-    if (abiertos.length === 0) {
-      contenedor.innerHTML = '<div style="color:#6b7280;">No hay tickets abiertos actualmente.</div>';
-      return;
-    }
-
-    contenedor.innerHTML = abiertos.slice(0, 5).map(t => `
-      <div class="ticket-item">
-        <div class="ticket-info">
-          <strong>${t.titulo}</strong>
-          <small>${t.solicitante} • ${new Date(t.fecha).toLocaleDateString()}</small>
-        </div>
-        <span class="ticket-priority ${t.prioridad.toLowerCase()}">${t.prioridad}</span>
-      </div>
-    `).join('');
-  } catch (e) {
-    contenedor.innerHTML = '<div style="color:#ef4444;">Error al cargar tickets.</div>';
-  }
-}
-
-cargarDashboard();
-cargarTickets();
-</script>
+<script src="/js/dashboard-list.js"></script>
 </body>
 </html>

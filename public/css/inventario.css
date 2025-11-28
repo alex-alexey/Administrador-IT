@@ -118,7 +118,7 @@ tbody tr:hover { background: #f9fafb; transition: var(--transition); }
   cursor: pointer;
   transition: var(--transition);
 }
-.acciones .edit { background: var(--color-warning); color: white; }
+.acciones .edit { background: var(--color-warning); color: white; display: inline-flex; align-items: center; justify-content: center; }
 .acciones .delete { background: var(--color-danger); color: white; }
 .acciones button:hover { transform: translateY(-1px); opacity: 0.85; }
 :root {

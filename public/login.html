@@ -216,15 +216,15 @@ button[type="submit"]:hover {
   <h2>INTEK-IT</h2>
   <p>Accede a tu cuenta para gestionar tus recursos tecnológicos</p>
 
-  <form autocomplete="off">
+  <form id="formLogin" autocomplete="off">
     <div class="input-group">
       <i class="fa-solid fa-user"></i>
-      <input type="text" id="username" name="username" placeholder="Usuario" required autofocus>
+  <input type="text" id="email" name="email" placeholder="Email" required autofocus>
     </div>
 
     <div class="input-group">
       <i class="fa-solid fa-lock"></i>
-      <input type="password" id="password" name="password" placeholder="Contraseña" required>
+  <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
     </div>
 
     <div class="forgot-password">
@@ -234,53 +234,13 @@ button[type="submit"]:hover {
     <button type="submit">Iniciar sesión</button>
   </form>
 
-  <div id="errorMsg"></div>
+  <div id="loginError"></div>
 
   <div class="footer">
     &copy; 2025 INTEK-IT. Todos los derechos reservados.
   </div>
 </div>
 
-<script>
-const loginForm = document.querySelector('form');
-const errorMsg = document.getElementById('errorMsg');
-
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  errorMsg.textContent = '';
-
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-
-  try {
-    const API_BASE_URL = window.location.hostname === 'localhost'
-      ? 'http://localhost:4000/api'
-      : 'https://it-xqhv.onrender.com/api';
-
-    const res = await fetch(`${API_BASE_URL}/usuarios/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      localStorage.setItem('loggedIn', 'true');
-      // data.data contiene el usuario según el backend
-      localStorage.setItem('usuario', JSON.stringify(data.data));
-      window.location.href = '/dashboard.html';
-    } else {
-      errorMsg.textContent =
-        data.error === 'No existe el usuario' ? 'No existe el usuario.' :
-        data.error === 'La contraseña es incorrecta' ? 'La contraseña es incorrecta.' :
-        data.error || 'Usuario o contraseña incorrectos.';
-    }
-  } catch {
-    errorMsg.textContent = 'Error de conexión con el servidor.';
-  }
-});
-</script>
-
+<script src="/js/login.js"></script>
 </body>
 </html>
