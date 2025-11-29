@@ -40,7 +40,7 @@ function calcularTotales(gastos) {
     }
   });
   console.log('Gastos que suman al totalMes:', debugGastosMes);
-  return { totalMes, totalTrimestre, totalAño, categoriaCostosa };
+  return { totalMes, totalTrimestre, totalAño, categoriaCostosa, categorias };
 }
 
 // ===================== RENDER =====================
@@ -95,6 +95,19 @@ function renderGastos(gastos) {
   renderTablaGastos(gastos);
   const totales = calcularTotales(gastos);
   renderContadores(totales);
+  renderTablaCategorias(totales.categorias);
+
+function renderTablaCategorias(categorias) {
+  const tabla = document.getElementById('tablaCategorias');
+  if (!tabla) return;
+  const tbody = tabla.querySelector('tbody');
+  tbody.innerHTML = '';
+  Object.entries(categorias).forEach(([cat, total]) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${cat}</td><td>${total.toLocaleString('es-ES', {style:'currency', currency:'EUR'})}</td>`;
+    tbody.appendChild(tr);
+  });
+}
 }
 
 // ===================== FILTROS =====================

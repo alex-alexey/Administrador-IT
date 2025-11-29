@@ -69,6 +69,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const body = { ...req.body };
+    // Unificar campo empleadoSolicitante
+    if (body.usuarioSolicitante) {
+      body.empleadoSolicitante = body.usuarioSolicitante;
+      delete body.usuarioSolicitante;
+    }
     if (body.fechaExpiracion) {
       const hoy = new Date();
       const fechaExp = new Date(body.fechaExpiracion);
@@ -81,10 +86,17 @@ router.post('/', async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
+});
+
 // Actualizar gasto y recalcular días restantes
 router.put('/:id', async (req, res) => {
   try {
     const body = { ...req.body };
+    // Unificar campo empleadoSolicitante
+    if (body.usuarioSolicitante) {
+      body.empleadoSolicitante = body.usuarioSolicitante;
+      delete body.usuarioSolicitante;
+    }
     if (body.fechaExpiracion) {
       const hoy = new Date();
       const fechaExp = new Date(body.fechaExpiracion);
@@ -96,7 +108,6 @@ router.put('/:id', async (req, res) => {
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
-});
 });
 
 export default router;
