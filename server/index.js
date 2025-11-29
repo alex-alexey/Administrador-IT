@@ -29,6 +29,16 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/test', {
 });
 
 // Rutas API (deben ir antes de servir archivos estáticos y redirecciones)
+
+
+import gastosRouter from './routes/gastos.js';
+app.use('/api/gastos', gastosRouter);
+import proveedoresRouter from './routes/proveedores.js';
+app.use('/api/proveedores', proveedoresRouter);
+import departamentosRouter from './routes/departamentos.js';
+app.use('/api/departamentos', departamentosRouter);
+import proyectosRouter from './routes/proyectos.js';
+app.use('/api/proyectos', proyectosRouter);
 app.use('/api/empleados', empleadosRouter);
 app.use('/api/licencias', licenciasRouter);
 app.use('/api/inventario', inventarioRouter);
