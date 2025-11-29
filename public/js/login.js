@@ -25,6 +25,7 @@ formLogin.onsubmit = async function(e) {
   if (result.success && result.token) {
     localStorage.setItem('token', result.token);
     localStorage.setItem('user', JSON.stringify(result.data));
+    localStorage.setItem('loggedIn', 'true');
     // Redirección según rol
     switch(result.data.rol) {
       case 'adminIT':
