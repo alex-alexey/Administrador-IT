@@ -20,21 +20,25 @@ function calcularTotales(gastos) {
   gastos.forEach(g => {
     const fechaGasto = parseFecha(g.fecha);
     const monto = Number(g.monto) || 0;
+    let entraEnFiltro = false;
     // Total del mes filtrado
     if (mesSeleccionado !== 'todos' && mesSeleccionado !== 'trimestre' && fechaGasto && fechaGasto.getFullYear() === añoSeleccionado && fechaGasto.getMonth() === Number(mesSeleccionado)) {
       totalMes += monto;
       debugGastosMes.push({fecha: g.fecha, monto, fechaGasto});
+      entraEnFiltro = true;
     }
     // Total del trimestre filtrado
     if (mesSeleccionado === 'trimestre' && fechaGasto && fechaGasto.getFullYear() === añoSeleccionado && Math.floor(fechaGasto.getMonth() / 3) === Number(trimestreSeleccionado)) {
       totalTrimestre += monto;
+      entraEnFiltro = true;
     }
     // Total del año filtrado
     if (fechaGasto && fechaGasto.getFullYear() === añoSeleccionado) {
       totalAño += monto;
+      if (mesSeleccionado === 'todos') entraEnFiltro = true;
     }
-    // Categoría más costosa
-    if (g.categoria) {
+    // Agrupar por categoría solo los gastos que entran en el filtro
+    if (entraEnFiltro && g.categoria) {
       categorias[g.categoria] = (categorias[g.categoria] || 0) + monto;
       if (categorias[g.categoria] > categoriaCostosa.total) categoriaCostosa = { nombre: g.categoria, total: categorias[g.categoria] };
     }
@@ -56,6 +60,8 @@ function renderTablaGastos(gastos) {
       <td>${g.numeroFactura || ''}</td>
       <td>${g.monto} €</td>
       <td>${g.categoria}</td>
+      <td>${g.usuarioSolicitanteNombre || g.usuarioSolicitante || ''}</td>
+      <td>${g.empleadoResponsableNombre || g.empleadoResponsable || ''}</td>
       <td>
         <button onclick="window.location.href='/gasto.html?id=${g._id}'" class="btn-ver">Ver</button>
         <button onclick="eliminarGasto('${g._id}', event)" class="btn-eliminar"><i class='fa fa-trash'></i></button>
@@ -102,9 +108,16 @@ function renderTablaCategorias(categorias) {
   if (!tabla) return;
   const tbody = tabla.querySelector('tbody');
   tbody.innerHTML = '';
-  Object.entries(categorias).forEach(([cat, total]) => {
+  const categoriasKeys = Object.keys(categorias);
+  if (categoriasKeys.length === 0) {
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${cat}</td><td>${total.toLocaleString('es-ES', {style:'currency', currency:'EUR'})}</td>`;
+    tr.innerHTML = `<td colspan="2">Sin datos</td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+  categoriasKeys.forEach(cat => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${cat}</td><td>${categorias[cat].toLocaleString('es-ES', {style:'currency', currency:'EUR'})}</td>`;
     tbody.appendChild(tr);
   });
 }
@@ -115,9 +128,70 @@ function filtrarGastos() {
   // ...filtros personalizados si se requieren en el futuro...
   renderGastos(window._gastos || []);
 }
+// ===================== CATEGORÍAS MODAL =====================
+const CATEGORIAS_GASTO = [
+  'General',
+  'Software',
+  'Hardware',
+  'Servicios',
+  'Licencias',
+  'Mantenimiento',
+  'Otros'
+];
+
+function inicializarCategoriasModal() {
+  const select = document.getElementById('m_categoria');
+  if (!select) return;
+  // Obtener categorías únicas de los gastos existentes
+  let categoriasUnicas = [...CATEGORIAS_GASTO];
+  if (window._gastos && Array.isArray(window._gastos)) {
+    window._gastos.forEach(g => {
+      if (g.categoria && !categoriasUnicas.includes(g.categoria)) {
+        categoriasUnicas.push(g.categoria);
+      }
+    });
+  }
+  // Limpiar y añadir opciones
+  select.innerHTML = '<option value="">-- Selecciona categoría --</option>';
+  categoriasUnicas.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    select.appendChild(opt);
+  });
+  select.innerHTML += '<option value="__nueva__">Añadir nueva categoría...</option>';
+  select.onchange = function() {
+    const inputNueva = document.getElementById('m_categoria_nueva');
+    if (this.value === '__nueva__') {
+      inputNueva.style.display = '';
+      inputNueva.value = '';
+      inputNueva.focus();
+    } else {
+      inputNueva.style.display = 'none';
+      inputNueva.value = '';
+    }
+  };
+}
+
 // Inicialización
 window.addEventListener('DOMContentLoaded', () => {
+  // Mostrar campo de nueva categoría al seleccionar 'Añadir nueva categoría...'
+  const selectCat = document.getElementById('m_categoria');
+  const inputCatNueva = document.getElementById('m_categoria_nueva');
+  if (selectCat && inputCatNueva) {
+    selectCat.addEventListener('change', function() {
+      if (this.value === '__nueva__') {
+        inputCatNueva.style.display = '';
+        inputCatNueva.value = '';
+        inputCatNueva.focus();
+      } else {
+        inputCatNueva.style.display = 'none';
+        inputCatNueva.value = '';
+      }
+    });
+  }
   inicializarFiltrosFecha();
+  inicializarCategoriasModal();
   cargarGastos();
   document.getElementById('filtroAnio').addEventListener('change', function() {
     const añoSeleccionado = Number(this.value);
@@ -361,10 +435,22 @@ async function guardarGasto(){
     alert('Proveedor, importe y fecha son obligatorios.');
     return;
   }
+  let categoria = m_categoria.value;
+  let nuevaCategoria = null;
+  const inputNuevaCat = document.getElementById('m_categoria_nueva');
+  if (categoria === '__nueva__') {
+    nuevaCategoria = inputNuevaCat ? inputNuevaCat.value.trim() : '';
+    if (!nuevaCategoria) {
+      alert('Debes indicar el nombre de la nueva categoría.');
+      if (inputNuevaCat) inputNuevaCat.focus();
+      return;
+    }
+    categoria = nuevaCategoria;
+  }
   const data = {
     proveedor,
     monto,
-    categoria: m_categoria.value,
+    categoria,
     fecha,
     numeroFactura: m_numeroFactura.value,
     usuarioSolicitante: m_usuarioSolicitante.value,
@@ -395,8 +481,24 @@ async function guardarGasto(){
     alert('Error al registrar gasto: ' + (error.error || res.status));
     return;
   }
-  closeModal();
-  cargarGastos();
+  // Añadir nueva categoría al listado si no existe
+  if (nuevaCategoria) {
+    if (!CATEGORIAS_GASTO.includes(nuevaCategoria)) {
+      CATEGORIAS_GASTO.push(nuevaCategoria);
+    }
+    inicializarCategoriasModal();
+    const selectCat = document.getElementById('m_categoria');
+    if (selectCat) selectCat.value = nuevaCategoria;
+    if (inputNuevaCat) {
+      inputNuevaCat.value = '';
+      inputNuevaCat.style.display = 'none';
+    }
+    // Esperar un ciclo para asegurar que el select se actualiza antes de cerrar el modal
+    setTimeout(() => { closeModal(); cargarGastos(); }, 0);
+  } else {
+    closeModal();
+    cargarGastos();
+  }
 }
 
 // ELIMINAR GASTO
@@ -407,11 +509,30 @@ async function eliminarGasto(id, event){
     const API_BASE_URL = window.location.hostname === 'localhost'
       ? 'http://localhost:4000/api'
       : 'https://it-xqhv.onrender.com/api';
-    await fetch(`${API_BASE_URL}/gastos/${id}`, {
-      method:'DELETE',
-      headers:{ 'Authorization': `Bearer ${token}` }
-    });
-    cargarGastos();
+    try {
+      const res = await fetch(`${API_BASE_URL}/gastos/${id}`, {
+        method:'DELETE',
+        headers:{ 'Authorization': `Bearer ${token}` }
+      });
+      let data;
+      try {
+        data = await res.json();
+      } catch (e) {
+        // Si la respuesta no es JSON (por ejemplo, HTML de error)
+        alert('Error al eliminar gasto: respuesta inesperada del servidor');
+        console.error('Respuesta no JSON al eliminar gasto:', res.status);
+        return;
+      }
+      console.log('Respuesta eliminar gasto:', res.status, data);
+      if (!res.ok) {
+        alert('Error al eliminar gasto: ' + (data.error || res.status));
+      } else {
+        cargarGastos();
+      }
+    } catch (err) {
+      alert('Error de red al eliminar gasto');
+      console.error(err);
+    }
   }
 }
 

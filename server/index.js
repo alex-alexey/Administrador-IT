@@ -1,5 +1,3 @@
-console.log('Arrancando index.js principal');
-console.log('INICIO index.js');
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -11,10 +9,13 @@ import usuariosRouter from './routes/usuarios.js';
 import dashboardRouter from './routes/dashboard.js';
 import dominiosRouter from './routes/dominios.js';
 import ordenadorRoutes from './routes/ordenador.js';
+import categoriasRouter from './routes/categorias.js';
+import ticketsRouter from './routes/tickets.js';
 dotenv.config();
 
 const app = express();
 console.log('Arrancando index.js principal');
+console.log('INICIO index.js');
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -45,7 +46,8 @@ app.use('/api/inventario', inventarioRouter);
 app.use('/api/usuarios', usuariosRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/dominios', dominiosRouter);
-app.use('/api/ordenador', ordenadorRoutes);
+
+app.use('/api/tickets', ticketsRouter);
 
 
 
@@ -65,9 +67,18 @@ app.get('/licencias/:id', (req, res) => {
 app.get('/ordenador/:id', (req, res) => {
   res.sendFile(path.join(publicPath, 'ordenador.html'));
 });
+
 app.use(express.static(publicPath));
 app.get(['/', '/login', '/login.html'], (req, res) => {
   res.sendFile(path.join(publicPath, 'login.html'));
+});
+
+// Middleware para rutas API no encontradas (siempre JSON)
+
+// Middleware para rutas API no encontradas (siempre JSON)
+// Debe ir después de todas las rutas API
+app.use('/api/*', (req, res) => {
+  res.status(404).json({ error: 'Ruta API no encontrada' });
 });
 
 const PORT = process.env.PORT || 3000;

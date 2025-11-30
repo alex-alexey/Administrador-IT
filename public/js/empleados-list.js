@@ -6,7 +6,12 @@ const API_BASE_URL = window.location.hostname === 'localhost'
 
 export async function getEmpleadosList() {
   try {
-    const res = await fetch(`${API_BASE_URL}/empleados`);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_BASE_URL}/empleados`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
     if (!res.ok) throw new Error('No se pudo obtener el listado de empleados');
     return await res.json();
   } catch {

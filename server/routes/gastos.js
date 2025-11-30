@@ -5,6 +5,17 @@ import Proveedor from '../models/Proveedor.js';
 
 const router = express.Router();
 
+// Eliminar gasto
+router.delete('/:id', async (req, res) => {
+  try {
+    const gasto = await Gasto.findByIdAndDelete(req.params.id);
+    if (!gasto) return res.status(404).json({ error: 'Gasto no encontrado' });
+    res.json({ message: 'Gasto eliminado correctamente' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // Listar gastos con nombre de proveedor
 router.get('/', async (req, res) => {
   try {

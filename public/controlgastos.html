@@ -173,14 +173,16 @@ tr:hover{background:#eef5ff; cursor:pointer;}
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> Inventario IT</a>
-    <a href="/licencias.html"><i class="fa-solid fa-key"></i> Licencias</a>
-    <a class="active" href="/controlgastos.html"><i class="fa-solid fa-coins"></i> Gastos</a>
-    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> Dominios</a>
-    <a href="/empleados.html"><i class="fa-solid fa-users"></i> Empleados</a>
-    <a href="#"><i class="fa-solid fa-headset"></i> Helpdesk</a>
-    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+    <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/controlgastos.html" class="active"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="/tickets.html"><i class="fa-solid fa-ticket"></i> <span>Tickets</span></a>
+    <a href="/usuarios.html"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
 
@@ -205,24 +207,11 @@ tr:hover{background:#eef5ff; cursor:pointer;}
       <div class="value" id="resumenAnual">0 €</div>
     </div>
     <div class="card">
-      <h3>Categoría más Costosa</h3>
+      <h3>Categoría con más Importe</h3>
       <div class="value" id="resumenCategoria">N/A</div>
     </div>
   </div>
 
-  <!-- TABLA DE GASTOS POR CATEGORÍA -->
-  <div class="box" style="margin-top:2rem;">
-    <h3>Gastos por Categoría</h3>
-    <table id="tablaCategorias" style="margin-top:1rem;">
-      <thead>
-        <tr>
-          <th>Categoría</th>
-          <th>Total (€)</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
 
   <!-- LISTADO DE GASTOS -->
   <div class="box">
@@ -258,6 +247,8 @@ tr:hover{background:#eef5ff; cursor:pointer;}
           <th>Nº Factura</th>
           <th>Monto</th>
           <th>Categoría</th>
+          <th>Solicitante</th>
+          <th>Responsable</th>
           <th>Acción</th>
         </tr>
       </thead>
@@ -268,15 +259,19 @@ tr:hover{background:#eef5ff; cursor:pointer;}
   <!-- GASTOS POR CATEGORÍA -->
   <div class="box">
     <h3>Gastos por Categoría</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Categoría</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody id="tablaCategorias"></tbody>
-    </table>
+      <div class="table-responsive">
+        <table class="table table-bordered" id="tablaCategorias">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Importe Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se insertan las filas dinámicamente -->
+          </tbody>
+        </table>
+      </div>
   </div>
 </div>
 
@@ -301,8 +296,13 @@ tr:hover{background:#eef5ff; cursor:pointer;}
   <label>Importe</label>
   <input id="m_monto" type="number">
 
+
     <label>Categoría</label>
-    <input id="m_categoria" type="text">
+    <select id="m_categoria">
+      <option value="">-- Selecciona categoría --</option>
+      <option value="__nueva__">Añadir nueva categoría...</option>
+    </select>
+    <input id="m_categoria_nueva" type="text" style="display:none;margin-bottom:1rem;" placeholder="Nueva categoría">
 
   <label>Empleado solicitante</label>
   <select id="m_usuarioSolicitante"></select>

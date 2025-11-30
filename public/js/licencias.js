@@ -168,7 +168,8 @@ function filtrarTabla() {
 
 // -------------------- MODAL AÑADIR LICENCIA --------------------
 document.getElementById('btnAddLicense').addEventListener('click', () => {
-  document.getElementById('modalAddOverlay').style.display = 'flex';
+  const modal = document.getElementById('modalAddOverlay');
+  modal.classList.add('active');
   fetchEmpleadosAddList();
 });
 function fetchEmpleadosAddList() {
@@ -187,8 +188,13 @@ function fetchEmpleadosAddList() {
       select.innerHTML = options;
     });
 }
+// Cerrar modal desde el botón de la cabecera
 document.getElementById('btnCancelAdd').addEventListener('click', () => {
-  document.getElementById('modalAddOverlay').style.display = 'none';
+  document.getElementById('modalAddOverlay').classList.remove('active');
+});
+// Cerrar modal desde el botón del footer
+document.getElementById('btnCancelAddFooter').addEventListener('click', () => {
+  document.getElementById('modalAddOverlay').classList.remove('active');
 });
 
 document.getElementById('formAddLicencia').addEventListener('submit', async function(e) {
@@ -205,7 +211,7 @@ document.getElementById('formAddLicencia').addEventListener('submit', async func
       body: JSON.stringify(data)
     });
     if (res.ok) {
-      document.getElementById('modalAddOverlay').style.display = 'none';
+  document.getElementById('modalAddOverlay').classList.remove('active');
       form.reset();
       fetchLicencias();
     } else {
