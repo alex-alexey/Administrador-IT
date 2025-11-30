@@ -40,8 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
     <a href="/controlgastos.html"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
     <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
     <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
-      <a href="#"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
-    <a href="#" id="btnLogout"><i class="fa-solid fa-sign-out-alt"></i> <span>Salir</span></a>
+    <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="/tickets.html"><i class="fa-solid fa-ticket"></i> <span>Tickets</span></a>
+    <a href="/usuarios.html"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
 
@@ -49,30 +51,65 @@ document.addEventListener('DOMContentLoaded', () => {
 <div class="main-content">
 
 <header>
-  <h1><i class="fa-solid fa-key"></i> Gestión de Licencias</h1>
-  <a href="/dashboard.html"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+  <h1><i class="fa-solid fa-gauge"></i> Panel de Control</h1>
+  <a href="/login.html"><i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar sesión</a>
 </header>
 
 <div class="container">
   <!-- MODAL NUEVA LICENCIA -->
-  <div id="modalAddOverlay" style="display:none;">
-    <div class="modal" id="modalAddForm">
-      <h3>Añadir Licencia</h3>
+  <div class="modal-overlay" id="modalAddOverlay">
+    <div class="modal-container" id="modalAddForm">
+      <div class="modal-header">
+        <h2 class="modal-title"><i class="fa-solid fa-key"></i> Añadir Licencia</h2>
+        <button type="button" class="modal-close" id="btnCancelAdd"><i class="fa-solid fa-xmark"></i></button>
+      </div>
       <form id="formAddLicencia">
-  <label>Software:<input type="text" name="software" required></label>
-  <label>Nombre Licencia:<input type="text" name="nombreLicencia" required></label>
-  <label>Licencia:<input type="text" name="licencia" required></label>
-  <label>Empleado Asignado:<select name="empleadoAsignado" id="add_empleadoAsignado"><option value="">Cargando...</option></select></label>
-  <label>Departamento:<input type="text" name="departamento"></label>
-  <label>Proveedor:<input type="text" name="proveedor"></label>
-  <label>Expiración:<input type="date" name="expiracion"></label>
-  <label>Estado:<input type="text" name="estado" style="display:none;"></label>
-  <label>Fecha Adquisición:<input type="date" name="fechaAdquisicion"></label>
-  <label>Fecha Última Renovación:<input type="date" name="fechaUltimaRenovacion"></label>
-  <label>Fecha Renovación:<input type="date" name="fechaRenovacion"></label>
-        <div class="actions">
-          <button type="submit" class="btn">Guardar</button>
-          <button type="button" class="btn cancel" id="btnCancelAdd">Cancelar</button>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label required">Software</label>
+            <input type="text" name="software" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Nombre Licencia</label>
+            <input type="text" name="nombreLicencia" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Licencia</label>
+            <input type="text" name="licencia" class="form-input" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Empleado Asignado</label>
+            <select name="empleadoAsignado" id="add_empleadoAsignado" class="form-select"><option value="">Cargando...</option></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Departamento</label>
+            <input type="text" name="departamento" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Proveedor</label>
+            <input type="text" name="proveedor" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Expiración</label>
+            <input type="date" name="expiracion" class="form-input">
+          </div>
+          <input type="text" name="estado" style="display:none;">
+          <div class="form-group">
+            <label class="form-label">Fecha Adquisición</label>
+            <input type="date" name="fechaAdquisicion" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fecha Última Renovación</label>
+            <input type="date" name="fechaUltimaRenovacion" class="form-input">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Fecha Renovación</label>
+            <input type="date" name="fechaRenovacion" class="form-input">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-danger" id="btnCancelAddFooter">Cancelar</button>
         </div>
       </form>
     </div>
@@ -80,9 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   <!-- == STATS == -->
   <div class="stats">
-    <div class="card"><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
-    <div class="card"><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
-    <div class="card"><h3>Caducadas</h3><span id="caducadas">0</span></div>
+    <div class="card"><i class="fa-solid fa-key"></i><h3>Total Licencias</h3><span id="totalLicencias">0</span></div>
+    <div class="card"><i class="fa-solid fa-hourglass-half"></i><h3>Próximas a Caducar</h3><span id="proximas">0</span></div>
+    <div class="card"><i class="fa-solid fa-ban"></i><h3>Caducadas</h3><span id="caducadas">0</span></div>
   </div>
 
   <!-- == SEARCH FILTERS == -->

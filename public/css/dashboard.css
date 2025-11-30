@@ -1,4 +1,6 @@
-/* Gráficos de dashboard */
+/* ==============================
+   Gráficos de dashboard
+   ============================== */
 #chartLicencias, #chartInventario {
   width: 100% !important;
   max-width: 320px;
@@ -6,6 +8,10 @@
   margin: 0 auto;
   display: block;
 }
+
+/* ==============================
+   Variables globales de color y diseño
+   ============================== */
 :root {
   --color-primary: #1e3a8a;
   --color-secondary: #3b82f6;
@@ -20,8 +26,14 @@
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* ==============================
+   Reset y fuente global
+   ============================== */
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
+/* ==============================
+   Layout principal
+   ============================== */
 body {
   display: flex;
   min-height: 100vh;
@@ -29,7 +41,9 @@ body {
   color: #111827;
 }
 
-/* Sidebar */
+/* ==============================
+   Sidebar (menú lateral)
+   ============================== */
 aside {
   width: 240px;
   background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
@@ -72,7 +86,9 @@ nav a.active {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Main content */
+/* ==============================
+   Contenido principal
+   ============================== */
 .main-content {
   margin-left: 240px;
   flex: 1;
@@ -81,7 +97,9 @@ nav a.active {
   min-height: 100vh;
 }
 
-/* Header */
+/* ==============================
+   Header (cabecera superior)
+   ============================== */
 header {
   background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: white;
@@ -107,13 +125,17 @@ header a {
 }
 header a:hover { background: rgba(255,255,255,0.3); }
 
-/* Container */
+/* ==============================
+   Contenedor general
+   ============================== */
 .container {
   padding: 2rem;
   flex: 1;
 }
 
-/* Stats */
+/* ==============================
+   Tarjetas de estadísticas
+   ============================== */
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -146,7 +168,9 @@ header a:hover { background: rgba(255,255,255,0.3); }
   color: rgba(59, 130, 246, 0.3);
 }
 
-/* Charts */
+/* ==============================
+   Gráficos y tarjetas de gráficos
+   ============================== */
 .charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -168,7 +192,9 @@ header a:hover { background: rgba(255,255,255,0.3); }
   margin-bottom: 1rem;
 }
 
-/* Helpdesk Tickets Section */
+/* ==============================
+   Sección de tickets de helpdesk
+   ============================== */
 .tickets {
   background: var(--color-white);
   border-radius: var(--radius);
@@ -212,7 +238,9 @@ header a:hover { background: rgba(255,255,255,0.3); }
 .ticket-priority.media { background: var(--color-warning); }
 .ticket-priority.baja { background: var(--color-success); }
 
-/* Footer */
+/* ==============================
+   Footer (pie de página)
+   ============================== */
 footer {
   text-align: center;
   padding: 1rem;
@@ -220,7 +248,9 @@ footer {
   font-size: 0.9rem;
 }
 
-/* Responsivo */
+/* ==============================
+   Responsivo (adaptación móvil)
+   ============================== */
 @media(max-width: 768px){
   aside { width: 70px; padding: 1rem 0.3rem; }
   aside .logo { font-size: 1rem; margin-bottom: 1rem; }

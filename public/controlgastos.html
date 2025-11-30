@@ -1,202 +1,356 @@
+<!-- Nuevo diseño moderno para Control de Gastos (UI renovada) -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<script src="/js/auth.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>INTEK-IT | Control de Gastos</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-/* --------------------------------------------- */
-/* VARIABLES Y BASE (MISMO ESTILO QUE LICENCIAS) */
-/* --------------------------------------------- */
-:root {
-  --bg:#f5f7fb; --white:#fff; --primary:#1e40af; --secondary:#3b82f6;
-  --gray:#6b7280; --light-gray:#eef0f5; --radius:16px;
-  --shadow:0 4px 18px rgba(0,0,0,0.08);
+/* Botones acción en tabla de gastos */
+.btn-ver {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  margin-right: 0.5rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
 }
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
-body{background:var(--bg);display:flex;}
+.btn-ver:hover {
+  background: var(--secondary);
+}
+.btn-eliminar {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-eliminar:hover {
+  background: #b91c1c;
+}
+:root{
+  --bg:#f4f6f9; --white:#fff; --primary:#1e3a8a; --secondary:#3b82f6;
+  --gray:#6b7280; --light:#e5e7eb; --radius:18px; --shadow:0 4px 20px rgba(0,0,0,0.06);
+}
+*{margin:0; padding:0; box-sizing:border-box; font-family:'Inter', sans-serif;}
+body{background:var(--bg); display:flex;}
 
 /* SIDEBAR */
 aside{
-  width:240px;
-  background:linear-gradient(180deg,var(--primary),var(--secondary));
-  color:white;
-  padding:2rem 1rem;
-  height:100vh;
-  position:fixed;
+  width:260px; background:linear-gradient(180deg, var(--primary), var(--secondary));
+  color:white; padding:2rem 1rem; height:100vh; position:fixed;
+  box-shadow:var(--shadow);
 }
 aside .logo{
-  text-align:center;
-  font-size:1.6rem;
-  font-weight:700;
-  margin-bottom:2rem;
+  font-size:1.8rem; font-weight:700; text-align:center; margin-bottom:2rem;
 }
 aside nav a{
-  display:flex; gap:.8rem;
-  padding:.7rem 1rem;
-  margin-bottom:.5rem;
-  border-radius:10px;
-  text-decoration:none;
-  color:white;
+  display:flex; align-items:center; gap:0.9rem; padding:0.75rem 1rem;
+  border-radius:12px; text-decoration:none; color:white; transition:.2s;
 }
-aside nav a:hover{ background:rgba(255,255,255,.25); }
-aside nav a.active{ background:rgba(255,255,255,.35); }
+aside nav a:hover{background:rgba(255,255,255,0.25);} 
+aside nav a.active{background:rgba(255,255,255,0.35);} 
 
 /* MAIN */
 .main{
-  margin-left:240px;
-  padding:2rem;
-  width:100%;
+  margin-left:260px; padding:2rem; width:100%;
 }
 .header{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  padding:1rem 2rem;
-  border-radius:var(--radius);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  color:white;
-  box-shadow:var(--shadow);
-}
-.header a{
-  background:rgba(255,255,255,.15);
-  padding:.5rem 1rem;
-  border-radius:8px;
-  text-decoration:none;
+  background:linear-gradient(135deg, var(--primary), var(--secondary));
+  padding:1.5rem 2rem; border-radius:var(--radius);
+  box-shadow:var(--shadow); display:flex; justify-content:space-between; align-items:center;
   color:white;
 }
-.btn{
-  background:var(--secondary);
-  padding:.6rem 1rem;
-  border:none;
-  color:white;
-  border-radius:10px;
-  cursor:pointer;
+.header .btn{
+  background:rgba(255,255,255,0.2);
+  padding:.7rem 1.2rem; border-radius:12px; border:none; color:white;
+  cursor:pointer; font-weight:500;
 }
-.btn:hover{ opacity:.9; }
+.header .btn:hover{background:rgba(255,255,255,0.3);} 
+
+/* CARDS RESUMEN */
+.cards{
+  margin-top:2rem; display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:1.5rem;
+}
+.card{
+  background:white; padding:1.5rem; border-radius:var(--radius);
+  box-shadow:var(--shadow); display:flex; flex-direction:column; gap:.5rem;
+}
+.card h3{font-size:1rem; color:var(--gray);} 
+.card .value{font-size:1.6rem; font-weight:700; color:var(--primary);} 
 
 /* TABLE */
-.table-container{
-  margin-top:2rem;
-  background:white;
-  padding:1rem;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
+.box{
+  background:white; padding:1.5rem; border-radius:var(--radius);
+  margin-top:2rem; box-shadow:var(--shadow);
 }
-table{ width:100%; border-collapse:collapse; }
-th,td{ padding:.8rem; border-bottom:1px solid #eee; }
-th{ color:var(--primary); }
-tr:hover{ background:#eef4ff; cursor:pointer; }
+table{width:100%; border-collapse:collapse; margin-top:1rem;} 
+th,td{padding:0.9rem; border-bottom:1px solid var(--light); text-align:center;} 
+th{color:var(--primary); font-weight:600; text-align:center;} 
+tr:hover{background:#eef5ff; cursor:pointer;} 
+
+/* FILTER BAR */
+.filters{display:flex; gap:1rem; margin-top:1rem;} 
+.filters select{
+  padding:.6rem 1rem; border-radius:10px; border:1px solid var(--light);
+  background:white; cursor:pointer;
+}
 
 /* MODAL */
 #modalOverlay{
-  position:fixed; display:none;
-  width:100%; height:100%;
-  top:0; left:0; background:rgba(0,0,0,.4);
-  justify-content:center; align-items:center;
+  position:fixed; inset:0; background:rgba(0,0,0,0.4);
+  display:none; justify-content:center; align-items:center;
 }
-.modal{
-  background:white; padding:2rem;
-  width:100%; max-width:450px;
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
+
+.modal {
+  background: white;
+  padding: 2rem;
+  width: 100%;
+  max-width: 520px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-.modal input{
-  width:100%; padding:.6rem;
-  border:1px solid var(--light-gray);
-  margin-bottom:1rem;
-  border-radius:6px;
+.modal h2 {
+  margin-bottom: 1.2rem;
+  font-size: 1.3rem;
+  color: var(--primary);
+  text-align: center;
 }
+.modal label {
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+  color: var(--gray);
+  margin-top: 0.5rem;
+}
+.modal input, .modal select {
+  width: 100%;
+  padding: .7rem;
+  border-radius: 10px;
+  border: 1px solid var(--light);
+  margin-bottom: 0.7rem;
+  font-size: 1rem;
+  background: #f8fafc;
+}
+.modal .btn {
+  width: 100%;
+  padding: .8rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--secondary);
+  color: white;
+  margin-top: .5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px #0001;
+  transition: background 0.2s;
+}
+.modal .btn.cancelar {
+  background: #dc2626;
+}
+.modal .btn:hover {
+  background: var(--primary);
+}
+
 </style>
 </head>
 
 <body>
-<script>
-const user = JSON.parse(localStorage.getItem('user') || 'null');
-requireAuth(['adminIT', 'manager']);
-document.addEventListener('DOMContentLoaded', () => {
-  if (!user) return;
-  const navLinks = document.querySelectorAll('nav a');
-  navLinks.forEach(link => {
-    if (user.rol === 'adminIT') return; // adminIT ve todo
-    if (link.href.includes('inventario.html') && !['adminIT','tecnico'].includes(user.rol)) link.style.display = 'none';
-    if (link.href.includes('empleados.html') && !['adminIT','rrhh'].includes(user.rol)) link.style.display = 'none';
-    if (link.href.includes('licencias.html') && !['adminIT','rrhh','manager'].includes(user.rol)) link.style.display = 'none';
-    if (link.href.includes('usuarios.html') && user.rol !== 'adminIT') link.style.display = 'none';
-    if (user.rol === 'manager' && !(link.href.includes('dashboard.html') || link.href.includes('controlgastos.html') || link.href.includes('licencias.html'))) link.style.display = 'none';
-    if (user.rol === 'empleado' && !(link.href.includes('dashboard.html') || link.href.includes('helpdesk'))) link.style.display = 'none';
-  });
-  // Llamada a gastos al cargar la página
-  if (typeof cargarGastos === 'function') cargarGastos();
-});
-</script>
 
-<!-- SIDEBAR -->
 <aside>
   <div class="logo">INTEK-IT</div>
   <nav>
-    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
-    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> Inventario IT</a>
-    <a href="/licencias.html"><i class="fa-solid fa-key"></i> Licencias</a>
-    <a href="/controlgastos.html" class="active"><i class="fa-solid fa-coins"></i> Gastos</a>
-    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> Dominios</a>
-    <a href="/empleados.html"><i class="fa-solid fa-users"></i> Empleados</a>
-    <a href="#"><i class="fa-solid fa-headset"></i> Helpdesk</a>
-    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> Salir</a>
+    <a href="/dashboard.html"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+    <a href="/inventario.html"><i class="fa-solid fa-desktop"></i> <span>Inventario IT</span></a>
+    <a href="/licencias.html"><i class="fa-solid fa-key"></i> <span>Licencias</span></a>
+    <a href="/controlgastos.html" class="active"><i class="fa-solid fa-coins"></i> <span>Gastos</span></a>
+    <a href="/dominios.html"><i class="fa-solid fa-globe"></i> <span>Dominios</span></a>
+    <a href="/empleados.html"><i class="fa-solid fa-users"></i> <span>Empleados</span></a>
+    <a href="/helpdesk.html"><i class="fa-solid fa-headset"></i> <span>Helpdesk</span></a>
+    <a href="/tickets.html"><i class="fa-solid fa-ticket"></i> <span>Tickets</span></a>
+    <a href="/usuarios.html"><i class="fa-solid fa-users"></i> <span>Usuarios</span></a>
+    <a href="#" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> <span>Salir</span></a>
   </nav>
 </aside>
 
-<!-- MAIN -->
 <div class="main">
-
   <div class="header">
     <h2><i class="fa-solid fa-coins"></i> Control de Gastos</h2>
     <button class="btn" onclick="openModal()">+ Registrar Gasto</button>
   </div>
 
-  <!-- Tabla -->
-  <div class="table-container">
+  <!-- RESUMEN CARDS -->
+  <div class="cards">
+    <div class="card">
+      <h3>Total del Mes</h3>
+      <div class="value" id="resumenMes">0 €</div>
+    </div>
+    <div class="card">
+      <h3>Total del Trimestre</h3>
+      <div class="value" id="resumenTrimestre">0 €</div>
+    </div>
+    <div class="card">
+      <h3>Total del Año</h3>
+      <div class="value" id="resumenAnual">0 €</div>
+    </div>
+    <div class="card">
+      <h3>Categoría con más Importe</h3>
+      <div class="value" id="resumenCategoria">N/A</div>
+    </div>
+  </div>
+
+
+  <!-- LISTADO DE GASTOS -->
+  <div class="box">
+    <h3>Listado de Gastos</h3>
+
+
+    <div class="filters">
+      <label for="filtroAnio">Año</label>
+      <select id="filtroAnio" onchange="filtrarGastos()"></select>
+      <label for="filtroMes">Mes</label>
+      <select id="filtroMes" onchange="onMesChange()">
+        <option value="todos">Todos</option>
+        <option value="trimestre">Trimestre</option>
+      </select>
+      <label for="filtroTrimestre">Trimestre</label>
+      <select id="filtroTrimestre" onchange="filtrarGastos()">
+        <option value="0">1º Trimestre (Ene-Mar)</option>
+        <option value="1">2º Trimestre (Abr-Jun)</option>
+        <option value="2">3º Trimestre (Jul-Sep)</option>
+        <option value="3">4º Trimestre (Oct-Dic)</option>
+      </select>
+      <label for="filtroCategoria">Categoría</label>
+      <select id="filtroCategoria" onchange="filtrarGastos()">
+        <option value="todos">Todas las categorías</option>
+      </select>
+    </div>
+
     <table>
       <thead>
         <tr>
-          <th>Concepto</th>
+          <th>Fecha</th>
+          <th>Proveedor</th>
+          <th>Nº Factura</th>
           <th>Monto</th>
           <th>Categoría</th>
-          <th>Fecha</th>
+          <th>Solicitante</th>
+          <th>Responsable</th>
+          <th>Acción</th>
         </tr>
       </thead>
       <tbody id="tablaGastos"></tbody>
     </table>
   </div>
 
+  <!-- GASTOS POR CATEGORÍA -->
+  <div class="box">
+    <h3>Gastos por Categoría</h3>
+      <div class="table-responsive">
+        <table class="table table-bordered" id="tablaCategorias">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Importe Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Aquí se insertan las filas dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+  </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL REGISTRO -->
 <div id="modalOverlay">
   <div class="modal">
-    <h3>Registrar Gasto</h3>
-
-    <label>Concepto</label>
-    <input id="m_concepto" type="text">
-
-    <label>Monto</label>
-    <input id="m_monto" type="number">
-
-    <label>Categoría</label>
-    <input id="m_categoria" type="text">
+    <h2 style="margin-bottom:1rem;">Registrar Gasto</h2>
 
     <label>Fecha</label>
     <input id="m_fecha" type="date">
 
+    <label>Proveedor</label>
+    <select id="m_proveedor">
+      <option value="">-- Selecciona proveedor --</option>
+      <option value="__nuevo__">Añadir nuevo proveedor...</option>
+    </select>
+    <input id="m_proveedor_nuevo" type="text" style="display:none;margin-bottom:1rem;" placeholder="Nuevo proveedor">
+
+    <label>Nº Factura</label>
+    <input id="m_numeroFactura" type="text">
+
+  <label>Importe</label>
+  <input id="m_monto" type="number">
+
+
+    <label>Categoría</label>
+    <select id="m_categoria">
+      <option value="">-- Selecciona categoría --</option>
+      <option value="__nueva__">Añadir nueva categoría...</option>
+    </select>
+    <input id="m_categoria_nueva" type="text" style="display:none;margin-bottom:1rem;" placeholder="Nueva categoría">
+
+  <label>Empleado solicitante</label>
+  <select id="m_usuarioSolicitante"></select>
+
+  <label>Empleado responsable</label>
+  <select id="m_empleadoResponsable"></select>
+
+  <label>Departamento</label>
+  <select id="m_departamento"></select>
+
+    <label>Proyecto</label>
+    <select id="m_proyecto">
+      <option value="">-- Selecciona proyecto --</option>
+      <option value="__nuevo__">Añadir nuevo proyecto...</option>
+    </select>
+    <input id="m_proyecto_nuevo" type="text" style="display:none;margin-bottom:1rem;" placeholder="Nuevo proyecto">
+
+    <label>Estado aprobación</label>
+    <select id="m_estadoAprobacion">
+      <option value="pendiente">Pendiente</option>
+      <option value="aprobado">Aprobado</option>
+      <option value="rechazado">Rechazado</option>
+    </select>
+
+    <label>Fecha expiración</label>
+    <input id="m_fechaExpiracion" type="date">
+
+    <label>Estado renovación</label>
+    <select id="m_estadoRenovacion">
+      <option value="activo">Activo</option>
+      <option value="próximo a vencer">Próximo a vencer</option>
+      <option value="vencido">Vencido</option>
+    </select>
+
+    <label>Periodicidad</label>
+    <input id="m_periodicidad" type="text">
+
+    <label>Importe renovación</label>
+    <input id="m_importeRenovacion" type="number">
+
+    <label>Notas renovación</label>
+    <input id="m_notasRenovacion" type="text">
+
     <button class="btn" onclick="guardarGasto()">Guardar</button>
-    <button class="btn" style="background:#dc2626" onclick="closeModal()">Cancelar</button>
+    <button class="btn cancelar" onclick="closeModal()">Cancelar</button>
   </div>
 </div>
-<link src="/js/controlgastos.js"></link>
+
+<script src="/js/controlgastos.js"></script>
 </body>
 </html>

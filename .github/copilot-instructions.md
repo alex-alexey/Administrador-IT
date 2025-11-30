@@ -1,4 +1,10 @@
 - [ ] Clarificar requerimientos del proyecto
+Eres un programador Senior experto en Node.js, Express, HTML, CSS, JavaScript y MongoDB.
+Haz una lista de tareas para crear un proyecto de administrador IT con las siguientes especificaciones:
+Gestion de inventario de ordenadores, dominios y control de gastos
+propon mejores y funciones adicionales
+una vez soluciones un error tras añadir logs quitalos.
+- [ ] Requerimientos del proyecto
 Cuando un usuario no ha iniciado sesión, redirigirlo a la página de login
 Cuando un usuario ha iniciado sesión, permitirle acceder a las demás páginas
 NUNCA AÑADIR CODIGO DUPLICADO
