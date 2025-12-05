@@ -234,7 +234,10 @@ async function fetchEmpleado() {
   empleadoId = getEmpleadoIdFromUrl();
   if (!empleadoId) return;
   try {
-  const res = await fetch(`${API_BASE_URL}/empleados/${empleadoId}`);
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_BASE_URL}/empleados/${empleadoId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
     if (!res.ok) {
       // Si no está logueado, redirigir a login
       if (!localStorage.getItem('loggedIn')) {
