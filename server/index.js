@@ -11,7 +11,7 @@ import dominiosRouter from './routes/dominios.js';
 import ordenadorRoutes from './routes/ordenador.js';
 import categoriasRouter from './routes/categorias.js';
 import ticketsRouter from './routes/tickets.js';
-dotenv.config();
+import inventarioImportExportRoutes from './routes/inventario-importexport.js';
 
 const app = express();
 console.log('Arrancando index.js principal');
@@ -48,7 +48,7 @@ app.use('/api/dashboard', dashboardRouter);
 app.use('/api/dominios', dominiosRouter);
 
 app.use('/api/tickets', ticketsRouter);
-
+app.use('/api/inventario', inventarioImportExportRoutes);
 
 
 import path from 'path';

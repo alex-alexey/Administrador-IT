@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 function getDeviceIdFromPath() {
-  const match = window.location.pathname.match(/\/ordenador\/(\w+)/);
+  const match = window.location.pathname.match(/\/(?:ordenador|inventario)\/(\w+)/);
   return match ? match[1] : null;
 }
 
@@ -52,7 +52,7 @@ async function fetchDevice() {
       }
       const token = localStorage.getItem('token');
       console.log('Token usado en GET /api/ordenador/:id:', token);
-      const res = await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
+      const res = await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!res.ok) throw new Error('No se pudo cargar el dispositivo');
@@ -99,8 +99,8 @@ function renderDeviceData() {
     const nuevoEstado = document.getElementById('selectNuevoEstado').value;
     try {
   const token = localStorage.getItem('token');
-  console.log('Token usado en PUT /api/ordenador/:id:', token);
-      await fetch(`${API_BASE_URL}/ordenador/${deviceId}`, {
+  console.log('Token usado en PUT /api/inventario/:id:', token);
+      await fetch(`${API_BASE_URL}/inventario/${deviceId}`, {
         method: 'PUT',
         headers: {
           'Content-Type':'application/json',

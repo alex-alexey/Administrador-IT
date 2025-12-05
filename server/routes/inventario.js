@@ -46,12 +46,38 @@ router.get('/:id', async (req, res) => {
 });
 // Ejemplo de control de rol en POST y DELETE
 router.post('/', (req, res) => {
-  authMiddleware(req, res, () => {
+  authMiddleware(req, res, async () => {
     if (!['adminIT', 'tecnico'].includes(req.user.rol)) {
       return res.status(403).json({ error: 'No tienes permisos para crear dispositivos.' });
     }
-    // ...lógica de creación aquí...
-    res.json({ mensaje: 'Dispositivo creado (ejemplo)' });
+    try {
+      const nuevoDispositivo = new Inventario({
+        tipo: req.body.tipo,
+        trazaEquipo: req.body.trazaEquipo,
+        nombre: req.body.nombre,
+        categoria: req.body.categoria,
+        marca: req.body.marca,
+        modelo: req.body.modelo,
+        serie: req.body.serie,
+        estado: req.body.estado,
+        ubicacion: req.body.ubicacion,
+        responsable: req.body.responsable,
+        empleado: req.body.empleado,
+        fechaCompra: req.body.fechaCompra,
+        observaciones: req.body.observaciones,
+        cpu: req.body.cpu,
+        ram: req.body.ram,
+        storage: req.body.storage,
+        os: req.body.os,
+        asignaciones: req.body.asignaciones || [],
+        reparaciones: req.body.reparaciones || []
+      });
+      await nuevoDispositivo.save();
+      res.status(201).json({ mensaje: 'Dispositivo creado correctamente', dispositivo: nuevoDispositivo });
+    } catch (err) {
+      console.error('Error al crear dispositivo:', err);
+      res.status(500).json({ error: 'Error al crear el dispositivo' });
+    }
   });
 });
 

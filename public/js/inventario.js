@@ -1,3 +1,52 @@
+// -------------------- IMPORTAR / EXPORTAR INVENTARIO --------------------
+const btnImportExport = document.getElementById('btnImportExport');
+const modalImportExport = document.getElementById('modalImportExport');
+const btnCerrarImportExport = document.getElementById('btnCerrarImportExport');
+const selectImport = document.getElementById('selectImport');
+const selectExport = document.getElementById('selectExport');
+const importExportContent = document.getElementById('importExportContent');
+
+if (btnImportExport && modalImportExport) {
+  btnImportExport.addEventListener('click', () => {
+    modalImportExport.style.display = 'flex';
+    importExportContent.innerHTML = '';
+  });
+}
+if (btnCerrarImportExport && modalImportExport) {
+  btnCerrarImportExport.addEventListener('click', () => {
+    modalImportExport.style.display = 'none';
+    importExportContent.innerHTML = '';
+  });
+}
+if (selectImport) {
+  selectImport.addEventListener('click', () => {
+    importExportContent.innerHTML = `<input type="file" id="fileImport" accept=".xlsx,.xls,.csv" style="margin-bottom:1em;" /> <button id="btnImportarArchivo" style="background:#22c55e;color:#fff;padding:0.5em 1.5em;border:none;border-radius:8px;font-size:1em;cursor:pointer;">Importar</button> <div id="importStatus" style="margin-top:1em;"></div>`;
+  });
+}
+if (selectExport) {
+  selectExport.addEventListener('click', async () => {
+    importExportContent.innerHTML = 'Generando archivo...';
+    try {
+      const token = localStorage.getItem('token');
+      const res = await fetch(`${API_BASE_URL}/inventario/export`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!res.ok) throw new Error('Error al exportar inventario');
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'inventario.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      importExportContent.innerHTML = '<span style="color:green">Exportación completada.</span>';
+    } catch (err) {
+      importExportContent.innerHTML = '<span style="color:red">' + err.message + '</span>';
+    }
+  });
+}
 // Mostrar modal al hacer clic en 'Añadir Dispositivo'
 const btnAddDevice = document.getElementById('btnAddDevice');
 const deviceModal = document.getElementById('deviceModal');
@@ -151,20 +200,11 @@ function renderTable() {
     tr.style.cursor = 'pointer';
 
     // Al hacer clic en la fila, primero consulta la API del equipo y redirige con URL absoluta
-    tr.addEventListener('click', async function(e) {
+    tr.addEventListener('click', function(e) {
       if (e.target.closest('.acciones')) return;
-      const token = localStorage.getItem('token');
       const baseHost = window.location.hostname;
       const basePort = (window.location.hostname === 'localhost') ? '4000' : window.location.port;
-      try {
-        const res = await fetch(`${API_BASE_URL}/ordenador/${item._id}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error('No se encontró el equipo');
-        window.location.href = `http://${baseHost}:${basePort}/ordenador/${item._id}`;
-      } catch {
-        mostrarPopupError('No se encontró el equipo o ha sido eliminado.');
-      }
+      window.location.href = `http://${baseHost}:${basePort}/ordenador/${item._id}`;
     });
 
     // Redirección al hacer clic en el icono de editar
@@ -192,7 +232,11 @@ function updateStats() {
 async function deleteDevice(id){
   if(confirm('¿Estás seguro de eliminar este dispositivo?')){
     try {
-      await fetch(`${API_BASE_URL}/inventario/${id}`, {method:'DELETE'});
+      const token = localStorage.getItem('token');
+      await fetch(`${API_BASE_URL}/inventario/${id}`, {
+        method:'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       fetchInventory();
     } catch {
       mostrarPopupError('El servidor no responde. No se pudo eliminar el dispositivo.');
